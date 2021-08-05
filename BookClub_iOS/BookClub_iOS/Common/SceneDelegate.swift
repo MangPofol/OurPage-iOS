@@ -14,7 +14,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = ViewController() // RootViewController를 연결
+        let navController = UINavigationController()
+        navController.viewControllers = [CreateBookClubViewController()]
+        navController.navigationBar.isTranslucent = false
+        window?.rootViewController = navController // RootViewController를 연결
         window?.makeKeyAndVisible()
     }
 
