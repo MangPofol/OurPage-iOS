@@ -6,17 +6,21 @@
 //
 
 import UIKit
+import RxSwift
 import SnapKit
 import Then
+import SideMenu
 
 class CreateBookClubViewController: UIViewController {
     lazy var customView = CreateBookClubView()
     lazy var underBarButton = UnderBarButton()
+    let disposeBag = DisposeBag()
     
     override func loadView() {
         super.loadView()
         self.view.addSubview(customView)
         self.view.addSubview(underBarButton)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: nil, action: nil)
         underBarButton.snp.makeConstraints {
             $0.bottom.left.right.equalToSuperview()
             $0.height.equalTo(Constants.screenSize.height / 12.5)
@@ -48,9 +52,24 @@ class CreateBookClubViewController: UIViewController {
             )
         )
         
+        self.navigationItem.leftBarButtonItem!
+            .rx.tap
+            .bind {
+                // Define the menu
+                let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
+                menu.leftSide = true
+                menu.presentationStyle = .menuSlideIn
+                menu.menuWidth = Constants.screenSize.width * 0.85
+                // SideMenuNavigationController is a subclass of UINavigationController, so do any additional configuration
+                // of it here like setting its viewControllers. If you're using storyboards, you'll want to do something like:
+                // let menu = storyboard!.instantiateViewController(withIdentifier: "RightMenu") as! SideMenuNavigationController
+                self.present(menu, animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
+        
         // TODO: bind to result {
             
-        // }
+        // }    
     }
     
     override func viewDidLayoutSubviews() {
