@@ -26,17 +26,19 @@ class SideMenuViewController: UIViewController {
         
         let viewModel = SideMenuViewModel()
         
-        // tableview cell 표시
+        // tableview에 표시할 데이터에 tableview bind {
         viewModel.bookclubs
             // 셀 개수에 따라 tableview 크기 맞추기
             .do(onNext: { clubs in
                 self.sideMenuView.myBookClubTableView.snp.makeConstraints {
                     $0.height.equalTo(self.cellHeight * CGFloat(clubs.count)) }
             })
+            .observeOn(MainScheduler.instance)
             .bind(to: sideMenuView.myBookClubTableView.rx.items) { (tableView: UITableView, index: Int, element) in
                 let indexPath = IndexPath(item: index, section: 0)
                 let cell = tableView.dequeueReusableCell(withIdentifier: BookClubListTableViewCell.identifier, for: indexPath) as! BookClubListTableViewCell
                 cell.titleLabel.text = element
+                cell.exitButton.rx.tap.bind { print("buttonTap") }.disposed(by: cell.disposeBag)
                 return cell
             }
             .disposed(by: disposeBag)
@@ -47,11 +49,13 @@ class SideMenuViewController: UIViewController {
                 self.sideMenuView.joinedClubTableView.snp.makeConstraints {
                     $0.height.equalTo(self.cellHeight * CGFloat(clubs.count)) }
             })
+            .observeOn(MainScheduler.instance)
             .bind(to: sideMenuView.joinedClubTableView.rx.items) { (tableView: UITableView, index: Int, element) in
                 let indexPath = IndexPath(item: index, section: 0)
                 let cell = tableView.dequeueReusableCell(withIdentifier: BookClubListTableViewCell.identifier, for: indexPath) as! BookClubListTableViewCell
                 cell.titleLabel.text = element
                 cell.exitButton.setTitle("탈퇴", for: .normal)
+                cell.exitButton.rx.tap.bind { print("buttonTap") }.disposed(by: cell.disposeBag)
                 return cell
             }
             .disposed(by: disposeBag)
@@ -61,6 +65,7 @@ class SideMenuViewController: UIViewController {
                 self.sideMenuView.alertTableView.snp.makeConstraints {
                     $0.height.equalTo(self.cellHeight * CGFloat(alerts.count) * 2.0) }
             })
+            .observeOn(MainScheduler.instance)
             .bind(to: sideMenuView.alertTableView.rx.items) { (tableView: UITableView, index: Int, element: AlertModel) in
                 let indexPath = IndexPath(item: index, section: 0)
                 let cell = tableView.dequeueReusableCell(withIdentifier: AlertTableViewCell.identifier, for: indexPath) as! AlertTableViewCell
@@ -70,6 +75,27 @@ class SideMenuViewController: UIViewController {
                 return cell
             }
             .disposed(by: disposeBag)
+        // }
+        
+        // select row at {
+        sideMenuView.myBookClubTableView.rx.modelSelected(String.self)
+            .subscribe(onNext:  { value in
+                print("Tapped `\(value)`")
+            })
+            .disposed(by: disposeBag)
+        
+        sideMenuView.joinedClubTableView.rx.modelSelected(String.self)
+            .subscribe(onNext:  { value in
+                print("Tapped `\(value)`")
+            })
+            .disposed(by: disposeBag)
+        
+        sideMenuView.alertTableView.rx.modelSelected(AlertModel.self)
+            .subscribe(onNext:  { value in
+                print("Tapped `\(value)`")
+            })
+            .disposed(by: disposeBag)
+        // }
     }
     
     private func setUpTableViews() {

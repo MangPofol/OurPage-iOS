@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import RxSwift
 
 class BookClubListTableViewCell: UITableViewCell {
 
     static let identifier = "BookClubListTableViewCell"
+    let disposeBag = DisposeBag()
     
     var titleLabel = UILabel().then {
         $0.textAlignment = .left
