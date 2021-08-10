@@ -25,3 +25,21 @@ extension UITableView {
         self.endUpdates()
     }
 }
+
+extension UIViewController {
+    func setNavigationBar() {
+        guard let nav = self.navigationController else {
+            return
+        }
+        nav.navigationBar.barTintColor = Constants.navigationbarColor
+        nav.navigationBar.isTranslucent = false
+    }
+}
+
+extension Date {
+    func toString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd"
+        return formatter.string(from: self)
+    }
+}
