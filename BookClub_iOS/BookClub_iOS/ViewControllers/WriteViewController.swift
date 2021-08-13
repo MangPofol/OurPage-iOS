@@ -17,7 +17,6 @@ class WriteViewController: UIViewController {
     override func loadView() {
         self.view = customView
         self.setNavigationBar()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: nil, action: nil)
         customView.makeView()
         
     }
