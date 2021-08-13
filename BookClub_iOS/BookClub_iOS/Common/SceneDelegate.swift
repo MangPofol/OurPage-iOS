@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let navController = UINavigationController()
-        navController.viewControllers = [MyLibraryTabViewController()]
+        navController.viewControllers = [BookListViewController()]
         navController.navigationBar.isTranslucent = false
         window?.rootViewController = navController // RootViewController를 연결
         window?.makeKeyAndVisible()

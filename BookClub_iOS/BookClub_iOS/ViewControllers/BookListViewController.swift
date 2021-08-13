@@ -8,11 +8,13 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import BetterSegmentedControl
+import SideMenu
 
 class BookListViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let viewModel = BookListViewModel()
+    var viewModel = BookListViewModel()
     
     // collectionView
     lazy var collectionView : UICollectionView = {
@@ -26,17 +28,66 @@ class BookListViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
+        // navigation bar button
+        self.setNavigationBar()
+        self.navigationItem.leftBarButtonItem!
+            .rx.tap
+            .bind {
+                let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
+                menu.leftSide = true
+                menu.presentationStyle = .menuSlideIn
+                menu.menuWidth = Constants.screenSize.width * 0.85
+                self.present(menu, animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
+        
+        // custom segment control
+        let typeControl = BetterSegmentedControl(frame: .zero)
+        typeControl.segments = LabelSegment.segments(withTitles: ["읽는 중", "완독", "읽고 싶은"])
+        self.view.addSubview(typeControl)
+        typeControl.setCustomSegment(underlineColor: .black, indicatorHeight: 1.0)
+        
+        // custom segment control
+        let control = BetterSegmentedControl(frame: .zero)
+        control.segments = LabelSegment.segments(withTitles: ["나만보기", "북클럽 A", "북클럽 B", "북클럽 C"])
+        self.view.addSubview(control)
+        control.setCustomSegment(underlineColor: .black, indicatorHeight: 1.0)
+        
         // add and configure collection view
         self.view.addSubview(self.collectionView)
         self.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+        
+        // autolayout set
+        typeControl.snp.makeConstraints {
+            $0.top.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+        }
+        control.snp.makeConstraints {
+            $0.left.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+            $0.top.equalTo(typeControl.snp.bottom).offset(10)
+        }
         self.collectionView.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(20)
-            $0.top.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
+            $0.top.equalTo(control.snp.bottom).offset(10)
         }
         
         // Register cell classes
         self.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         
+        // segmented control change
+        typeControl.rx.controlEvent(.valueChanged)
+            .bind {
+                print(control.index)
+            }
+            .disposed(by: disposeBag)
+        
+        control.rx.controlEvent(.valueChanged)
+            .bind {
+                print(control.index)
+            }
+            .disposed(by: disposeBag)
+        
+        // bind outputs
         viewModel.data
             .bind(to:
                     self.collectionView

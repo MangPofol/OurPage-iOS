@@ -40,8 +40,7 @@ class MyLibraryTabViewController: TabmanViewController {
         let vc3 = UIViewController()
         vc3.view.backgroundColor = .blue
         
-        viewControllers = [BookListTabViewController(), vc2, vc3]
-        
+        viewControllers = []
         
         self.dataSource = self
         

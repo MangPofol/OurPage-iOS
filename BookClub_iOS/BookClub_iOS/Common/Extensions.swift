@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit.UITableView
+import BetterSegmentedControl
 
 extension UITableView {
     func removeExtraLine() {
@@ -49,5 +50,18 @@ extension Date {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
         return formatter.string(from: self)
+    }
+}
+
+extension BetterSegmentedControl {
+    func setCustomSegment(underlineColor: UIColor, indicatorHeight: Double) {
+        self.setOptions([.backgroundColor(.clear), .indicatorViewBackgroundColor(.clear)])
+        let customSubview = UIView(frame: .zero)
+        customSubview.backgroundColor = underlineColor
+        self.indicatorView.addSubview(customSubview)
+        customSubview.snp.makeConstraints {
+            $0.left.right.bottom.equalToSuperview()
+            $0.height.equalTo(indicatorHeight)
+        }
     }
 }

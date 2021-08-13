@@ -28,3 +28,9 @@ class BookListViewModel {
                                                 BookModel(image: "SampleBook", title: "Book11")])
     }
 }
+
+enum BookListType {
+    case reading
+    case finished
+    case wantToRead
+}
