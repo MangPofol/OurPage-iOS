@@ -11,14 +11,14 @@ final class SideMenuView: UIView {
     var nameLabel = UILabel().then {
         $0.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         $0.adjustsFontForContentSizeCategory = true
-        $0.textColor = .white
+        $0.textColor = .black
         $0.text = "이름"
     }
     
     var idLabel = UILabel().then {
         $0.font = UIFont.preferredFont(forTextStyle: .body)
         $0.adjustsFontForContentSizeCategory = true
-        $0.textColor = .white
+        $0.textColor = .black
         $0.text = "아이디: hi06021"
     }
     
@@ -31,55 +31,60 @@ final class SideMenuView: UIView {
         $0.sizeToFit()
     }
     
-    var myBookClubLabel = UILabel().then {
-        $0.font = UIFont.preferredFont(forTextStyle: .headline)
-        $0.adjustsFontForContentSizeCategory = true
-        $0.textColor = .white
-        $0.text = "▼ 나의 북클럽"
-        // ▶︎
+    var myBookClubButton = UIButton().then {
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.contentHorizontalAlignment = .left
+        $0.setTitleColor(.black, for: .normal)
+        $0.setTitle("▼ 나의 북클럽", for: .normal)
     }
     
     var myBookClubTableView = UITableView().then {
         $0.separatorColor = .black
         $0.separatorStyle = .none
+        $0.isScrollEnabled = false
     }
     
     var createBookClubButton = UIButton().then {
         $0.setTitle("북클럽 생성하기", for: .normal)
         $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .orange
+        $0.backgroundColor = .backgroundGray
+        $0.setShadow(opacity: 1, color: .lightGray, offset: CGSize(width: 0, height: 3), radius: 1)
     }
     
-    lazy var myBookClubStack = UIStackView(arrangedSubviews: [myBookClubLabel, myBookClubTableView, createBookClubButton]).then {
+    lazy var myBookClubStack = UIStackView(arrangedSubviews: [myBookClubButton, myBookClubTableView, createBookClubButton]).then {
         $0.axis = .vertical
-        $0.spacing = 5
+        $0.spacing = 0
         $0.distribution = .equalSpacing
     }
     
-    var joinedBookClubLabel = UILabel().then {
-        $0.font = UIFont.preferredFont(forTextStyle: .headline)
-        $0.adjustsFontForContentSizeCategory = true
-        $0.textColor = .white
-        $0.text = "▼ 참여한 북클럽"
+    var joinedBookClubButton = UIButton().then {
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.contentHorizontalAlignment = .left
+        $0.setTitleColor(.black, for: .normal)
+        $0.setTitle("▼ 참여한 북클럽", for: .normal)
     }
     
     var joinedClubTableView = UITableView().then {
         $0.separatorColor = .black
         $0.separatorStyle = .none
-        $0.backgroundColor = .black
+        $0.backgroundColor = .white
+        $0.isScrollEnabled = false
     }
     
-    lazy var joinedClubStack = UIStackView(arrangedSubviews: [joinedBookClubLabel, joinedClubTableView]).then {
+    lazy var joinedClubStack = UIStackView(arrangedSubviews: [joinedBookClubButton, joinedClubTableView]).then {
         $0.axis = .vertical
         $0.spacing = 5
         $0.distribution = .equalSpacing
     }
     
-    var alertLabel = UILabel().then {
-        $0.font = UIFont.preferredFont(forTextStyle: .headline)
-        $0.adjustsFontForContentSizeCategory = true
-        $0.textColor = .white
-        $0.text = "▼ 알림"
+    var alertButton = UIButton().then {
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.contentHorizontalAlignment = .left
+        $0.setTitleColor(.black, for: .normal)
+        $0.setTitle("▼ 알림", for: .normal)
     }
     
     var alertTableView = UITableView().then {
@@ -87,7 +92,7 @@ final class SideMenuView: UIView {
         $0.separatorStyle = .none
     }
     
-    lazy var alertStack = UIStackView(arrangedSubviews: [alertLabel, alertTableView]).then {
+    lazy var alertStack = UIStackView(arrangedSubviews: [alertButton, alertTableView]).then {
         $0.axis = .vertical
         $0.spacing = 5
         $0.distribution = .equalSpacing
@@ -95,30 +100,35 @@ final class SideMenuView: UIView {
     
     var usageButton = UIButton().then {
         $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.white.cgColor
-        $0.backgroundColor = .black
-        $0.setTitle("앱 활용법", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
+        $0.layer.borderColor = UIColor.black.cgColor
+        $0.backgroundColor = .white
+        $0.setTitle(" 앱 활용법 ", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
         $0.titleLabel?.adjustsFontForContentSizeCategory = true
     }
+    
+    // 우 하단 버튼 {
+    var verticalLine1 = LineView(width: 1.0, color: .black)
+    var verticalLine2 = LineView(width: 1.0, color: .black)
     var versionButton = UIButton().then {
-        $0.backgroundColor = .black
+        $0.backgroundColor = .white
         $0.setTitle("앱버젼", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
+        $0.setTitleColor(.black, for: .normal)
     }
     var inquireButton = UIButton().then {
-        $0.backgroundColor = .black
+        $0.backgroundColor = .white
         $0.setTitle("문의하기", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
+        $0.setTitleColor(.black, for: .normal)
     }
     var settingButton = UIButton().then {
-        $0.backgroundColor = .black
+        $0.backgroundColor = .white
         $0.setTitle("설정", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
+        $0.setTitleColor(.black, for: .normal)
     }
+    // }
     
-    lazy var buttonStack = UIStackView(arrangedSubviews: [versionButton, inquireButton, settingButton]).then {
+    lazy var buttonStack = UIStackView(arrangedSubviews: [versionButton, verticalLine1, inquireButton, verticalLine2, settingButton]).then {
         $0.axis = .horizontal
         $0.spacing = 5
         $0.distribution = .equalSpacing
@@ -146,7 +156,7 @@ final class SideMenuView: UIView {
     func makeView() {
         nameLabel.snp.makeConstraints {
             $0.left.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().offset(Constants.screenSize.height / 20)
+            $0.top.equalTo(self.safeAreaLayoutGuide).inset(Constants.screenSize.height / 20)
         }
         idLabel.snp.makeConstraints {
             $0.left.equalToSuperview().inset(20)
@@ -175,6 +185,14 @@ final class SideMenuView: UIView {
         buttonStack.snp.makeConstraints {
             $0.right.equalToSuperview().inset(20)
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-20)
+        }
+        verticalLine1.snp.makeConstraints {
+            $0.width.equalTo(1.25)
+            $0.top.bottom.equalToSuperview()
+        }
+        verticalLine2.snp.makeConstraints {
+            $0.width.equalTo(1.25)
+            $0.top.bottom.equalToSuperview()
         }
     }
 }

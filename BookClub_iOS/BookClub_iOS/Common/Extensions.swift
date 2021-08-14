@@ -82,3 +82,17 @@ extension UIFont {
     }
     // }
 }
+
+extension UIView {
+    // Make Shadow of view
+    func setShadow(opacity: Float = 1, color: UIColor = .black, offset: CGSize = CGSize(width: 0, height: 0), radius: CGFloat = 10) {
+        self.layer.shadowOpacity = opacity
+        self.layer.shadowColor = color.cgColor
+        self.layer.shadowOffset = offset
+        self.layer.shadowRadius = radius
+    }
+}
+
+extension UIColor {
+    static let backgroundGray = UIColor(named: "BackgroundGray")!
+}
