@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import BetterSegmentedControl
 import SideMenu
+import SnapKit
 
 class MyLibraryViewController: UIViewController {
     
@@ -27,6 +28,12 @@ class MyLibraryViewController: UIViewController {
         cv.backgroundColor = .white
         return cv
     }()
+    
+    // 상단 버튼 stack
+    lazy var controlStack = UIStackView(arrangedSubviews: [typeControl, control]).then {
+        $0.axis = .vertical
+        $0.spacing = 0
+    }
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
@@ -35,9 +42,7 @@ class MyLibraryViewController: UIViewController {
         
         // navigation bar button
         self.setNavigationBar()
-    
-        self.view.addSubview(typeControl)
-        self.view.addSubview(control)
+        self.view.addSubview(controlStack)
         
         // add and configure collection view
         self.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
@@ -47,7 +52,7 @@ class MyLibraryViewController: UIViewController {
         setAutolayouts()
         setSegmentedControls()
         
-        // bind inputs
+        // bind inputs {
         typeControl.rx.controlEvent(.valueChanged)
             .bind {
                 print(self.typeControl.index)
@@ -70,8 +75,26 @@ class MyLibraryViewController: UIViewController {
                 self.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
+        // }
         
-        // bind outputs
+        // 스크롤시 상단 버튼 숨기기
+        self.collectionView.rx.didScroll
+            .bind {
+                if self.collectionView.contentOffset.y <= self.controlStack.bounds.height {
+                    self.controlStack.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.collectionView.contentOffset.y)
+                    
+                    }
+                } else {
+                    self.controlStack.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.controlStack.bounds.height)
+                    
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        // bind outputs {
         viewModel.data
             .bind(to:
                     self.collectionView
@@ -89,6 +112,7 @@ class MyLibraryViewController: UIViewController {
         //                        self.present(pushVC, animated: true, completion: nil)
         //                    }).disposed(by: disposeBag)
         
+        // }
     }
     
     // MARK: - Private functions
@@ -109,17 +133,13 @@ class MyLibraryViewController: UIViewController {
     
     private func setAutolayouts() {
         // autolayout set
-        typeControl.snp.makeConstraints {
+        controlStack.snp.makeConstraints {
             $0.top.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(10)
-        }
-        control.snp.makeConstraints {
-            $0.left.equalTo(self.view.safeAreaLayoutGuide).inset(10)
-            $0.top.equalTo(typeControl.snp.bottom).offset(10)
         }
         self.collectionView.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(20)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
-            $0.top.equalTo(control.snp.bottom).offset(10)
+            $0.top.equalTo(controlStack.snp.bottom).offset(10)
         }
     }
 }
