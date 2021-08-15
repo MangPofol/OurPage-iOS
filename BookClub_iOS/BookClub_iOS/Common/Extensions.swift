@@ -95,4 +95,7 @@ extension UIView {
 
 extension UIColor {
     static let backgroundGray = UIColor(named: "BackgroundGray")!
+    static let mainColor = UIColor(named: "MainColor")!
+    static let gray1 = UIColor(named: "Gray1")!
+    static let black = UIColor(named: "Black")!
 }
