@@ -8,7 +8,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import BetterSegmentedControl
 import SideMenu
 import SnapKit
 
@@ -16,53 +15,37 @@ class MyLibraryViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     var viewModel = BookListViewModel()
+    lazy var customView = MyLibraryView()
     
-    // custom segment control
-    let typeControl = BetterSegmentedControl(frame: .zero)
-    let control = BetterSegmentedControl(frame: .zero)
-    
-    // collectionView
-    lazy var collectionView : UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .white
-        return cv
-    }()
-    
-    // 상단 버튼 stack
-    lazy var controlStack = UIStackView(arrangedSubviews: [typeControl, control]).then {
-        $0.axis = .vertical
-        $0.spacing = 0
+    // MARK: - loadView()
+    override func loadView() {
+        // add and configure collection view
+        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
+        customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+//        customView.makeView()
+        self.view = customView
     }
-
+    
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.title = "내 서재"
         
-        // navigation bar button
+        // navigation bar configure
         self.setNavigationBar()
-        self.view.addSubview(controlStack)
-        
-        // add and configure collection view
-        self.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
-        self.view.addSubview(self.collectionView)
-        self.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
-        
-        setAutolayouts()
-        setSegmentedControls()
+        self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
         
         // bind inputs {
-        typeControl.rx.controlEvent(.valueChanged)
+        customView.typeControl.rx.controlEvent(.valueChanged)
             .bind {
-                print(self.typeControl.index)
+                print(self.customView.typeControl.index)
             }
             .disposed(by: disposeBag)
         
-        control.rx.controlEvent(.valueChanged)
+        customView.control.rx.controlEvent(.valueChanged)
             .bind {
-                print(self.control.index)
+                print(self.customView.control.index)
             }
             .disposed(by: disposeBag)
         
@@ -79,17 +62,15 @@ class MyLibraryViewController: UIViewController {
         // }
         
         // 스크롤시 상단 버튼 숨기기
-        self.collectionView.rx.didScroll
+        customView.collectionView.rx.didScroll
             .bind {
-                if self.collectionView.contentOffset.y <= self.controlStack.bounds.height {
-                    self.controlStack.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.collectionView.contentOffset.y)
-                    
+                if self.customView.collectionView.contentOffset.y <= self.customView.controlStack.bounds.height {
+                    self.customView.controlStack.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
                     }
                 } else {
-                    self.controlStack.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.controlStack.bounds.height)
-                    
+                    self.customView.controlStack.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.controlStack.bounds.height)
                     }
                 }
             }
@@ -98,12 +79,15 @@ class MyLibraryViewController: UIViewController {
         // bind outputs {
         viewModel.data
             .bind(to:
-                    self.collectionView
+                    self.customView.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
                 cell.bookImageView.image = UIImage(named: element.image)
                 cell.bookTitleLabel.text = element.title
             }.disposed(by: disposeBag)
+        
+        // cell을 모두 configure 한 후 autolayout 세팅
+        customView.makeView()
         
         //                maincollectionView.rx
         //                    .modelSelected(BotMenu.self)
@@ -115,41 +99,13 @@ class MyLibraryViewController: UIViewController {
         
         // }
     }
-    
-    // MARK: - Private functions
-    private func setSegmentedControls() {
-        typeControl.segments = LabelSegment.segments(withTitles: ["읽는 중", "완독", "읽고 싶은"],
-                                                     normalFont: UIFont.preferredFont(forTextStyle: .title2),
-                                                     normalTextColor: .gray,
-                                                     selectedFont: UIFont.preferredFont(forTextStyle: .title2).bold(),
-                                                     selectedTextColor: .black)
-        control.segments = LabelSegment.segments(withTitles: ["나만보기", "북클럽 A", "북클럽 B", "북클럽 C"],
-                                                 normalFont: UIFont.preferredFont(forTextStyle: .caption1),
-                                                 normalTextColor: .gray,
-                                                 selectedFont: UIFont.preferredFont(forTextStyle: .caption1).bold(),
-                                                 selectedTextColor: .black)
-        typeControl.setCustomSegment(underlineColor: .black, indicatorHeight: 1.5)
-        control.setCustomSegment(underlineColor: .black, indicatorHeight: 1.0)
-    }
-    
-    private func setAutolayouts() {
-        // autolayout set
-        controlStack.snp.makeConstraints {
-            $0.top.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(10)
-        }
-        self.collectionView.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(10)
-            $0.top.equalTo(controlStack.snp.bottom).offset(10)
-        }
-    }
 }
 
 extension MyLibraryViewController: UICollectionViewDelegateFlowLayout {
     // 한 가로줄에 cell이 3개만 들어가도록 크기 조정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-           let width = collectionView.bounds.width
-           let cellWidth = (width - 30) / 3 // compute your cell width
-           return CGSize(width: cellWidth, height: cellWidth / 0.6)
-       }
+        let width = Constants.screenSize.width * 0.9
+        let cellWidth = (width - 30) / 3 // compute your cell width
+        return CGSize(width: cellWidth, height: cellWidth / 0.6)
+    }
 }

@@ -16,8 +16,7 @@ class MainTabBarController: TabmanViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vc1 = UINavigationController(navigationBarClass: MyLibraryNavigationBar.self, toolbarClass: nil)
-        vc1.viewControllers = [MyLibraryViewController()]
+        let vc1 = UINavigationController(rootViewController: MyLibraryViewController())
         let vc2 = UIViewController()
         vc2.view.backgroundColor = .green
         let vc3 = UIViewController()

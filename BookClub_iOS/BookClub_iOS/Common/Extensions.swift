@@ -67,6 +67,12 @@ extension BetterSegmentedControl {
 }
 
 extension UIFont {
+    enum FontSize: CGFloat {
+        case big = 18.0
+        case medium = 14.0
+        case small = 10.0
+    }
+    
     // Make preferred font bold or italic {
     func withTraits(traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
         let descriptor = fontDescriptor.withSymbolicTraits(traits)
@@ -81,6 +87,10 @@ extension UIFont {
         return withTraits(traits: .traitItalic)
     }
     // }
+    
+    static func defaultFont(size: FontSize, bold: Bool = false) -> UIFont {
+        UIFont(name: bold ? "Roboto-Bold" : "Roboto-Regular", size: size.rawValue)!
+    }
 }
 
 extension UIView {
