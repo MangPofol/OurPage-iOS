@@ -1,5 +1,5 @@
 //
-//  BookListViewModel.swift
+//  MyLibraryViewModel.swift
 //  BookClub_iOS
 //
 //  Created by Lee Nam Jun on 2021/08/13.
@@ -9,10 +9,19 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class BookListViewModel {
-    var data = Observable<[BookModel]>.just([])
+class MyLibraryViewModel {
     
-    init() {
+    // outputs
+    var data = Observable<[BookModel]>.just([])
+    var bookListType = Observable.just(BookListType.reading)
+    var filterType: Observable<FilterType>
+    
+    init(
+        input: (
+            typeTapped: Observable<BookListType>,
+            filterTapped: Observable<FilterType>
+        )
+    ) {
         // TODO: Book List fetching
         data = Observable<[BookModel]>.just([
                                                 BookModel(image: "SampleBook", title: "Book1"),
@@ -26,11 +35,28 @@ class BookListViewModel {
                                                 BookModel(image: "SampleBook", title: "Book9"),
                                                 BookModel(image: "SampleBook", title: "Book10"),
                                                 BookModel(image: "SampleBook", title: "Book11")])
+        
+        bookListType = input.typeTapped
+            .map {
+                return $0
+            }
+        
+        filterType = input.filterTapped
+            .map {
+                return $0
+            }
     }
 }
 
-enum BookListType {
-    case reading
-    case finished
-    case wantToRead
+enum BookListType: Int {
+    case reading = 0
+    case finished = 1
+    case wantToRead = 2
+}
+
+enum FilterType: String {
+    case none = ""
+    case search = "검색"
+    case bookclub = "북클럽"
+    case sorting = "정렬"
 }

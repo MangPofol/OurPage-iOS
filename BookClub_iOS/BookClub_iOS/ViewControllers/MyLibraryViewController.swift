@@ -14,7 +14,7 @@ import SnapKit
 class MyLibraryViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    var viewModel = BookListViewModel()
+    var viewModel: MyLibraryViewModel?
     lazy var customView = MyLibraryView()
     
     // MARK: - loadView()
@@ -26,9 +26,26 @@ class MyLibraryViewController: UIViewController {
         self.view = customView
     }
     
+    
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel = MyLibraryViewModel(
+            input: (
+                typeTapped: customView.typeControl.rx.controlEvent(.valueChanged)
+                    .map {
+                        BookListType(rawValue: self.customView.typeControl.index)!
+                    },
+                filterTapped: Observable.merge(
+                    customView.searchButton.rx.tap.map { _ in
+                        !self.customView.searchButton.isOn ? FilterType.none : FilterType.search },
+                    customView.bookclubButton.rx.tap.map { _ in
+                        !self.customView.bookclubButton.isOn ? FilterType.none: FilterType.bookclub },
+                    customView.sortingButton.rx.tap.map { _ in
+                        !self.customView.sortingButton.isOn ? FilterType.none : FilterType.sorting }
+                )
+            )
+        )
         self.view.backgroundColor = .white
         self.title = "내 서재"
         
@@ -37,17 +54,6 @@ class MyLibraryViewController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
         
         // bind inputs {
-        customView.typeControl.rx.controlEvent(.valueChanged)
-            .bind {
-                print(self.customView.typeControl.index)
-            }
-            .disposed(by: disposeBag)
-        
-        customView.control.rx.controlEvent(.valueChanged)
-            .bind {
-                print(self.customView.control.index)
-            }
-            .disposed(by: disposeBag)
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap
@@ -59,25 +65,26 @@ class MyLibraryViewController: UIViewController {
                 self.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
+        
         // }
         
         // 스크롤시 상단 버튼 숨기기
-        customView.collectionView.rx.didScroll
-            .bind {
-                if self.customView.collectionView.contentOffset.y <= self.customView.controlStack.bounds.height {
-                    self.customView.controlStack.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
-                    }
-                } else {
-                    self.customView.controlStack.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.controlStack.bounds.height)
-                    }
-                }
-            }
-            .disposed(by: disposeBag)
+//        customView.collectionView.rx.didScroll
+//            .bind {
+//                if self.customView.collectionView.contentOffset.y <= self.customView.controlStack.bounds.height {
+//                    self.customView.controlStack.snp.updateConstraints {
+//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
+//                    }
+//                } else {
+//                    self.customView.controlStack.snp.updateConstraints {
+//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.controlStack.bounds.height)
+//                    }
+//                }
+//            }
+//            .disposed(by: disposeBag)
         
         // bind outputs {
-        viewModel.data
+        viewModel!.data
             .bind(to:
                     self.customView.collectionView
                     .rx
@@ -85,6 +92,31 @@ class MyLibraryViewController: UIViewController {
                 cell.bookImageView.image = UIImage(named: element.image)
                 cell.bookTitleLabel.text = element.title
             }.disposed(by: disposeBag)
+        
+        viewModel!.bookListType
+            .bind {
+                print($0)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel!.filterType
+            .bind {
+                self.customView.bookclubButton.isOn = false
+                self.customView.searchButton.isOn = false
+                self.customView.sortingButton.isOn = false
+                
+                switch $0 {
+                case .none:
+                    break
+                case .bookclub:
+                    self.customView.bookclubButton.isOn = true
+                case .search:
+                    self.customView.searchButton.isOn = true
+                case .sorting:
+                    self.customView.sortingButton.isOn = true
+                }
+            }
+            .disposed(by: disposeBag)
         
         // cell을 모두 configure 한 후 autolayout 세팅
         customView.makeView()

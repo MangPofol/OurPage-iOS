@@ -12,7 +12,35 @@ class MyLibraryView: UIView {
 
     // custom segment control
     let typeControl = BetterSegmentedControl(frame: .zero)
-    let control = BetterSegmentedControl(frame: .zero)
+    
+    // 검색, 북클럽, 정렬 버튼
+    let searchButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+        $0.setTitle("검색", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    let bookclubButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+        $0.setTitle("북클럽", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    let sortingButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+        $0.setTitle("정렬", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    
+    lazy var buttonStack = UIStackView(arrangedSubviews: [searchButton, bookclubButton, sortingButton]).then {
+        $0.axis = .horizontal
+        $0.spacing = 5
+        $0.distribution = .fillEqually
+    }
     
     // collectionView
     lazy var collectionView : UICollectionView = {
@@ -22,15 +50,10 @@ class MyLibraryView: UIView {
         return cv
     }()
     
-    // 상단 버튼 stack
-    lazy var controlStack = UIStackView(arrangedSubviews: [typeControl, control]).then {
-        $0.axis = .vertical
-        $0.spacing = 0
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(controlStack)
+        self.addSubview(typeControl)
+        self.addSubview(buttonStack)
         self.addSubview(collectionView)
         setSegmentedControls()
     }
@@ -41,13 +64,18 @@ class MyLibraryView: UIView {
     
     func makeView() {
         // autolayout set
-        controlStack.snp.makeConstraints {
+        typeControl.snp.makeConstraints {
             $0.top.equalTo(self.safeAreaLayoutGuide).inset(10)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)
         }
+        buttonStack.snp.makeConstraints {
+            $0.top.equalTo(typeControl.snp.bottom).offset(12)
+            $0.left.equalTo(typeControl)
+            $0.width.equalTo(typeControl).multipliedBy(0.55)
+        }
         collectionView.snp.remakeConstraints {
-            $0.top.equalTo(controlStack.snp.bottom).offset(20)
+            $0.top.equalTo(buttonStack.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
@@ -60,12 +88,6 @@ class MyLibraryView: UIView {
                                                      normalTextColor: .black,
                                                      selectedFont: UIFont.defaultFont(size: .medium, bold: true),
                                                      selectedTextColor: .mainColor)
-        control.segments = LabelSegment.segments(withTitles: ["나만보기", "북클럽 A", "북클럽 B", "북클럽 C"],
-                                                 normalFont: UIFont.defaultFont(size: .medium),
-                                                 normalTextColor: .gray1,
-                                                 selectedFont: UIFont.defaultFont(size: .medium, bold: true),
-                                                 selectedTextColor: .black)
         typeControl.setCustomSegment(underlineColor: .mainColor, indicatorHeight: 1.5)
-        control.setCustomSegment(underlineColor: .black, indicatorHeight: 1.0)
     }
 }

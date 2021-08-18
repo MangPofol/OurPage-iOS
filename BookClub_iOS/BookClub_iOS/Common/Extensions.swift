@@ -101,6 +101,13 @@ extension UIView {
         self.layer.shadowOffset = offset
         self.layer.shadowRadius = radius
     }
+    
+    func makeBorder(color: CGColor = UIColor.black.cgColor, width: CGFloat = CGFloat(1.0), cornerRadius: CGFloat = CGFloat(0.0)) {
+        self.layer.borderColor = color
+        self.layer.borderWidth = width
+        self.layer.cornerRadius = cornerRadius
+        self.clipsToBounds = cornerRadius > 0
+    }
 }
 
 extension UIColor {
