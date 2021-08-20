@@ -27,24 +27,6 @@ extension UITableView {
     }
 }
 
-extension UIViewController {
-    func setNavigationBar() {
-        guard let nav = self.navigationController else {
-            return
-        }
-        nav.navigationBar.barTintColor = Constants.navigationbarColor
-        nav.navigationBar.tintColor = .black
-        nav.navigationBar.isTranslucent = false
-
-        // bar underline 삭제
-        nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        nav.navigationBar.shadowImage = UIImage()
-
-        let buttonImage = UIImage(systemName: "text.justify")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
-    }
-}
-
 extension Date {
     func toString() -> String {
         let formatter = DateFormatter()

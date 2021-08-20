@@ -22,7 +22,6 @@ class MyLibraryViewController: UIViewController {
         // add and configure collection view
         customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
-//        customView.makeView()
         self.view = customView
     }
     
@@ -49,8 +48,8 @@ class MyLibraryViewController: UIViewController {
         self.view.backgroundColor = .white
         self.title = "내 서재"
         
-        // navigation bar configure
-        self.setNavigationBar()
+        // Left navigation button
+        setNavigationBar()
         self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
         
         // bind inputs {
@@ -66,22 +65,39 @@ class MyLibraryViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        self.navigationItem.rightBarButtonItem!
+            .rx.tap
+            .bind {
+                print($0)
+            }
+            .disposed(by: disposeBag)
+        
+        // 검색 바 처리
+        customView.searchBar
+            .rx.text
+            .orEmpty
+            .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { print($0) })
+            .disposed(by: disposeBag)
+
+        
         // }
         
         // 스크롤시 상단 버튼 숨기기
-//        customView.collectionView.rx.didScroll
-//            .bind {
-//                if self.customView.collectionView.contentOffset.y <= self.customView.controlStack.bounds.height {
-//                    self.customView.controlStack.snp.updateConstraints {
-//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
-//                    }
-//                } else {
-//                    self.customView.controlStack.snp.updateConstraints {
-//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.controlStack.bounds.height)
-//                    }
-//                }
-//            }
-//            .disposed(by: disposeBag)
+        customView.collectionView.rx.didScroll
+            .bind {
+                if self.customView.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
+                    self.customView.typeControl.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
+                    }
+                } else {
+                    self.customView.typeControl.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12))
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
         
         // bind outputs {
         viewModel!.data
@@ -108,14 +124,21 @@ class MyLibraryViewController: UIViewController {
                 switch $0 {
                 case .none:
                     break
-                case .bookclub:
-                    self.customView.bookclubButton.isOn = true
                 case .search:
                     self.customView.searchButton.isOn = true
+                case .bookclub:
+                    self.customView.bookclubButton.isOn = true
                 case .sorting:
                     self.customView.sortingButton.isOn = true
                 }
             }
+            .disposed(by: disposeBag)
+        
+        self.customView.searchButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                setSearchBar($0)
+            })
             .disposed(by: disposeBag)
         
         // cell을 모두 configure 한 후 autolayout 세팅
@@ -130,6 +153,30 @@ class MyLibraryViewController: UIViewController {
         //                    }).disposed(by: disposeBag)
         
         // }
+        
+        // private funcs
+        func setSearchBar(_ isOn: Bool) {
+            self.customView.searchBar.isHidden = !isOn
+            self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(isOn ? 30 : 0) }
+            self.customView.searchBar.text = nil
+        }
+        
+        func setNavigationBar() {
+            guard let nav = self.navigationController else {
+                return
+            }
+            nav.navigationBar.barTintColor = Constants.navigationbarColor
+            nav.navigationBar.tintColor = .black
+            nav.navigationBar.isTranslucent = false
+
+            // bar underline 삭제
+            nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            nav.navigationBar.shadowImage = UIImage()
+
+            let buttonImage = UIImage(systemName: "text.justify")
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class ToggleButton: UIButton {
     
@@ -14,8 +15,12 @@ class ToggleButton: UIButton {
     var normalTextColor: UIColor = .black
     var onTextColor: UIColor = .white
     
+    var isOnRx = BehaviorSubject<Bool>(value: false)
+    let disposeBag = DisposeBag()
+    
     var isOn = false {
         didSet {
+            isOnRx.onNext(isOn)
             self.backgroundColor = isOn ? onColor : normalColor
             self.setTitleColor( isOn ? onTextColor : normalTextColor, for: .normal)
         }

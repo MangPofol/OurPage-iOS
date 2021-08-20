@@ -16,7 +16,7 @@ class WriteViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
-        self.setNavigationBar()
+//        self.setNavigationBar()
         customView.makeView()
         
     }

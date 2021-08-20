@@ -11,7 +11,9 @@ import BetterSegmentedControl
 class MyLibraryView: UIView {
 
     // custom segment control
-    let typeControl = BetterSegmentedControl(frame: .zero)
+    let typeControl = BetterSegmentedControl(frame: .zero).then {
+        $0.backgroundColor = .white
+    }
     
     // 검색, 북클럽, 정렬 버튼
     let searchButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
@@ -42,6 +44,18 @@ class MyLibraryView: UIView {
         $0.distribution = .fillEqually
     }
     
+    // 선택하면 나올 컨트롤들
+    lazy var searchBar = UISearchBar().then {
+        $0.isHidden = true
+        $0.placeholder = "책 제목을 입력하세요."
+        $0.searchTextField.font = .defaultFont(size: .small)
+    }
+    
+    lazy var selectedControl = UIView().then {
+        $0.addSubview(searchBar)
+        searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
+    }
+    
     // collectionView
     lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -55,6 +69,7 @@ class MyLibraryView: UIView {
         self.addSubview(typeControl)
         self.addSubview(buttonStack)
         self.addSubview(collectionView)
+        self.addSubview(selectedControl)
         setSegmentedControls()
     }
     
@@ -74,8 +89,14 @@ class MyLibraryView: UIView {
             $0.left.equalTo(typeControl)
             $0.width.equalTo(typeControl).multipliedBy(0.55)
         }
+        selectedControl.snp.makeConstraints {
+            $0.top.equalTo(buttonStack.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(Constants.screenSize.width * 0.9)
+            $0.height.equalTo(0)
+        }
         collectionView.snp.remakeConstraints {
-            $0.top.equalTo(buttonStack.snp.bottom).offset(20)
+            $0.top.equalTo(selectedControl.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
