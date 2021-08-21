@@ -10,6 +10,9 @@ import RxSwift
 import RxCocoa
 
 class MyLibraryViewModel {
+    let disposeBag = DisposeBag()
+        
+    var filterBy = PublishSubject<FilterBy>()
     
     // outputs
     var data = Observable<[BookModel]>.just([])
@@ -48,6 +51,14 @@ class MyLibraryViewModel {
             .map {
                 return $0
             }
+        
+        Observable.combineLatest(filterType, filterBy)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .subscribe(onNext: {
+                print($0, $1)
+                // TODO: 맞는 필터 타입에 맞춰 data 재가공
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -62,4 +73,11 @@ enum FilterType: String {
     case search = "검색"
     case bookclub = "북클럽"
     case sorting = "정렬"
+}
+
+enum FilterBy: String {
+    case byNew = "최신순"
+    case byOld = "오래된순"
+    case byName = "이름순"
+    case none = ""
 }

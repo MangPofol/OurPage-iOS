@@ -18,11 +18,19 @@ class ToggleButton: UIButton {
     var isOnRx = BehaviorSubject<Bool>(value: false)
     let disposeBag = DisposeBag()
     
+    var relatedButtons: [ToggleButton] = []
+    
     var isOn = false {
         didSet {
             isOnRx.onNext(isOn)
             self.backgroundColor = isOn ? onColor : normalColor
             self.setTitleColor( isOn ? onTextColor : normalTextColor, for: .normal)
+            if isOn == true {
+                relatedButtons.forEach {
+                    $0.isOn = false
+                }
+            }
+            
         }
     }
     

@@ -92,21 +92,6 @@ class MyLibraryViewController: UIViewController {
 
         // }
         
-        // 스크롤시 상단 버튼 숨기기
-        customView.collectionView.rx.didScroll
-            .bind {
-                if self.customView.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
-                    self.customView.typeControl.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
-                    }
-                } else {
-                    self.customView.typeControl.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12))
-                    }
-                }
-            }
-            .disposed(by: disposeBag)
-        
         // bind outputs {
         viewModel!.data
             .bind(to:
@@ -123,22 +108,13 @@ class MyLibraryViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel!.filterType
+        // 필터 버튼 중 하나라도 상태가 변하는 것에 대응
+        let filterButtonsTapped = Observable.combineLatest(self.customView.searchButton.isOnRx, self.customView.bookclubButton.isOnRx, self.customView.sortingButton.isOnRx)
+        filterButtonsTapped
+            .skip(1)
             .bind {
-                self.customView.bookclubButton.isOn = false
-                self.customView.searchButton.isOn = false
-                self.customView.sortingButton.isOn = false
-                
-                switch $0 {
-                case .none:
-                    break
-                case .search:
-                    self.customView.searchButton.isOn = true
-                case .bookclub:
-                    self.customView.bookclubButton.isOn = true
-                case .sorting:
-                    self.customView.sortingButton.isOn = true
-                }
+                let status = $0.0 || $0.1 || $0.2
+                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? 30 : 0) }
             }
             .disposed(by: disposeBag)
         
@@ -155,7 +131,33 @@ class MyLibraryViewController: UIViewController {
                 setBookclubSelector($0)
             })
             .disposed(by: disposeBag)
+        
+        self.customView.sortingButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                setSortButtons($0)
+            })
+            .disposed(by: disposeBag)
 
+        // 필터 방식
+        self.customView.byNewButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byNew) }
+            })
+            .disposed(by: disposeBag)
+        self.customView.byOldButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byOld) }
+            })
+            .disposed(by: disposeBag)
+        self.customView.byNameButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byName) }
+            })
+            .disposed(by: disposeBag)
         
         // 뷰 모델로 부터 소속된 북클럽을 받아와서 북클럽 필터에 표시
         viewModel!.bookclubs
@@ -172,18 +174,39 @@ class MyLibraryViewController: UIViewController {
         
         // }
         
+        // 스크롤시 상단 버튼 숨기기
+        customView.collectionView.rx.didScroll
+            .bind {
+                if self.customView.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
+                    self.customView.typeControl.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
+                    }
+                } else {
+                    self.customView.typeControl.snp.updateConstraints {
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12))
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+        
         // private funcs
         func setSearchBar(_ isOn: Bool) {
             self.customView.searchBar.isHidden = !isOn
-            self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(isOn ? 30 : 0) }
             self.customView.searchBar.text = nil
         }
         
         func setBookclubSelector(_ isOn: Bool) {
             self.customView.bookclubSelector.reloadData()
             self.customView.bookclubSelector.isHidden = !isOn
-            self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(isOn ? 30 : 0) }
             self.customView.searchBar.text = nil
+        }
+        
+        func setSortButtons(_ isOn: Bool) {
+            self.customView.sortButtonStack.isHidden = !isOn
+            self.customView.byNewButton.isOn = false
+            self.customView.byOldButton.isOn = false
+            self.customView.byNameButton.isOn = false
+            self.viewModel!.filterBy.onNext(.none)
         }
         
         func setNavigationBar() {

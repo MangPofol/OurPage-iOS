@@ -20,21 +20,21 @@ class MyLibraryView: UIView {
     }
     
     // 검색, 북클럽, 정렬 버튼
-    let searchButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+    let searchButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
         $0.setTitle("검색", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         
         $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
     }
-    let bookclubButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+    let bookclubButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
         $0.setTitle("북클럽", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.backgroundColor = .white
         $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
     }
-    let sortingButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+    let sortingButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
         $0.setTitle("정렬", for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.setTitleColor(.black, for: .normal)
@@ -46,6 +46,9 @@ class MyLibraryView: UIView {
         $0.axis = .horizontal
         $0.spacing = 5
         $0.distribution = .fillEqually
+        searchButton.relatedButtons = [bookclubButton, sortingButton]
+        bookclubButton.relatedButtons = [searchButton, sortingButton]
+        sortingButton.relatedButtons = [searchButton, bookclubButton]
     }
     
     // 선택하면 나올 컨트롤들 {
@@ -63,11 +66,50 @@ class MyLibraryView: UIView {
         $0.allowsMultipleSelection = true
     }
     
+    // 정렬 방법 선택
+    let byNewButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("최신순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    let byOldButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("오래된순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    let byNameButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("이름순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    lazy var sortButtonStack = UIStackView(arrangedSubviews: [byNewButton, byOldButton, byNameButton]).then {
+        $0.isHidden = true
+        $0.axis = .horizontal
+        $0.spacing = 5
+        $0.distribution = .fillEqually
+        $0.alignment = .leading
+        byNewButton.relatedButtons = [byOldButton, byNameButton]
+        byOldButton.relatedButtons = [byNewButton, byNameButton]
+        byNameButton.relatedButtons = [byNewButton, byOldButton]
+    }
+    
     lazy var selectedControl = UIView().then {
         $0.addSubview(searchBar)
         $0.addSubview(bookclubSelector)
+        $0.addSubview(sortButtonStack)
         searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
+        sortButtonStack.snp.makeConstraints {
+            $0.top.bottom.left.equalToSuperview()
+            $0.width.equalTo(Constants.screenSize.width * 0.45)
+        }
     }
+    
     // }
     
     // collectionView

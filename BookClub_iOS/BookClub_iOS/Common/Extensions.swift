@@ -84,6 +84,11 @@ extension UIView {
         self.layer.shadowRadius = radius
     }
     
+    func setCornerRadius(radius: CGFloat) {
+        self.layer.cornerRadius = radius
+        self.clipsToBounds = radius > 0
+    }
+    
     func makeBorder(color: CGColor = UIColor.black.cgColor, width: CGFloat = CGFloat(1.0), cornerRadius: CGFloat = CGFloat(0.0)) {
         self.layer.borderColor = color
         self.layer.borderWidth = width
