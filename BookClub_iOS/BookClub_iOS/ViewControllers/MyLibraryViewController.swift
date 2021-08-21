@@ -21,7 +21,9 @@ class MyLibraryViewController: UIViewController {
     override func loadView() {
         // add and configure collection view
         customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
+        customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
         customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+        customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
     }
     
@@ -80,8 +82,14 @@ class MyLibraryViewController: UIViewController {
             .distinctUntilChanged()
             .subscribe(onNext: { print($0) })
             .disposed(by: disposeBag)
-
         
+        customView.bookclubSelector
+            .rx.itemSelected
+            .subscribe(onNext: {
+                print($0)
+            })
+            .disposed(by: disposeBag)
+
         // }
         
         // 스크롤시 상단 버튼 숨기기
@@ -141,22 +149,39 @@ class MyLibraryViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        self.customView.bookclubButton.isOnRx
+            .skip(1)
+            .subscribe(onNext: {
+                setBookclubSelector($0)
+            })
+            .disposed(by: disposeBag)
+
+        
+        // 뷰 모델로 부터 소속된 북클럽을 받아와서 북클럽 필터에 표시
+        viewModel!.bookclubs
+            .bind(to: self.customView.bookclubSelector
+                    .rx
+                    .items(cellIdentifier: BookclubSelectorCell.identifier, cellType: BookclubSelectorCell.self)) { (row, element, cell) in
+                cell.backgroundColor = .gray1
+                cell.titleLabel.text = " \(element)"
+            }
+            .disposed(by: disposeBag)
+        
         // cell을 모두 configure 한 후 autolayout 세팅
         customView.makeView()
-        
-        //                maincollectionView.rx
-        //                    .modelSelected(BotMenu.self)
-        //                    .subscribe({ (item) in
-        //                        print(item.element?.path ?? "")
-        //                        let pushVC = PushViewController()
-        //                        self.present(pushVC, animated: true, completion: nil)
-        //                    }).disposed(by: disposeBag)
         
         // }
         
         // private funcs
         func setSearchBar(_ isOn: Bool) {
             self.customView.searchBar.isHidden = !isOn
+            self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(isOn ? 30 : 0) }
+            self.customView.searchBar.text = nil
+        }
+        
+        func setBookclubSelector(_ isOn: Bool) {
+            self.customView.bookclubSelector.reloadData()
+            self.customView.bookclubSelector.isHidden = !isOn
             self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(isOn ? 30 : 0) }
             self.customView.searchBar.text = nil
         }
@@ -183,8 +208,10 @@ class MyLibraryViewController: UIViewController {
 extension MyLibraryViewController: UICollectionViewDelegateFlowLayout {
     // 한 가로줄에 cell이 3개만 들어가도록 크기 조정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = Constants.screenSize.width * 0.9
-        let cellWidth = (width - 30) / 3 // compute your cell width
-        return CGSize(width: cellWidth, height: cellWidth / 0.6)
+        if collectionViewLayout == self.customView.collectionViewLayout {
+            return Constants.bookListCellSize()
+        } else {
+            return Constants.bookclubSelectorSize()
+        }
     }
 }

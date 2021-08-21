@@ -15,6 +15,7 @@ class MyLibraryViewModel {
     var data = Observable<[BookModel]>.just([])
     var bookListType = Observable.just(BookListType.reading)
     var filterType: Observable<FilterType>
+    var bookclubs = Observable<[String]>.just([])
     
     init(
         input: (
@@ -35,6 +36,8 @@ class MyLibraryViewModel {
                                                 BookModel(image: "SampleBook", title: "Book9"),
                                                 BookModel(image: "SampleBook", title: "Book10"),
                                                 BookModel(image: "SampleBook", title: "Book11")])
+        
+        bookclubs = Observable<[String]>.just(["북클럽 1", "북클럽 2", "북클럽 3"])
         
         bookListType = input.typeTapped
             .map {

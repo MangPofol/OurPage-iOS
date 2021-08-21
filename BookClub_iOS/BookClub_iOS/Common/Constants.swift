@@ -12,6 +12,18 @@ class Constants {
     static let createBookClubTitleText = "북클럽 생성하기"
     static let screenSize = UIScreen.main.bounds.size
     static let navigationbarColor: UIColor = .white
+    
+    static func bookListCellSize() -> CGSize {
+        let width = Constants.screenSize.width * 0.9
+        let cellWidth = (width - 30) / 3
+        return CGSize(width: cellWidth, height: cellWidth / 0.6)
+    }
+    
+    static func bookclubSelectorSize() -> CGSize {
+        let width = Constants.screenSize.width * 0.75
+        let cellWidth = (width - 30) / 3
+        return CGSize(width: cellWidth, height: cellWidth * 0.22)
+    }
 }
 
 class LineView: UIView {

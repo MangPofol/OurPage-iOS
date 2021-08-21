@@ -10,6 +10,10 @@ import BetterSegmentedControl
 
 class MyLibraryView: UIView {
 
+    // CollectionView layouts
+    let bookclubSelectorLayout = UICollectionViewFlowLayout()
+    let collectionViewLayout = UICollectionViewFlowLayout()
+    
     // custom segment control
     let typeControl = BetterSegmentedControl(frame: .zero).then {
         $0.backgroundColor = .white
@@ -44,22 +48,31 @@ class MyLibraryView: UIView {
         $0.distribution = .fillEqually
     }
     
-    // 선택하면 나올 컨트롤들
+    // 선택하면 나올 컨트롤들 {
+    // 서치바
     lazy var searchBar = UISearchBar().then {
         $0.isHidden = true
         $0.placeholder = "책 제목을 입력하세요."
         $0.searchTextField.font = .defaultFont(size: .small)
     }
     
+    // 북클럽 선택
+    lazy var bookclubSelector = UICollectionView(frame: .zero, collectionViewLayout: bookclubSelectorLayout).then {
+        $0.isHidden = true
+        $0.backgroundColor = .white
+        $0.allowsMultipleSelection = true
+    }
+    
     lazy var selectedControl = UIView().then {
         $0.addSubview(searchBar)
+        $0.addSubview(bookclubSelector)
         searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
+    // }
     
     // collectionView
     lazy var collectionView : UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         cv.backgroundColor = .white
         return cv
     }()
@@ -101,6 +114,12 @@ class MyLibraryView: UIView {
             $0.width.equalTo(Constants.screenSize.width * 0.9)
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
         }
+        bookclubSelector.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.left.equalTo(typeControl)
+            $0.width.equalTo(Constants.screenSize.width * 0.75)
+        }
+        bookclubSelector.contentInset.top = (30.0 - Constants.bookclubSelectorSize().height) / 2.0
     }
     
     func setSegmentedControls() {
