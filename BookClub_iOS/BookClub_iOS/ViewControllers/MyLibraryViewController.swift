@@ -67,13 +67,6 @@ class MyLibraryViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        self.navigationItem.rightBarButtonItem!
-            .rx.tap
-            .bind {
-                print($0)
-            }
-            .disposed(by: disposeBag)
-        
         // 검색 바 처리
         customView.searchBar
             .rx.text
@@ -223,7 +216,6 @@ class MyLibraryViewController: UIViewController {
 
             let buttonImage = UIImage(systemName: "text.justify")
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
         }
     }
 }
