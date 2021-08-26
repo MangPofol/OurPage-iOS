@@ -112,18 +112,15 @@ class MyLibraryView: UIView {
     
     // }
     
-    // collectionView
-    lazy var collectionView : UICollectionView = {
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
-        cv.backgroundColor = .white
-        return cv
-    }()
+    var bookCollectionContainer = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(typeControl)
         self.addSubview(buttonStack)
-        self.addSubview(collectionView)
+        self.addSubview(bookCollectionContainer)
         self.addSubview(selectedControl)
         setSegmentedControls()
     }
@@ -150,7 +147,7 @@ class MyLibraryView: UIView {
             $0.width.equalTo(Constants.screenSize.width * 0.9)
             $0.height.equalTo(0)
         }
-        collectionView.snp.remakeConstraints {
+        bookCollectionContainer.snp.remakeConstraints {
             $0.top.equalTo(selectedControl.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)

@@ -16,15 +16,18 @@ class MyLibraryViewController: UIViewController {
     let disposeBag = DisposeBag()
     var viewModel: MyLibraryViewModel?
     lazy var customView = MyLibraryView()
+    var bookCollectionVC = BookCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
     
     // MARK: - loadView()
     override func loadView() {
         // add and configure collection view
-        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
+//        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
-        customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+//        customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
         customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
+        customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
+        bookCollectionVC.view.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     
@@ -84,16 +87,6 @@ class MyLibraryViewController: UIViewController {
             .disposed(by: disposeBag)
 
         // }
-        
-        // bind outputs {
-        viewModel!.data
-            .bind(to:
-                    self.customView.collectionView
-                    .rx
-                    .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-                cell.bookImageView.image = UIImage(named: element.image)
-                cell.bookTitleLabel.text = element.title
-            }.disposed(by: disposeBag)
         
         viewModel!.bookListType
             .bind {
@@ -168,11 +161,11 @@ class MyLibraryViewController: UIViewController {
         // }
         
         // 스크롤시 상단 버튼 숨기기
-        customView.collectionView.rx.didScroll
+        bookCollectionVC.collectionView.rx.didScroll
             .bind {
-                if self.customView.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
+                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
                     self.customView.typeControl.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.customView.collectionView.contentOffset.y)
+                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.bookCollectionVC.collectionView.contentOffset.y)
                     }
                 } else {
                     self.customView.typeControl.snp.updateConstraints {
@@ -223,10 +216,6 @@ class MyLibraryViewController: UIViewController {
 extension MyLibraryViewController: UICollectionViewDelegateFlowLayout {
     // 한 가로줄에 cell이 3개만 들어가도록 크기 조정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionViewLayout == self.customView.collectionViewLayout {
-            return Constants.bookListCellSize()
-        } else {
             return Constants.bookclubSelectorSize()
-        }
     }
 }
