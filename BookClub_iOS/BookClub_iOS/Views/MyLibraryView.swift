@@ -24,21 +24,21 @@ class MyLibraryView: UIView {
         $0.setTitle("검색", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
-        
+        $0.backgroundColor = .gray1
         $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
     }
     let bookclubButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
         $0.setTitle("북클럽", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.backgroundColor = .white
+        $0.backgroundColor = .gray1
         $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
     }
     let sortingButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
         $0.setTitle("정렬", for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .white
+        $0.backgroundColor = .gray1
         $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
     }
     
