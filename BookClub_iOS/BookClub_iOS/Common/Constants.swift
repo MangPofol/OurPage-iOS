@@ -24,6 +24,10 @@ class Constants {
         let cellWidth = (width - 30) / 3
         return CGSize(width: cellWidth, height: cellWidth * 0.22)
     }
+    
+    static func profileImageSize() -> CGSize {
+        return CGSize(width: 50.0, height: 50.0)
+    }
 }
 
 class LineView: UIView {

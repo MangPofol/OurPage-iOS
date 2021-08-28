@@ -17,8 +17,7 @@ class MainTabBarController: TabmanViewController {
         super.viewDidLoad()
         
         let vc1 = UINavigationController(rootViewController: MyLibraryViewController())
-        let vc2 = UIViewController()
-        vc2.view.backgroundColor = .green
+        let vc2 = UINavigationController(rootViewController: BookclubViewController())
         let vc3 = UIViewController()
         vc3.view.backgroundColor = .blue
         

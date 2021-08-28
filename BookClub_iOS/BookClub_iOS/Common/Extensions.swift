@@ -52,6 +52,7 @@ extension UIFont {
     enum FontSize: CGFloat {
         case big = 18.0
         case medium = 14.0
+        case cellFont = 12.0
         case small = 10.0
     }
     
@@ -95,6 +96,20 @@ extension UIView {
         self.layer.cornerRadius = cornerRadius
         self.clipsToBounds = cornerRadius > 0
     }
+    
+    // 특정 위치만 radius 주기
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
+    }
+    
+    func topRoundCorner(radius: CGFloat) {
+        self.clipsToBounds = true
+        self.layer.cornerRadius = radius
+        self.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner] // Top right corner, Top left corner respectively
+    }
 }
 
 extension UIColor {
@@ -102,4 +117,30 @@ extension UIColor {
     static let mainColor = UIColor(named: "MainColor")!
     static let gray1 = UIColor(named: "Gray1")!
     static let black = UIColor(named: "Black")!
+}
+
+extension CALayer {
+    func addBorder(_ arr_edge: [UIRectEdge], color: UIColor, width: CGFloat) {
+        for edge in arr_edge {
+            let border = CALayer()
+            switch edge {
+            case UIRectEdge.top:
+                border.frame = CGRect.init(x: 0, y: 0, width: frame.width, height: width)
+                break
+            case UIRectEdge.bottom:
+                border.frame = CGRect.init(x: 0, y: frame.height - width, width: frame.width, height: width)
+                break
+            case UIRectEdge.left:
+                border.frame = CGRect.init(x: 0, y: 0, width: width, height: frame.height)
+                break
+            case UIRectEdge.right:
+                border.frame = CGRect.init(x: frame.width - width, y: 0, width: width, height: frame.height)
+                break
+            default:
+                break
+            }
+            border.backgroundColor = color.cgColor;
+            self.addSublayer(border)
+        }
+    }
 }

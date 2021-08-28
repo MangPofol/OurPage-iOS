@@ -1,0 +1,235 @@
+//
+//  BookclubView.swift
+//  BookClub_iOS
+//
+//  Created by Lee Nam Jun on 2021/08/26.
+//
+
+import UIKit
+
+class BookclubView: UIView {
+    let clubMemberSelectorLayout = UICollectionViewFlowLayout()
+    
+    var levelView = UIView().then {
+        $0.backgroundColor = .lightGray
+    }
+    
+    let memberProfileFlowLayout = UICollectionViewFlowLayout()
+    lazy var memberProfileCollectionView = UICollectionView(frame: .zero, collectionViewLayout: memberProfileFlowLayout).then {
+        $0.backgroundColor = .mainColor
+        memberProfileFlowLayout.scrollDirection = .horizontal
+        let size = Constants.profileImageSize().width
+        memberProfileFlowLayout.minimumLineSpacing = -(size / 3.0)
+//        memberProfileFlowLayout.minimumInteritemSpacing = -(size / 2.0)
+        $0.register(MemberProfileCollectionViewCell.self, forCellWithReuseIdentifier: MemberProfileCollectionViewCell.identifier)
+    }
+    
+    lazy var upperView = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.addSubview(levelView)
+        $0.addSubview(memberProfileCollectionView)
+    }
+    
+    var hotContainer = UIView().then {
+        $0.backgroundColor = .white
+    }
+    
+    
+    var underline1 = LineView().then { $0.backgroundColor = .mainColor }
+    var underline2 = LineView().then { $0.backgroundColor = .gray1 }
+    var recordCollectionLabel = UILabel().then {
+        $0.font = .defaultFont(size: .medium, bold: true)
+        $0.textColor = .mainColor
+        $0.text = " 기록 모아보기 "
+    }
+    
+    // 필터 버튼
+    let searchButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("검색", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.backgroundColor = .gray1
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    let clubMemberButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("클럽원", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.backgroundColor = .gray1
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    let sortingButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("정렬", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+    }
+    
+    lazy var buttonStack = UIStackView(arrangedSubviews: [searchButton, clubMemberButton, sortingButton]).then {
+        $0.axis = .horizontal
+        $0.spacing = 5
+        $0.distribution = .fillEqually
+        searchButton.relatedButtons = [clubMemberButton, sortingButton]
+        clubMemberButton.relatedButtons = [searchButton, sortingButton]
+        sortingButton.relatedButtons = [searchButton, clubMemberButton]
+    }
+    
+    // 선택하면 나올 컨트롤들 {
+    // 서치바
+    lazy var searchBar = UISearchBar().then {
+        $0.isHidden = true
+        $0.placeholder = "책 제목을 입력하세요."
+        $0.searchTextField.font = .defaultFont(size: .small)
+    }
+    
+    // 북클럽 선택
+    lazy var clubMemeberSelector = UICollectionView(frame: .zero, collectionViewLayout: clubMemberSelectorLayout).then {
+        $0.isHidden = true
+        $0.backgroundColor = .white
+        $0.allowsMultipleSelection = true
+    }
+    
+    // 정렬 방법 선택
+    let byNewButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("최신순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    let byOldButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("오래된순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    let byNameButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+        $0.setTitle("이름순", for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.setTitleColor(.black, for: .normal)
+        $0.backgroundColor = .gray1
+        $0.setCornerRadius(radius: 3)
+    }
+    lazy var sortButtonStack = UIStackView(arrangedSubviews: [byNewButton, byOldButton, byNameButton]).then {
+        $0.isHidden = true
+        $0.axis = .horizontal
+        $0.spacing = 5
+        $0.distribution = .fillEqually
+        $0.alignment = .leading
+        byNewButton.relatedButtons = [byOldButton, byNameButton]
+        byOldButton.relatedButtons = [byNewButton, byNameButton]
+        byNameButton.relatedButtons = [byNewButton, byOldButton]
+    }
+    
+    lazy var selectedControl = UIView().then {
+        $0.backgroundColor = .lightGray
+        $0.addSubview(searchBar)
+        $0.addSubview(clubMemeberSelector)
+        $0.addSubview(sortButtonStack)
+        searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
+        sortButtonStack.snp.makeConstraints {
+            $0.top.bottom.left.equalToSuperview()
+            $0.width.equalTo(Constants.screenSize.width * 0.45)
+        }
+    }
+    
+    // }
+    
+    var bookCollectionContainer = UIView().then {
+        $0.backgroundColor = .white
+    }
+    
+    lazy var lowerView = UIView().then {
+        $0.addSubview(hotContainer)
+        $0.addSubview(recordCollectionLabel)
+        $0.addSubview(underline1)
+        $0.addSubview(underline2)
+        $0.addSubview(buttonStack)
+        $0.addSubview(selectedControl)
+        $0.backgroundColor = .white
+        $0.topRoundCorner(radius: 20)
+    }
+        
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .white
+        self.addSubview(upperView)
+        self.addSubview(lowerView)
+        self.addSubview(bookCollectionContainer)
+//        self.addSubview(memberProfileCollectionView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func makeView() {
+        levelView.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(12)
+            $0.top.equalToSuperview().inset(20)
+            $0.width.equalTo(50)
+            $0.height.equalTo(25)
+        }
+        
+        memberProfileCollectionView.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(12)
+            $0.top.equalTo(levelView.snp.bottom).offset(12)
+            $0.height.equalTo(Constants.profileImageSize().height)
+        }
+        
+        upperView.snp.makeConstraints {
+            $0.top.left.right.equalTo(self.safeAreaLayoutGuide)
+            $0.height.equalToSuperview().multipliedBy(0.25)
+        }
+        
+        lowerView.snp.makeConstraints {
+            $0.top.equalTo(upperView.snp.bottom).offset(-20)
+            $0.left.right.bottom.equalToSuperview()
+        }
+        
+        hotContainer.snp.makeConstraints {
+            $0.top.left.right.equalToSuperview().inset(12)
+            $0.height.equalToSuperview().dividedBy(3.0)
+        }
+        
+        recordCollectionLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(12)
+            $0.top.equalTo(hotContainer.snp.bottom).offset(20)
+        }
+        underline1.snp.makeConstraints {
+            $0.left.right.equalTo(recordCollectionLabel)
+            $0.top.equalTo(recordCollectionLabel.snp.bottom).offset(8)
+            $0.height.equalTo(1.5)
+        }
+        underline2.snp.makeConstraints {
+            $0.left.equalTo(underline1.snp.right)
+            $0.top.equalTo(recordCollectionLabel.snp.bottom).offset(8)
+            $0.right.equalToSuperview().inset(12)
+            $0.height.equalTo(1.5)
+        }
+        buttonStack.snp.makeConstraints {
+            $0.top.equalTo(underline1).offset(12)
+            $0.left.equalTo(recordCollectionLabel)
+            $0.width.equalTo(lowerView).dividedBy(2.0)
+        }
+        selectedControl.snp.makeConstraints {
+            $0.top.equalTo(buttonStack.snp.bottom).offset(10)
+            $0.left.equalTo(buttonStack)
+            $0.width.equalTo(Constants.screenSize.width * 0.9)
+            $0.height.equalTo(30)
+        }
+        clubMemeberSelector.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.left.equalTo(selectedControl)
+            $0.width.equalTo(Constants.screenSize.width * 0.75)
+        }
+        bookCollectionContainer.snp.remakeConstraints {
+            $0.top.equalTo(selectedControl.snp.bottom).offset(20)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(Constants.screenSize.width * 0.9)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
+        }
+    }
+}
