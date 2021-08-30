@@ -191,7 +191,7 @@ class BookclubView: UIView {
         
         hotContainer.snp.makeConstraints {
             $0.top.left.right.equalToSuperview().inset(12)
-            $0.height.equalToSuperview().dividedBy(3.0)
+            $0.height.equalTo(200)
         }
         
         recordCollectionLabel.snp.makeConstraints {
@@ -218,7 +218,7 @@ class BookclubView: UIView {
             $0.top.equalTo(buttonStack.snp.bottom).offset(10)
             $0.left.equalTo(buttonStack)
             $0.width.equalTo(Constants.screenSize.width * 0.9)
-            $0.height.equalTo(30)
+            $0.height.equalTo(0)
         }
         clubMemeberSelector.snp.makeConstraints {
             $0.top.bottom.equalToSuperview()
