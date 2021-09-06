@@ -12,21 +12,31 @@ class Constants {
     static let createBookClubTitleText = "북클럽 생성하기"
     static let screenSize = UIScreen.main.bounds.size
     static let navigationbarColor: UIColor = .white
+    static let buttonStackSpacing = Constants.getAdjustedWidth(8.0)
+    static let selectedControlHeight = Constants.getAdjustedHeight(26.0)
     
     static func bookListCellSize() -> CGSize {
-        let width = Constants.screenSize.width * 0.9
-        let cellWidth = (width - 30) / 3
-        return CGSize(width: cellWidth, height: cellWidth / 0.6)
+        let width = Constants.getAdjustedWidth(102.0)
+        let height = Constants.getAdjustedHeight(149.0)
+        return CGSize(width: width, height: height)
     }
     
     static func bookclubSelectorSize() -> CGSize {
-        let width = Constants.screenSize.width * 0.75
-        let cellWidth = (width - 30) / 3
-        return CGSize(width: cellWidth, height: cellWidth * 0.22)
+        let width = Constants.getAdjustedWidth(84.0)
+        let height = Constants.getAdjustedHeight(19.0)
+        return CGSize(width: width, height: height)
     }
     
     static func profileImageSize() -> CGSize {
         return CGSize(width: 50.0, height: 50.0)
+    }
+    
+    static func getAdjustedWidth(_ value: Double) -> Double {
+        return (Double(Constants.screenSize.width) * value) / 375
+    }
+    
+    static func getAdjustedHeight(_ value: Double) -> Double {
+        return (Double(Constants.screenSize.height) * value) / 759
     }
 }
 

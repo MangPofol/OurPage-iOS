@@ -100,7 +100,7 @@ class MyLibraryViewController: UIViewController {
             .skip(1)
             .bind {
                 let status = $0.0 || $0.1 || $0.2
-                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? 30 : 0) }
+                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? Constants.selectedControlHeight : 0) }
             }
             .disposed(by: disposeBag)
         
@@ -150,8 +150,9 @@ class MyLibraryViewController: UIViewController {
             .bind(to: self.customView.bookclubSelector
                     .rx
                     .items(cellIdentifier: BookclubSelectorCell.identifier, cellType: BookclubSelectorCell.self)) { (row, element, cell) in
-                cell.backgroundColor = .gray1
+                cell.contentView.backgroundColor = .gray1
                 cell.titleLabel.text = " \(element)"
+                cell.contentView.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
             }
             .disposed(by: disposeBag)
         
@@ -162,20 +163,28 @@ class MyLibraryViewController: UIViewController {
         
         // 스크롤시 상단 버튼 숨기기
         bookCollectionVC.collectionView.rx.didScroll
+            .observeOn(MainScheduler.asyncInstance)
             .bind {
-                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12 {
+                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height {
                     self.customView.typeControl.snp.updateConstraints {
                         $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.bookCollectionVC.collectionView.contentOffset.y)
                     }
                 } else {
-                    self.customView.typeControl.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + 12))
-                    }
+                    UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+                        self.customView.typeControl.snp.updateConstraints {
+                            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-upperSize())
+                        }
+                        self.customView.layoutIfNeeded()
+                    })
                 }
             }
             .disposed(by: disposeBag)
         
         // private funcs
+        func upperSize() -> Double {
+            return Double(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + self.customView.selectedControl.bounds.height + CGFloat(Constants.getAdjustedHeight(23.0) + Constants.getAdjustedHeight(14.0) + Constants.getAdjustedHeight(23.0)))
+        }
+        
         func setSearchBar(_ isOn: Bool) {
             self.customView.searchBar.isHidden = !isOn
             self.customView.searchBar.text = nil

@@ -24,10 +24,5 @@ class BookCollectionViewModel {
                                                 BookModel(image: "SampleBook", title: "Book9"),
                                                 BookModel(image: "SampleBook", title: "Book10"),
                                                 BookModel(image: "SampleBook", title: "Book11")])
-        
-        let selectedModel = bookTapped
-            .debug()
-            .map { $0 }
-        selectedModel.subscribe(onNext: {print($0)})
     }
 }

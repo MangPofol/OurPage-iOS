@@ -38,12 +38,12 @@ class BookclubSelectorCell: UICollectionViewCell {
     override var isSelected: Bool {
             didSet {
                 if self.isSelected {
-                    backgroundColor = UIColor.mainColor
+                    self.contentView.backgroundColor = UIColor.mainColor
                     self.titleLabel.textColor = .white
                     self.checkMark.textColor = .white
                 }
                 else {
-                    backgroundColor = UIColor.gray1
+                    self.contentView.backgroundColor = UIColor.gray1
                     self.titleLabel.textColor = .black
                     self.checkMark.textColor = .black
                 }

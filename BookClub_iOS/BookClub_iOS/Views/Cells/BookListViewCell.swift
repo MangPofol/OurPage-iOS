@@ -13,11 +13,12 @@ class BookListViewCell: UICollectionViewCell {
     var bookImageView = UIImageView().then {
         $0.image = UIImage(named: "SampleBook")!
         $0.contentMode = .scaleAspectFit
+        $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(10.0)))
     }
     var bookTitleLabel = UILabel().then {
         $0.text = "책 제목"
         $0.textAlignment = .center
-        $0.font = UIFont.preferredFont(forTextStyle: .caption1)
+        $0.font = .defaultFont(size: .small)
         $0.adjustsFontForContentSizeCategory = true
     }
     
@@ -34,11 +35,13 @@ class BookListViewCell: UICollectionViewCell {
     
     func makeView() {
         bookImageView.snp.makeConstraints {
-            $0.top.left.right.equalTo(self.contentView.safeAreaLayoutGuide)
-            $0.bottom.equalTo(bookTitleLabel.snp.top)
+            $0.center.equalToSuperview()
+            $0.width.equalTo(Constants.getAdjustedWidth(93.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(132.0))
         }
         bookTitleLabel.snp.makeConstraints {
-            $0.left.right.bottom.equalTo(self.contentView.safeAreaLayoutGuide)
+            $0.top.equalTo(bookImageView.snp.bottom).offset(Constants.getAdjustedHeight(8.0))
+            $0.centerX.equalToSuperview()
         }
     }
 }
