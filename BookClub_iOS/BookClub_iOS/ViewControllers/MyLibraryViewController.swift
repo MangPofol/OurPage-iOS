@@ -23,7 +23,6 @@ class MyLibraryViewController: UIViewController {
         // add and configure collection view
 //        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
-//        customView.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
         customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
         customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
@@ -51,7 +50,6 @@ class MyLibraryViewController: UIViewController {
             )
         )
         self.view.backgroundColor = .white
-        self.title = "내 서재"
         
         // Left navigation button
         setNavigationBar()

@@ -6,69 +6,77 @@
 //
 
 import UIKit
-import Tabman
-import Pageboy
 
-class MainTabBarController: TabmanViewController {
-    
-    private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
-    
+class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vc1 = UINavigationController(rootViewController: MyLibraryViewController())
-        let vc2 = UINavigationController(rootViewController: BookclubViewController())
-        let vc3 = UIViewController()
-        vc3.view.backgroundColor = .blue
-        
-        viewControllers = [vc1, vc2, vc3]
-        
-        
-        self.dataSource = self
-        self.isScrollEnabled = false
-        // Create bar
-        let bar = TMBar.TabBar()
-
-        setUpBar(bar: bar)
+        setupVCs()
+        removeTabbarItemsText()
+        tabBar.isTranslucent = false
+        tabBar.backgroundColor = .white
+        tabBar.unselectedItemTintColor = .grayC4
+        tabBar.tintColor = .mainColor
     }
     
-    private func setUpBar(bar: TMBar.TabBar) {
-        bar.layout.transitionStyle = .none
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let height = CGFloat(Constants.getAdjustedHeight(75.0))
+        tabBar.frame.size.height = height
+        tabBar.frame.origin.y = view.frame.height - height
+    }
+    
+    func setupVCs() {
         
-        // 버튼 속성 설정
-        bar.buttons.customize { (button) in
-            button.tintColor = .gray1
-            button.selectedTintColor = .mainColor
+        viewControllers = [
+            createNavController(for: UIViewController(), image: .writeViewIcon, title: ""),
+            createNavController(for: MyLibraryViewController(), image: .myLibraryViewIcon, title: "내 서재"),
+            createNavController(for: BookclubViewController(), image: .bookclubViewIcon, title: "북클럽")
+        ]
+        self.setViewControllers(viewControllers, animated: true)
+        self.customizableViewControllers = viewControllers
+        let array = self.customizableViewControllers
+        for controller in array! {
+            controller.tabBarItem.imageInsets = UIEdgeInsets(top: 20, left: 0, bottom: -10, right: 0)
         }
-                
-        // 오버 스크롤
-        bar.indicator.overscrollBehavior = .compress
-        
-        let systemBar = bar.systemBar()
-        systemBar.setShadow()
-        systemBar.backgroundStyle = .flat(color: .white)
-        
-        // Add to view
-        addBar(systemBar, dataSource: self, at: .bottom)
+
+    }
+    
+    fileprivate func createNavController(for rootViewController: UIViewController,
+                                         image: UIImage, title: String) -> UIViewController {
+        let navController = UINavigationController(rootViewController: rootViewController)
+        navController.tabBarItem.image = image
+        rootViewController.navigationItem.title = title
+        return navController
+    }
+    
+    func removeTabbarItemsText() {
+        if let items = tabBarController?.tabBar.items {
+            for item in items {
+                item.title = nil
+//                item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0);
+            }
+        }
     }
 }
 
-extension MainTabBarController: PageboyViewControllerDataSource, TMBarDataSource {
-    
-    func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
-        return viewControllers.count
-    }
-    
-    func viewController(for pageboyViewController: PageboyViewController,
-                        at index: PageboyViewController.PageIndex) -> UIViewController? {
-        return viewControllers[index]
-    }
-    
-    func defaultPage(for pageboyViewController: PageboyViewController) -> PageboyViewController.Page? {
-        return nil
-    }
-    
-    func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        return TMBarItem(image: UIImage(systemName: "person")!)
-    }
-}
+//
+//fileprivate func createNavController(for rootViewController: UIViewController,
+//                                                title: String,
+//                                                image: UIImage) -> UIViewController {
+//      let navController = UINavigationController(rootViewController: rootViewController)
+//      navController.tabBarItem.title = title
+//      navController.tabBarItem.image = image
+//      navController.navigationBar.prefersLargeTitles = true
+//      rootViewController.navigationItem.title = title
+//      return navController
+//  }
+//
+//
+//func setupVCs() {
+//      viewControllers = [
+//          createNavController(for: ViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass")!),
+//          createNavController(for: ViewController(), title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house")!),
+//          createNavController(for: ViewController(), title: NSLocalizedString("Profile", comment: ""), image: UIImage(systemName: "person")!)
+//      ]
+//  }

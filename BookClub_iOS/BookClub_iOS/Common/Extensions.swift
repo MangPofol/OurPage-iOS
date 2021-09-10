@@ -117,6 +117,7 @@ extension UIColor {
     static let mainColor = UIColor(named: "MainColor")!
     static let gray1 = UIColor(named: "Gray1")!
     static let black = UIColor(named: "Black")!
+    static let grayC4 = UIColor(named: "GrayC4")!
 }
 
 extension CALayer {
@@ -143,4 +144,10 @@ extension CALayer {
             self.addSublayer(border)
         }
     }
+}
+
+extension UIImage {
+    static let writeViewIcon = UIImage(named: "WriteViewIcon")!
+    static let myLibraryViewIcon = UIImage(named: "MyLibraryViewIcon")!
+    static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
 }

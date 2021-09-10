@@ -88,7 +88,6 @@ class BookclubViewController: UIViewController {
         guard let nav = self.navigationController else {
             return
         }
-        self.title = "북클럽 A"
         nav.navigationBar.barTintColor = .mainColor
         nav.navigationBar.tintColor = .white
         nav.navigationBar.isTranslucent = false
