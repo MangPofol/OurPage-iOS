@@ -27,18 +27,7 @@ class MyLibraryViewModel {
         )
     ) {
         // TODO: Book List fetching
-        data = Observable<[BookModel]>.just([
-                                                BookModel(image: "SampleBook", title: "Book1"),
-                                                BookModel(image: "SampleBook", title: "Book2"),
-                                                BookModel(image: "SampleBook", title: "Book3"),
-                                                BookModel(image: "SampleBook", title: "Book4"),
-                                                BookModel(image: "SampleBook", title: "Book5"),
-                                                BookModel(image: "SampleBook", title: "Book6"),
-                                                BookModel(image: "SampleBook", title: "Book7"),
-                                                BookModel(image: "SampleBook", title: "Book8"),
-                                                BookModel(image: "SampleBook", title: "Book9"),
-                                                BookModel(image: "SampleBook", title: "Book10"),
-                                                BookModel(image: "SampleBook", title: "Book11")])
+        data = Observable<[BookModel]>.just([])
         
         bookclubs = Observable<[String]>.just(["북클럽 1", "북클럽 2", "북클럽 3"])
         

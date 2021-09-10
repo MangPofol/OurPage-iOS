@@ -31,8 +31,8 @@ class BookCollectionViewController: UICollectionViewController {
                     self.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-                cell.bookImageView.image = UIImage(named: element.image)
-                cell.bookTitleLabel.text = element.title
+//                cell.bookImageView.image = UIImage(named: element.image)
+                cell.bookTitleLabel.text = element.name
             }.disposed(by: disposeBag)
     }
 }
