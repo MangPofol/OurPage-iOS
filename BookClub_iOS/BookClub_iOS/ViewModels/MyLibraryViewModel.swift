@@ -15,7 +15,6 @@ class MyLibraryViewModel {
     var filterBy = PublishSubject<FilterBy>()
     
     // outputs
-    var data = Observable<[BookModel]>.just([])
     var bookListType = Observable.just(BookListType.reading)
     var filterType: Observable<FilterType>
     var bookclubs = Observable<[String]>.just([])
@@ -26,8 +25,6 @@ class MyLibraryViewModel {
             filterTapped: Observable<FilterType>
         )
     ) {
-        // TODO: Book List fetching
-        data = Observable<[BookModel]>.just([])
         
         bookclubs = Observable<[String]>.just(["북클럽 1", "북클럽 2", "북클럽 3"])
         

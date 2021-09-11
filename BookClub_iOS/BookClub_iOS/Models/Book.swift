@@ -8,13 +8,13 @@
 import UIKit.UIImage
 
 struct BookModel: Codable {
-    var id: String
-    var name: String
-    var isbn: String
     var category: String
     var createdDate: String
-    var modifiedDate: String
+    var id: Int
+    var isbn: String
     var likedList: [Liked]
+    var modifiedDate: String
+    var name: String
 }
 
 struct Liked: Codable {

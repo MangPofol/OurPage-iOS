@@ -24,14 +24,18 @@ class BookServices {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let data = try JSONDecoder().decode(BooksResponse.self, from: $0.data)
-                    return data.data
+                    do {
+                        let data = try JSONDecoder().decode(BooksResponse.self, from: $0.data)
+                        return data.data
+                    } catch {
+                        print(error.localizedDescription)
+                        return []
+                    }
                 } else {
                     print("Failed with Status Code: \($0.statusCode)")
                     return []
                 }
             }
-            .catchErrorJustReturn([])
     }
     
     // 새 책 생성

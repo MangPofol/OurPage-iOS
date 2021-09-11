@@ -27,10 +27,12 @@ class BookCollectionViewController: UICollectionViewController {
         
         // bind outputs
         viewModel!.data
+            .debug()
             .bind(to:
                     self.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
+                print(element)
 //                cell.bookImageView.image = UIImage(named: element.image)
                 cell.bookTitleLabel.text = element.name
             }.disposed(by: disposeBag)

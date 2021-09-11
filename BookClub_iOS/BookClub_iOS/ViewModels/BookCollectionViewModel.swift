@@ -9,9 +9,9 @@ import Foundation
 import RxSwift
 
 class BookCollectionViewModel {
-    var data = Observable<[BookModel]>.just([])
+    var data: Observable<[BookModel]>
     
     init(bookTapped: Observable<BookModel>) {
-        data = Observable<[BookModel]>.just([])
+        data = BookServices.getBooksBy(email: "2@naver.com", category: "NOW")
     }
 }
