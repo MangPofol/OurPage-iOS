@@ -50,6 +50,7 @@ extension BetterSegmentedControl {
 
 extension UIFont {
     enum FontSize: CGFloat {
+        case bigger = 20.0
         case big = 18.0
         case medium = 14.0
         case cellFont = 12.0
@@ -150,4 +151,5 @@ extension UIImage {
     static let writeViewIcon = UIImage(named: "WriteViewIcon")!
     static let myLibraryViewIcon = UIImage(named: "MyLibraryViewIcon")!
     static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
+    static let defaultProfile = UIImage(named: "SampleProfile")
 }
