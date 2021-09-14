@@ -33,7 +33,6 @@ class BookclubViewController: UIViewController {
             $0.edges.equalToSuperview()
         }
         customView.memberProfileCollectionView.rx.setDelegate(self).disposed(by: disposeBag)
-        customView.makeView()
         
         // viewModel
         viewModel = BookclubViewModel(
@@ -62,6 +61,13 @@ class BookclubViewController: UIViewController {
         
         // bind outputs {
         viewModel.profiles
+            .do {
+                let count = CGFloat($0.count)
+                print(#fileID, #function, #line, count)
+                self.customView.memberProfileCollectionView.snp.updateConstraints {
+                    $0.width.equalTo(Constants.profileImageSize().width * (count * 0.8) + (Constants.profileImageSize().width / 5.0))
+                }
+            }
             .bind(to: customView.memberProfileCollectionView
                     .rx
                     .items(cellIdentifier: MemberProfileCollectionViewCell.identifier, cellType: MemberProfileCollectionViewCell.self)) { (row, element, cell) in
@@ -75,13 +81,17 @@ class BookclubViewController: UIViewController {
             .skip(1)
             .bind {
                 let status = $0.0 || $0.1 || $0.2
-                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? 30 : 0) }
+                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? Constants.getAdjustedHeight(26.0) : 0) }
+                
+                self.customView.searchBar.isHidden = !$0.0
+                self.customView.clubMemeberSelector.isHidden = !$0.1
+                self.customView.sortButtonStack.isHidden = !$0.2
             }
             .disposed(by: disposeBag)
         
         // }
         
-        
+        customView.makeView()
     }
     
     func setNavigationBar() {

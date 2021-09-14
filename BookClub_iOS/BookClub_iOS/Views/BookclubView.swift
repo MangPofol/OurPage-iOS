@@ -19,14 +19,21 @@ class BookclubView: UIView {
         $0.backgroundColor = .mainColor
         memberProfileFlowLayout.scrollDirection = .horizontal
         let size = Constants.profileImageSize().width
-        memberProfileFlowLayout.minimumLineSpacing = -(size / 3.0)
+        memberProfileFlowLayout.minimumLineSpacing = -(size / 5.0)
 //        memberProfileFlowLayout.minimumInteritemSpacing = -(size / 2.0)
         $0.register(MemberProfileCollectionViewCell.self, forCellWithReuseIdentifier: MemberProfileCollectionViewCell.identifier)
+    }
+    
+    var introducingLabel = UILabel().then {
+        $0.font = .defaultFont(size: .introducing)
+        $0.textColor = .white
+        $0.text = "북클럽 한 줄 소개"
     }
     
     lazy var upperView = UIView().then {
         $0.backgroundColor = .mainColor
         $0.addSubview(levelView)
+        $0.addSubview(introducingLabel)
         $0.addSubview(memberProfileCollectionView)
     }
     
@@ -70,9 +77,9 @@ class BookclubView: UIView {
         $0.axis = .horizontal
         $0.spacing = 5
         $0.distribution = .fillEqually
-        searchButton.relatedButtons = [clubMemberButton, sortingButton]
-        clubMemberButton.relatedButtons = [searchButton, sortingButton]
         sortingButton.relatedButtons = [searchButton, clubMemberButton]
+        clubMemberButton.relatedButtons = [searchButton, sortingButton]
+        searchButton.relatedButtons = [clubMemberButton, sortingButton]
     }
     
     // 선택하면 나올 컨트롤들 {
@@ -124,7 +131,6 @@ class BookclubView: UIView {
     }
     
     lazy var selectedControl = UIView().then {
-        $0.backgroundColor = .lightGray
         $0.addSubview(searchBar)
         $0.addSubview(clubMemeberSelector)
         $0.addSubview(sortButtonStack)
@@ -144,8 +150,8 @@ class BookclubView: UIView {
     lazy var lowerView = UIView().then {
         $0.addSubview(hotContainer)
         $0.addSubview(recordCollectionLabel)
-        $0.addSubview(underline1)
         $0.addSubview(underline2)
+        $0.addSubview(underline1)
         $0.addSubview(buttonStack)
         $0.addSubview(selectedControl)
         $0.backgroundColor = .white
@@ -167,36 +173,46 @@ class BookclubView: UIView {
     
     func makeView() {
         levelView.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(12)
-            $0.top.equalToSuperview().inset(20)
-            $0.width.equalTo(50)
-            $0.height.equalTo(25)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(20.0))
+            $0.width.equalTo(Constants.getAdjustedWidth(116.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(25.0))
         }
         
+        introducingLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(levelView.snp.bottom).offset(Constants.getAdjustedHeight(10.0))
+        }
+    
         memberProfileCollectionView.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(12)
-            $0.top.equalTo(levelView.snp.bottom).offset(12)
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(introducingLabel.snp.bottom).offset(Constants.getAdjustedHeight(11.0))
             $0.height.equalTo(Constants.profileImageSize().height)
         }
         
         upperView.snp.makeConstraints {
-            $0.top.left.right.equalTo(self.safeAreaLayoutGuide)
-            $0.height.equalToSuperview().multipliedBy(0.25)
+            $0.top.left.right.equalToSuperview()
+            $0.height.equalTo(Constants.getAdjustedHeight(185.0))
         }
         
+        // lowerview {
         lowerView.snp.makeConstraints {
-            $0.top.equalTo(upperView.snp.bottom).offset(-20)
-            $0.left.right.bottom.equalToSuperview()
+            $0.top.equalTo(upperView.snp.bottom).offset(-Constants.getAdjustedHeight(35.0))
+//            $0.left.right.bottom.equalToSuperview()
+            $0.left.right.equalToSuperview()
+            $0.height.equalTo(Constants.getAdjustedHeight(300.0))
+            //279
         }
         
         hotContainer.snp.makeConstraints {
-            $0.top.left.right.equalToSuperview().inset(12)
-            $0.height.equalTo(200)
+            $0.left.right.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
+            $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(16.0))
+            $0.height.equalTo(143.0)
         }
         
         recordCollectionLabel.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(12)
-            $0.top.equalTo(hotContainer.snp.bottom).offset(20)
+            $0.left.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
+            $0.top.equalTo(hotContainer.snp.bottom).offset(44)
         }
         underline1.snp.makeConstraints {
             $0.left.right.equalTo(recordCollectionLabel)
@@ -204,18 +220,17 @@ class BookclubView: UIView {
             $0.height.equalTo(1.5)
         }
         underline2.snp.makeConstraints {
-            $0.left.equalTo(underline1.snp.right)
+            $0.left.right.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
             $0.top.equalTo(recordCollectionLabel.snp.bottom).offset(8)
-            $0.right.equalToSuperview().inset(12)
             $0.height.equalTo(1.5)
         }
         buttonStack.snp.makeConstraints {
-            $0.top.equalTo(underline1).offset(12)
+            $0.top.equalTo(underline1).offset(Constants.getAdjustedHeight(14.0))
             $0.left.equalTo(recordCollectionLabel)
             $0.width.equalTo(lowerView).dividedBy(2.0)
         }
         selectedControl.snp.makeConstraints {
-            $0.top.equalTo(buttonStack.snp.bottom).offset(10)
+            $0.top.equalTo(buttonStack.snp.bottom).offset(Constants.getAdjustedHeight(12.0))
             $0.left.equalTo(buttonStack)
             $0.width.equalTo(Constants.screenSize.width * 0.9)
             $0.height.equalTo(0)
@@ -225,11 +240,13 @@ class BookclubView: UIView {
             $0.left.equalTo(selectedControl)
             $0.width.equalTo(Constants.screenSize.width * 0.75)
         }
+        // }
+        
         bookCollectionContainer.snp.remakeConstraints {
-            $0.top.equalTo(selectedControl.snp.bottom).offset(20)
+            $0.top.equalTo(selectedControl.snp.bottom).offset(Constants.getAdjustedHeight(12.0))
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)
-            $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide)
         }
     }
 }

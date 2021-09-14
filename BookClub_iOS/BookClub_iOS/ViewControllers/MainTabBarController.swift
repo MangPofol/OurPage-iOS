@@ -14,9 +14,9 @@ class MainTabBarController: UITabBarController {
         setupVCs()
         removeTabbarItemsText()
         tabBar.isTranslucent = false
-        tabBar.backgroundColor = .white
         tabBar.unselectedItemTintColor = .grayC4
         tabBar.tintColor = .mainColor
+        tabBar.addShadow(location: .top, color: .lightGray, opacity: 1.0)
     }
     
     override func viewDidLayoutSubviews() {
