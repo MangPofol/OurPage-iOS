@@ -86,8 +86,10 @@ class MyLibraryViewController: UIViewController {
 
         // }
         
+        // bind outputs {
         viewModel!.bookListType
             .bind {
+                self.bookCollectionVC.viewModel.category.onNext($0)
                 print($0)
             }
             .disposed(by: disposeBag)
@@ -158,6 +160,7 @@ class MyLibraryViewController: UIViewController {
         customView.makeView()
         
         // }
+        
         
         // 스크롤시 상단 버튼 숨기기
         bookCollectionVC.collectionView.rx.didScroll

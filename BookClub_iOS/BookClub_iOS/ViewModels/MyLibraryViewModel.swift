@@ -15,7 +15,7 @@ class MyLibraryViewModel {
     var filterBy = PublishSubject<FilterBy>()
     
     // outputs
-    var bookListType = Observable.just(BookListType.reading)
+    var bookListType = Observable.just(BookListType.NOW)
     var filterType: Observable<FilterType>
     var bookclubs = Observable<[String]>.just([])
     
@@ -49,9 +49,9 @@ class MyLibraryViewModel {
 }
 
 enum BookListType: Int {
-    case reading = 0
-    case finished = 1
-    case wantToRead = 2
+    case NOW = 0
+    case AFTER = 1
+    case BEFORE = 2
 }
 
 enum FilterType: String {
