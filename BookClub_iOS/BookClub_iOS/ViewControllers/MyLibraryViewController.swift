@@ -217,8 +217,7 @@ class MyLibraryViewController: UIViewController {
             nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
             nav.navigationBar.shadowImage = UIImage()
 
-            let buttonImage = UIImage(systemName: "text.justify")
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
         }
     }
 }

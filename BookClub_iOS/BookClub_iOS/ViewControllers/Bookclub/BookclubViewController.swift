@@ -63,7 +63,6 @@ class BookclubViewController: UIViewController {
         viewModel.profiles
             .do {
                 let count = CGFloat($0.count)
-                print(#fileID, #function, #line, count)
                 self.customView.memberProfileCollectionView.snp.updateConstraints {
                     $0.width.equalTo(Constants.profileImageSize().width * (count * 0.8) + (Constants.profileImageSize().width / 5.0))
                 }
@@ -71,7 +70,6 @@ class BookclubViewController: UIViewController {
             .bind(to: customView.memberProfileCollectionView
                     .rx
                     .items(cellIdentifier: MemberProfileCollectionViewCell.identifier, cellType: MemberProfileCollectionViewCell.self)) { (row, element, cell) in
-                print(row, element)
                 cell.profileImageView.image = UIImage(named: "SampleProfile")
             }
             .disposed(by: disposeBag)
@@ -106,10 +104,9 @@ class BookclubViewController: UIViewController {
         // bar underline 삭제
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         nav.navigationBar.shadowImage = UIImage()
-
-        let buttonImage = UIImage(systemName: "text.justify")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: buttonImage, style: .plain, target: nil, action: nil)
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .updownArrowImage, style: .plain, target: nil, action: nil)
     }
 }
 

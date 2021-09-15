@@ -181,4 +181,6 @@ extension UIImage {
     static let writeViewIcon = UIImage(named: "WriteViewIcon")!
     static let myLibraryViewIcon = UIImage(named: "MyLibraryViewIcon")!
     static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
+    static let sidebarButtonImage = UIImage(named: "SidebarButton")!
+    static let updownArrowImage = UIImage(named: "UpDownArrow")!
 }
