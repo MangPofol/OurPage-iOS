@@ -14,6 +14,7 @@ class BookListViewCell: UICollectionViewCell {
     
     var bookModel = BehaviorSubject<BookModel?>(value: nil)
     var thumbnailString = BehaviorSubject<String?>(value: nil)
+    var searchedInfo = BehaviorSubject<SearchedBook?>(value: nil)
     
     var bookImageView = UIImageView().then {
         $0.image = UIImage(named: "SampleBook")!
@@ -61,10 +62,10 @@ class BookListViewCell: UICollectionViewCell {
             }
             .disposed(by: disposeBag)
         
-        thumbnailString.observeOn(MainScheduler.asyncInstance)
+        searchedInfo.observeOn(MainScheduler.asyncInstance)
             .filter { $0 != nil }
             .bind {
-                self.bookImageView.kf.setImage(with: URL(string: $0!))
+                self.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail))
             }
             .disposed(by: disposeBag)
     }

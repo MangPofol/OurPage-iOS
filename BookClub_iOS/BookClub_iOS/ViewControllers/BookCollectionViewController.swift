@@ -33,11 +33,10 @@ class BookCollectionViewController: UICollectionViewController {
                     self.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-                
-                SearchServices.getThumbnailBy(isbn: element.isbn).bind {
-                    cell.thumbnailString.onNext($0)
+            
+                SearchServices.searchBookBy(isbn: element.isbn).bind {
+                    cell.searchedInfo.onNext($0.first)
                 }.disposed(by: cell.disposeBag)
-                    
                 
                 cell.bookModel.onNext(element)
             }.disposed(by: disposeBag)
