@@ -9,20 +9,25 @@ import Foundation
 import RxSwift
 
 class BookCollectionViewModel {
-    var data: Observable<[BookModel]>
+    var bookModel: Observable<[BookModel]>
+    var bookInformation = Observable<[SearchedBook]>.just([])
     var category = BehaviorSubject<BookListType>(value: BookListType.NOW)
     
     init(bookTapped: Observable<BookModel>) {
-        data = category.flatMap { value -> Observable<[BookModel]> in
+        bookModel = category.flatMap { value -> Observable<[BookModel]> in
             switch value {
             case .NOW:
-                return BookServices.getBooksBy(email: "2@naver.com", category: "NOW")
+                return BookServices.getBooksBy(email: "testerlnj@naver.com", category: "NOW")
             case .BEFORE:
                 return BookServices.getBooksBy(email: "2@naver.com", category: "BEFORE")
             case .AFTER:
                 return BookServices.getBooksBy(email: "2@naver.com", category: "AFTER")
             }
-            
         }
     }
+    
+//    func getBookInformation(by isbn: String) -> Observable<SearchedBook>  {
+//        SearchServices.searchBookBy(isbn: isbn).
+//    }
+    
 }

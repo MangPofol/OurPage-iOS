@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import RxSwift
 
 class BookListViewCell: UICollectionViewCell {
     static let identifier = "BookListViewCell"
+    var disposeBag = DisposeBag()
+    
+    var bookModel = BehaviorSubject<BookModel?>(value: nil)
+    var thumbnailString = BehaviorSubject<String?>(value: nil)
     
     var bookImageView = UIImageView().then {
         $0.image = UIImage(named: "SampleBook")!
@@ -27,6 +32,8 @@ class BookListViewCell: UICollectionViewCell {
         self.contentView.addSubview(bookImageView)
         self.contentView.addSubview(bookTitleLabel)
         makeView()
+        
+        bindOutputs()
     }
     
     required init?(coder: NSCoder) {
@@ -43,5 +50,28 @@ class BookListViewCell: UICollectionViewCell {
             $0.top.equalTo(bookImageView.snp.bottom).offset(Constants.getAdjustedHeight(8.0))
             $0.centerX.equalToSuperview()
         }
+    }
+    
+    private func bindOutputs() {
+        bookModel.observeOn(MainScheduler.instance)
+            .filter { $0 != nil}
+            .bind { book in
+                // DB 먼저 검사
+                self.bookTitleLabel.text = book!.name
+            }
+            .disposed(by: disposeBag)
+        
+        thumbnailString.observeOn(MainScheduler.asyncInstance)
+            .filter { $0 != nil }
+            .bind {
+                self.bookImageView.kf.setImage(with: URL(string: $0!))
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+        bindOutputs()
     }
 }

@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class BookCollectionViewController: UICollectionViewController {
 
@@ -26,13 +27,19 @@ class BookCollectionViewController: UICollectionViewController {
         viewModel = BookCollectionViewModel(bookTapped: self.collectionView.rx.modelSelected(BookModel.self).map { $0 })
         
         // bind outputs
-        viewModel!.data
+        viewModel!.bookModel
+            .observeOn(MainScheduler.asyncInstance)
             .bind(to:
                     self.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-//                cell.bookImageView.image = UIImage(named: element.image)
-                cell.bookTitleLabel.text = element.name
+                
+                SearchServices.getThumbnailBy(isbn: element.isbn).bind {
+                    cell.thumbnailString.onNext($0)
+                }.disposed(by: cell.disposeBag)
+                    
+                
+                cell.bookModel.onNext(element)
             }.disposed(by: disposeBag)
     }
 }
