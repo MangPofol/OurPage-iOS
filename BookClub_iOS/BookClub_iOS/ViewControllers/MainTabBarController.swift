@@ -29,7 +29,7 @@ class MainTabBarController: UITabBarController {
     func setupVCs() {
         
         viewControllers = [
-            createNavController(for: UIViewController(), image: .writeViewIcon, title: ""),
+            createNavController(for: WriteViewController(), image: .writeViewIcon, title: "기록하기"),
             createNavController(for: MyLibraryViewController(), image: .myLibraryViewIcon, title: "내 서재"),
             createNavController(for: BookclubViewController(), image: .bookclubViewIcon, title: "북클럽")
         ]

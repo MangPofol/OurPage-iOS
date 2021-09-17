@@ -8,152 +8,93 @@
 import UIKit
 
 class WriteView: UIView {
-    var bookTextField = UITextField().then {
-        $0.placeholder = "책을 정해주세요"
-        $0.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.adjustsFontForContentSizeCategory = true
+    var bookSelectionButton = ButtonWithImage(frame: .zero).then {
+        $0.backgroundColor = .mainColor
+        $0.button.setTitle("기록할 책을 선택해주세요", for: .normal)
+        $0.button.setTitleColor(.white, for: .normal)
+        $0.button.titleLabel?.font = .defaultFont(size: .medium, bold: true)
+        $0.imageView.image = .rightArrowImage
+        $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedHeight(10.0)))
     }
     
-    var lineView = UIView(frame: CGRect(x: 0, y: 100, width: 320, height: 1.0)).then {
-        $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.black.cgColor
-    }
-    
-    // Buttons and date
-    var memoButton = UIButton().then {
-        $0.setTitle("⋅ MEMO", for: .normal)
+    var memoButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+        $0.setTitle("메모", for: .normal)
         $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
-        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
     }
-    var topicButton = UIButton().then {
-        $0.setTitle("⋅ TOPIC", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
-        $0.titleLabel?.adjustsFontForContentSizeCategory = true
-    }
-    var dateLabel = UILabel().then {
-        $0.text = Date().toString()
-        $0.font = UIFont.preferredFont(forTextStyle: .footnote)
-        $0.adjustsFontForContentSizeCategory = true
-    }
-    //
     
-    lazy var containerView = UIView().then {
-        $0.backgroundColor = .clear
-        $0.addSubview(memoButton)
-        $0.addSubview(topicButton)
-        $0.addSubview(dateLabel)
+    var topicButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
+        $0.setTitle("토픽", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: .small)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
     }
     
     var titleTextField = UITextField().then {
-        $0.placeholder = "제목을 작성해보세요"
-        $0.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.adjustsFontForContentSizeCategory = true
-    }
-    
-    var lineView2 = UIView(frame: CGRect(x: 0, y: 100, width: 320, height: 1.0)).then {
-        $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.black.cgColor
+        $0.placeholder = "제목을 입력해주세요."
+        $0.font = .defaultFont(size: .big, bold: true)
+        $0.autocorrectionType = .no
+        $0.autocapitalizationType = .none
     }
     
     var contentTextView = UITextView().then {
-        $0.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.adjustsFontForContentSizeCategory = true
-        $0.text = "내용을 입력 해 주세요."
-        $0.textColor = .lightGray
-        $0.textContainerInset = UIEdgeInsets(top: 5.0, left: 0, bottom: 0, right: 0)
-        $0.textContainer.lineFragmentPadding = 0.0
-    }
+        $0.font = .defaultFont(size: .medium)
+        $0.textColor = .grayB0
+        $0.text = "내용을 입력하세요."
+        $0.autocorrectionType = .no
     
-    // Underbar buttons
-    var addButton = UIButton().then {
-        $0.setTitle("+", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.titleLabel?.adjustsFontForContentSizeCategory = true
-    }
-    var saveButton = UIButton().then {
-        $0.setTitle("저장하기", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.titleLabel?.adjustsFontForContentSizeCategory = true
-    }
-    var verticalLine = UIView().then {
-        $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.black.cgColor
-    }
-    var storageButton = UIButton().then {
-        $0.setTitle("2", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        $0.titleLabel?.adjustsFontForContentSizeCategory = true
-    }
-    lazy var underbarContainer = UIView().then {
-        $0.backgroundColor = .clear
-        $0.addSubview(addButton)
-        $0.addSubview(saveButton)
-        $0.addSubview(verticalLine)
-        $0.addSubview(storageButton)
-    }
-    //
-        
-    lazy var stackView = UIStackView(
-        arrangedSubviews: [bookTextField, lineView, containerView, titleTextField, lineView2, contentTextView]
-    ).then {
-        $0.axis = .vertical
-        $0.spacing = 3
-        $0.distribution = .fill
-        $0.backgroundColor = .white
+        // 공백 없애기
+        $0.textContainer.lineFragmentPadding = 0
+        $0.textContainerInset = .zero
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-        self.addSubview(stackView)
-        self.addSubview(underbarContainer)
+        self.addSubview(bookSelectionButton)
+        self.addSubview(memoButton)
+        self.addSubview(topicButton)
+        self.addSubview(titleTextField)
+        self.addSubview(contentTextView)
+        memoButton.relatedButtons = [topicButton]
+        topicButton.relatedButtons = [memoButton]
+        makeView()
     }
     
-    public func makeView() {
-        lineView.snp.makeConstraints {
-            $0.height.equalTo(1.0)
+    func makeView() {
+        bookSelectionButton.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(20.0))
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(Constants.getAdjustedHeight(30.0))
+            $0.width.equalTo(Constants.getAdjustedWidth(334.0))
         }
-        lineView2.snp.makeConstraints {
-            $0.height.equalTo(1.0)
-        }
+        
         memoButton.snp.makeConstraints {
-            $0.left.top.bottom.equalToSuperview()
+            $0.left.equalTo(bookSelectionButton)
+            $0.top.equalTo(bookSelectionButton.snp.bottom).offset(Constants.getAdjustedHeight(14.0))
+            $0.width.equalTo(Constants.getAdjustedWidth(51.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(26.0))
         }
+        
         topicButton.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.left.equalTo(memoButton.snp.right).offset(10)
+            $0.width.height.equalTo(memoButton)
+            $0.top.equalTo(bookSelectionButton.snp.bottom).offset(Constants.getAdjustedHeight(14.0))
+            $0.left.equalTo(memoButton.snp.right).offset(Constants.getAdjustedWidth(8.0))
         }
-        dateLabel.snp.makeConstraints {
-            $0.top.bottom.right.equalToSuperview()
+        
+        titleTextField.snp.makeConstraints {
+            $0.left.right.equalTo(bookSelectionButton)
+            $0.top.equalTo(memoButton.snp.bottom).offset(Constants.getAdjustedHeight(37.0))
         }
-        stackView.snp.makeConstraints {
-            $0.left.right.equalTo(self.safeAreaLayoutGuide).inset(20)
-            $0.bottom.equalTo(underbarContainer.snp.top)
-            $0.top.equalTo(self.safeAreaLayoutGuide).inset(50)
-        }
-        underbarContainer.snp.makeConstraints {
-            $0.left.right.equalTo(self.safeAreaLayoutGuide).inset(20)
-            $0.bottom.equalTo(self.safeAreaLayoutGuide).inset(30)
-        }
-        addButton.snp.makeConstraints {
-            $0.left.top.bottom.equalToSuperview()
-        }
-        storageButton.snp.makeConstraints {
-            $0.right.top.bottom.equalToSuperview()
-        }
-        verticalLine.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.right.equalTo(storageButton.snp.left).offset(-15)
-            $0.width.equalTo(1.0)
-        }
-        saveButton.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.right.equalTo(verticalLine.snp.left).offset(-15)
+        
+        contentTextView.snp.makeConstraints {
+            $0.left.equalTo(titleTextField)
+            $0.top.equalTo(titleTextField.snp.bottom).offset(Constants.getAdjustedHeight(14.0))
+            $0.width.equalTo(Constants.getAdjustedWidth(316.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(308.0))
         }
     }
     

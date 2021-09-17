@@ -149,6 +149,7 @@ extension UIColor {
     static let gray1 = UIColor(named: "Gray1")!
     static let black = UIColor(named: "Black")!
     static let grayC4 = UIColor(named: "GrayC4")!
+    static let grayB0 = UIColor(named: "GrayB0")!
 }
 
 extension CALayer {
@@ -183,4 +184,5 @@ extension UIImage {
     static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
     static let sidebarButtonImage = UIImage(named: "SidebarButton")!
     static let updownArrowImage = UIImage(named: "UpDownArrow")!
+    static let rightArrowImage = UIImage(named: "RightArrow")!
 }
