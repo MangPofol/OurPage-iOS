@@ -11,7 +11,7 @@ import RxCocoa
 import Kingfisher
 
 class BookCollectionViewController: UICollectionViewController {
-
+    
     let disposeBag = DisposeBag()
     var viewModel: BookCollectionViewModel!
     
@@ -30,6 +30,7 @@ class BookCollectionViewController: UICollectionViewController {
         
         // bind outputs
         viewModel!.bookModel
+            .debug()
             .bind(to:
                     self.collectionView
                     .rx

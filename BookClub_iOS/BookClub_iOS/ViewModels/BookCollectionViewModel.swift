@@ -19,16 +19,13 @@ class BookCollectionViewModel {
     init(bookTapped: Observable<Book>) {
         tappedBook = bookTapped
         
-        // TODO:
         category.bind {
-            _ = self.getBooksBy(email: "testerlnj@naver.com", category: $0.rawValue).map {
-                self.bookModel.onNext($0)
-            }
+            self.getBooksBy(email: "testerlnj@naver.com", category: $0.rawValue)
         }.disposed(by: disposeBag)
     }
     
-    func getBooksBy(email: String, category: String) -> Observable<[Book]> {
-        return BookServices.getBooksBy(email: email, category: category).map { values -> [Book] in
+    func getBooksBy(email: String, category: String){
+        BookServices.getBooksBy(email: email, category: category).map { values -> [Book] in
             var books = [Book]()
             
             values.forEach {
@@ -37,15 +34,14 @@ class BookCollectionViewModel {
             }
             
             return books
-        }
+        }.bind {
+            self.bookModel.onNext($0)
+        }.disposed(by: disposeBag)
     }
     
     func searchBook(by title: String) {
         if title == "" {
-            self.getBooksBy(email: "testerlnj@naver.com", category: BookListType.NOW.rawValue).bind {
-                self.bookModel.onNext($0)
-            }
-            .disposed(by: disposeBag)
+            self.getBooksBy(email: "testerlnj@naver.com", category: BookListType.NOW.rawValue)
             
         } else {
             print(#fileID, #function, #line, "")
