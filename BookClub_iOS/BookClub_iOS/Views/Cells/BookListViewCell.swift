@@ -49,7 +49,7 @@ class BookListViewCell: UICollectionViewCell {
         }
         bookTitleLabel.snp.makeConstraints {
             $0.top.equalTo(bookImageView.snp.bottom).offset(Constants.getAdjustedHeight(8.0))
-            $0.centerX.equalToSuperview()
+            $0.left.right.equalToSuperview()
         }
     }
     

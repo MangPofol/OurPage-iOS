@@ -24,21 +24,26 @@ class BookCollectionViewController: UICollectionViewController {
         self.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         self.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
         
-        viewModel = BookCollectionViewModel(bookTapped: self.collectionView.rx.modelSelected(BookModel.self).map { $0 })
+        viewModel = BookCollectionViewModel(bookTapped: self.collectionView.rx.modelSelected(Book.self).map { $0 })
+        
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: CGFloat(Constants.getAdjustedHeight(15.0)), right: 0)
         
         // bind outputs
         viewModel!.bookModel
-            .observeOn(MainScheduler.asyncInstance)
             .bind(to:
                     self.collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-            
-                SearchServices.searchBookBy(isbn: element.isbn).bind {
-                    cell.searchedInfo.onNext($0.first)
-                }.disposed(by: cell.disposeBag)
                 
-                cell.bookModel.onNext(element)
+                if element.searchedInfo == nil {
+                    SearchServices.searchBookBy(isbn: element.bookModel.isbn).bind {
+                        cell.searchedInfo.onNext($0.first)
+                    }.disposed(by: cell.disposeBag)
+                } else {
+                    cell.searchedInfo.onNext(element.searchedInfo)
+                }
+                
+                cell.bookModel.onNext(element.bookModel)
             }.disposed(by: disposeBag)
     }
 }

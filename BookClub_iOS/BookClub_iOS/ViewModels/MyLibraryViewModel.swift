@@ -48,10 +48,10 @@ class MyLibraryViewModel {
     }
 }
 
-enum BookListType: Int {
-    case NOW = 0
-    case AFTER = 1
-    case BEFORE = 2
+enum BookListType: String {
+    case NOW = "NOW"
+    case AFTER = "AFTER"
+    case BEFORE = "BEFORE"
 }
 
 enum FilterType: String {

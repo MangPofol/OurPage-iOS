@@ -85,16 +85,16 @@ extension UIView {
         case right
     }
 
-    func addShadow(location: VerticalLocation, color: UIColor = .black, opacity: Float = 1, radius: CGFloat = 10.0) {
+    func addShadow(location: VerticalLocation, color: UIColor = .black, opacity: Float = 1, radius: CGFloat = 5.0, offset: CGFloat = 2.5) {
         switch location {
         case .bottom:
-             addShadow(offset: CGSize(width: 0, height: 10), color: color, opacity: opacity, radius: radius)
+             addShadow(offset: CGSize(width: 0, height: offset), color: color, opacity: opacity, radius: radius)
         case .top:
-            addShadow(offset: CGSize(width: 0, height: -10), color: color, opacity: opacity, radius: radius)
+            addShadow(offset: CGSize(width: 0, height: -offset), color: color, opacity: opacity, radius: radius)
         case .left:
-            addShadow(offset: CGSize(width: -10, height: 0), color: color, opacity: opacity, radius: radius)
+            addShadow(offset: CGSize(width: -offset, height: 0), color: color, opacity: opacity, radius: radius)
         case .right:
-            addShadow(offset: CGSize(width: 10, height: 0), color: color, opacity: opacity, radius: radius)
+            addShadow(offset: CGSize(width: offset, height: 0), color: color, opacity: opacity, radius: radius)
         }
     }
 
@@ -150,6 +150,8 @@ extension UIColor {
     static let black = UIColor(named: "Black")!
     static let grayC4 = UIColor(named: "GrayC4")!
     static let grayB0 = UIColor(named: "GrayB0")!
+    static let gray7A = UIColor(named: "Gray7A")!
+    static let grayD1 = UIColor(named: "GrayD1")!
 }
 
 extension CALayer {
@@ -185,4 +187,6 @@ extension UIImage {
     static let sidebarButtonImage = UIImage(named: "SidebarButton")!
     static let updownArrowImage = UIImage(named: "UpDownArrow")!
     static let rightArrowImage = UIImage(named: "RightArrow")!
+    static let leftArrowImage = UIImage(named: "LeftArrow")!
+    static let searchImage = UIImage(named: "Search")!
 }

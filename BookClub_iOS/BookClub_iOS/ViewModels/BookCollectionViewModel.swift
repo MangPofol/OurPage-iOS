@@ -9,25 +9,52 @@ import Foundation
 import RxSwift
 
 class BookCollectionViewModel {
-    var bookModel: Observable<[BookModel]>
+    var bookModel = BehaviorSubject<[Book]>(value: [])
     var bookInformation = Observable<[SearchedBook]>.just([])
     var category = BehaviorSubject<BookListType>(value: BookListType.NOW)
+    var tappedBook: Observable<Book>
     
-    init(bookTapped: Observable<BookModel>) {
-        bookModel = category.flatMap { value -> Observable<[BookModel]> in
-            switch value {
-            case .NOW:
-                return BookServices.getBooksBy(email: "testerlnj@naver.com", category: "NOW")
-            case .BEFORE:
-                return BookServices.getBooksBy(email: "2@naver.com", category: "BEFORE")
-            case .AFTER:
-                return BookServices.getBooksBy(email: "2@naver.com", category: "AFTER")
+    let disposeBag = DisposeBag()
+    
+    init(bookTapped: Observable<Book>) {
+        tappedBook = bookTapped
+        
+        // TODO:
+        category.bind {
+            _ = self.getBooksBy(email: "testerlnj@naver.com", category: $0.rawValue).map {
+                self.bookModel.onNext($0)
             }
+        }.disposed(by: disposeBag)
+    }
+    
+    func getBooksBy(email: String, category: String) -> Observable<[Book]> {
+        return BookServices.getBooksBy(email: email, category: category).map { values -> [Book] in
+            var books = [Book]()
+            
+            values.forEach {
+                let book = Book(bookModel: $0, searchedInfo: nil)
+                books.append(book)
+            }
+            
+            return books
         }
     }
     
-//    func getBookInformation(by isbn: String) -> Observable<SearchedBook>  {
-//        SearchServices.searchBookBy(isbn: isbn).
-//    }
+    func searchBook(by title: String) {
+        if title == "" {
+            self.getBooksBy(email: "testerlnj@naver.com", category: BookListType.NOW.rawValue).bind {
+                self.bookModel.onNext($0)
+            }
+            .disposed(by: disposeBag)
+            
+        } else {
+            print(#fileID, #function, #line, "")
+            SearchServices.searchBookBy(title: title)
+                .bind {
+                    self.bookModel.onNext($0)
+                }
+                .disposed(by: disposeBag)
+        }
+    }
     
 }

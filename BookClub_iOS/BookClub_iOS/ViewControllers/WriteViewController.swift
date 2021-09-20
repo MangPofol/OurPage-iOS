@@ -22,6 +22,10 @@ class WriteViewController: UIViewController {
         setTextViewPlaceholder()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = WriteViewModel(
@@ -36,7 +40,9 @@ class WriteViewController: UIViewController {
         viewModel.bookSelection
             .observeOn(MainScheduler.instance)
             .bind {
-                print($0)
+                if $0 {
+                    self.navigationController?.pushViewController(BookSelectViewController(), animated: true)
+                }
             }
             .disposed(by: disposeBag)
         
@@ -69,7 +75,20 @@ class WriteViewController: UIViewController {
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         nav.navigationBar.shadowImage = UIImage()
 
+        nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
+        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "올리기", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .selected)
+        
+        // 백 버튼 텍스트 지우기
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        backBarButtonItem.tintColor = .mainColor
+        self.navigationItem.backBarButtonItem = backBarButtonItem
         
         // navigation bar button
         self.navigationItem.leftBarButtonItem!

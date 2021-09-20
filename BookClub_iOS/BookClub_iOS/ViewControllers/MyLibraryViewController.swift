@@ -37,7 +37,16 @@ class MyLibraryViewController: UIViewController {
             input: (
                 typeTapped: customView.typeControl.rx.controlEvent(.valueChanged)
                     .map {
-                        BookListType(rawValue: self.customView.typeControl.index)!
+                        switch self.customView.typeControl.index {
+                        case 0:
+                            return BookListType.NOW
+                        case 1:
+                            return BookListType.AFTER
+                        case 2:
+                            return BookListType.BEFORE
+                        default:
+                            return BookListType.NOW
+                        }
                     },
                 filterTapped: Observable.merge(
                     customView.searchButton.rx.tap.map { _ in
