@@ -73,7 +73,7 @@ extension UIFont {
     // }
     
     static func defaultFont(size: FontSize, bold: Bool = false) -> UIFont {
-        UIFont(name: bold ? "Roboto-Bold" : "Roboto-Regular", size: size.rawValue)!
+        UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size.rawValue)!
     }
 }
 
