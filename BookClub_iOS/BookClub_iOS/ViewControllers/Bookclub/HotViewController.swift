@@ -25,6 +25,10 @@ class HotViewController: UITableViewController {
             cell.bookLabel.text = element.book
         }.disposed(by: disposeBag)
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(Constants.getAdjustedHeight(41.0))
+    }
 }
 
 class HotViewCell: UITableViewCell {
@@ -35,7 +39,7 @@ class HotViewCell: UITableViewCell {
     }
     var bookLabel = UILabel().then {
         $0.font = .defaultFont(size: .cellFont)
-        $0.textColor = .gray1
+        $0.textColor = .lightMainColor
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

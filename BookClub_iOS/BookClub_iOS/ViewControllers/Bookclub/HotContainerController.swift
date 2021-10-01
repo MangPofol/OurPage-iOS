@@ -12,7 +12,7 @@ import Pageboy
 class HotContainerController: TabmanViewController {
     private var viewControllers = [HotViewController(), UIViewController()]
     let bar = TMBar.ButtonBar()
-    let lineView = LineView(color: .gray1)
+    let lineView = LineView(color: .grayC3)
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,7 +36,7 @@ class HotContainerController: TabmanViewController {
         bar.buttons.customize { (button) in
             button.font = .defaultFont(size: .medium)
             button.selectedFont = .defaultFont(size: .medium, bold: true)
-            button.tintColor = .gray1
+            button.tintColor = .grayC3
             button.selectedTintColor = .mainColor
         }
         

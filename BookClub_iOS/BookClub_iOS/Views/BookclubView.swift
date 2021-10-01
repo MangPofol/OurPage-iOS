@@ -10,8 +10,9 @@ import UIKit
 class BookclubView: UIView {
     let clubMemberSelectorLayout = UICollectionViewFlowLayout()
     
-    var levelView = UIView().then {
-        $0.backgroundColor = .lightGray
+    var levelView = UIImageView().then {
+        $0.backgroundColor = .mainColor
+        $0.image = .bookclubLevelImage
     }
     
     let memberProfileFlowLayout = UICollectionViewFlowLayout()
@@ -43,7 +44,7 @@ class BookclubView: UIView {
     
     
     var underline1 = LineView().then { $0.backgroundColor = .mainColor }
-    var underline2 = LineView().then { $0.backgroundColor = .gray1 }
+    var underline2 = LineView().then { $0.backgroundColor = .grayC3 }
     var recordCollectionLabel = UILabel().then {
         $0.font = .defaultFont(size: .medium, bold: true)
         $0.textColor = .mainColor
@@ -51,26 +52,33 @@ class BookclubView: UIView {
     }
     
     // 필터 버튼
-    let searchButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let searchButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("검색", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
+        
+        $0.imageView?.contentMode = .scaleAspectFit
+        $0.setImage(.searchImage.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.imageView?.tintColor = .mainColor
+        $0.semanticContentAttribute = .forceRightToLeft
+        $0.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), imageTitlePadding: 8.0)
+        
+        $0.setTitleColor(.mainColor, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.backgroundColor = .gray1
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(12.5)))
     }
-    let clubMemberButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let clubMemberButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("클럽원", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
+        $0.setTitleColor(.mainColor, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.backgroundColor = .gray1
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(12.5)))
     }
-    let sortingButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let sortingButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("정렬", for: .normal)
+        $0.setTitleColor(.mainColor, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .gray1
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: 5)
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(12.5)))
     }
     
     lazy var buttonStack = UIStackView(arrangedSubviews: [searchButton, clubMemberButton, sortingButton]).then {
@@ -86,8 +94,18 @@ class BookclubView: UIView {
     // 서치바
     lazy var searchBar = UISearchBar().then {
         $0.isHidden = true
+        $0.backgroundImage = .none
+        $0.autocorrectionType = .no
+        
         $0.placeholder = "책 제목을 입력하세요."
+        
+        $0.makeBorder(color: UIColor.grayE3.cgColor, width: CGFloat(Constants.getAdjustedWidth(1.0)), cornerRadius: CGFloat(Constants.getAdjustedHeight(8.0)))
+        $0.searchTextField.tintColor = .mainColor
+        $0.searchTextField.textColor = .mainColor
+        $0.searchTextField.backgroundColor = .white
         $0.searchTextField.font = .defaultFont(size: .small)
+        $0.searchTextField.textAlignment = .left
+        $0.searchTextField.leftView?.tintColor = .mainColor
     }
     
     // 북클럽 선택
@@ -134,7 +152,7 @@ class BookclubView: UIView {
         $0.addSubview(searchBar)
         $0.addSubview(clubMemeberSelector)
         $0.addSubview(sortButtonStack)
-        searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
+        searchBar.snp.makeConstraints { $0.edges.equalToSuperview().inset(1.0) }
         sortButtonStack.snp.makeConstraints {
             $0.top.bottom.left.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.45)
@@ -207,12 +225,12 @@ class BookclubView: UIView {
         hotContainer.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
             $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(16.0))
-            $0.height.equalTo(143.0)
+            $0.height.equalTo(191.10)
         }
         
         recordCollectionLabel.snp.makeConstraints {
             $0.left.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
-            $0.top.equalTo(hotContainer.snp.bottom).offset(44)
+            $0.top.equalTo(hotContainer.snp.bottom).offset(5)
         }
         underline1.snp.makeConstraints {
             $0.left.right.equalTo(recordCollectionLabel)
@@ -228,6 +246,7 @@ class BookclubView: UIView {
             $0.top.equalTo(underline1).offset(Constants.getAdjustedHeight(14.0))
             $0.left.equalTo(recordCollectionLabel)
             $0.width.equalTo(lowerView).dividedBy(2.0)
+            $0.height.equalTo(Constants.getAdjustedHeight(25.0))
         }
         selectedControl.snp.makeConstraints {
             $0.top.equalTo(buttonStack.snp.bottom).offset(Constants.getAdjustedHeight(12.0))

@@ -148,10 +148,13 @@ extension UIColor {
     static let mainColor = UIColor(named: "MainColor")!
     static let gray1 = UIColor(named: "Gray1")!
     static let black = UIColor(named: "Black")!
+    static let grayC3 = UIColor(named: "GrayC3")!
     static let grayC4 = UIColor(named: "GrayC4")!
     static let grayB0 = UIColor(named: "GrayB0")!
     static let gray7A = UIColor(named: "Gray7A")!
     static let grayD1 = UIColor(named: "GrayD1")!
+    static let grayE3 = UIColor(named: "GrayE3")!
+    static let lightMainColor = UIColor(named: "LightMainColor")!
 }
 
 extension CALayer {
@@ -189,4 +192,22 @@ extension UIImage {
     static let rightArrowImage = UIImage(named: "RightArrow")!
     static let leftArrowImage = UIImage(named: "LeftArrow")!
     static let searchImage = UIImage(named: "Search")!
+    static let bookclubLevelImage = UIImage(named: "BookClubLevel")!
+}
+
+extension UIButton {
+    func setInsets(forContentPadding contentPadding: UIEdgeInsets, imageTitlePadding: CGFloat) {
+        self.contentEdgeInsets = UIEdgeInsets(
+            top: contentPadding.top,
+            left: contentPadding.left + imageTitlePadding,
+            bottom: contentPadding.bottom,
+            right: contentPadding.left
+        )
+        self.titleEdgeInsets = UIEdgeInsets(
+            top: 0,
+            left: -imageTitlePadding,
+            bottom: 0,
+            right: imageTitlePadding
+        )
+    }
 }

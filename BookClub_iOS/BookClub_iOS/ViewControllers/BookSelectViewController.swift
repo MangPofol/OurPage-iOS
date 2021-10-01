@@ -16,6 +16,9 @@ class BookSelectViewController: UIViewController {
     var bookCollectionVC = BookCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
     
     let disposeBag = DisposeBag()
+    var bookSelectionDisposeBag = DisposeBag()
+    
+    var newBookSelected = BehaviorSubject<Book?>(value: nil)
     
     override func loadView() {
         self.view = customView
@@ -28,7 +31,7 @@ class BookSelectViewController: UIViewController {
         super.viewDidLoad()
         viewModel = BookSelectionViewModel(
             input: (
-                searchBarText: customView.searchBar.rx.text.asObservable(),
+                searchBarText: customView.searchBar.searchTextField.rx.text.asObservable(),
                 readingButtonTapped: customView.readingButton.rx.tap
                     .asObservable()
                     .map { .NOW },
@@ -44,12 +47,6 @@ class BookSelectViewController: UIViewController {
     // bind outputs {
         
         // 책 목록에서 책 선택
-        bookCollectionVC.viewModel.tappedBook
-            .bind {
-                print($0)
-            }
-            .disposed(by: disposeBag)
-        
         bookCollectionVC.collectionView.rx.didScroll
             .bind {
                 self.view.endEditing(true)
@@ -76,6 +73,17 @@ class BookSelectViewController: UIViewController {
         viewModel.isSearching
             .bind {
                 self.searchMode($0)
+            }
+            .disposed(by: disposeBag)
+        
+        // 새 책 추가
+        newBookSelected
+            .filter { $0 != nil }
+            .bind {
+                if let root = self.navigationController?.viewControllers.first as? WriteViewController {
+                    root.selectedBook = $0
+                    self.navigationController?.popViewController(animated: false)
+                }
             }
             .disposed(by: disposeBag)
     // }
@@ -106,17 +114,40 @@ class BookSelectViewController: UIViewController {
         nav.navigationBar.shadowImage = UIImage()
     }
     
-    private func searchMode(_ on: Bool) {
+    private func backToWriteView(selectedBook: Book) {
+        if let root = self.navigationController?.viewControllers.first as? WriteViewController {
+            root.selectedBook = selectedBook
+        }
+        self.navigationController?.popViewController(animated: false)
+    }
+    
+    func searchMode(_ on: Bool) {
         if on {
             customView.buttonContainer.isHidden = true
             customView.bookCollectionContainer.snp.updateConstraints {
                 $0.top.equalTo(customView.buttonContainer.snp.bottom).offset(Constants.getAdjustedHeight(-21.0))
             }
+            bookSelectionDisposeBag = DisposeBag()
+            bookCollectionVC.viewModel.tappedBook
+                .bind {
+                    let vc = BookOptionSelectViewController()
+                    vc.modalTransitionStyle = .coverVertical
+                    vc.selectedBook = $0
+                    vc.bookSelectVC = self
+                    self.present(vc, animated: true, completion: nil)
+                }
+                .disposed(by: bookSelectionDisposeBag)
         } else {
             customView.buttonContainer.isHidden = false
             customView.bookCollectionContainer.snp.updateConstraints {
                 $0.top.equalTo(customView.buttonContainer.snp.bottom).offset(Constants.getAdjustedHeight(21.0))
             }
+            bookSelectionDisposeBag = DisposeBag()
+            bookCollectionVC.viewModel.tappedBook
+                .bind {
+                    print($0)
+                }
+                .disposed(by: bookSelectionDisposeBag)
         }
     }
 }

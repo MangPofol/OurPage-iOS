@@ -15,6 +15,8 @@ class WriteViewController: UIViewController {
     let customView = WriteView()
     var viewModel: WriteViewModel!
     
+    var selectedBook: Book!
+    
     override func loadView() {
         self.view = customView
         setNavigationBar()
@@ -24,6 +26,12 @@ class WriteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        if selectedBook != nil {
+            customView.bookSelectionButton.button.setTitle(selectedBook.bookModel.name, for: .normal)
+        } else {
+            customView.bookSelectionButton.button.setTitle("기록할 책을 선택하세요.", for: .normal)
+        }
     }
     
     override func viewDidLoad() {
