@@ -11,23 +11,29 @@ import RxSwift
 
 class SideMenuViewController: UIViewController {
     let disposeBag = DisposeBag()
-    let sideMenuView = SideMenuView()
+    let customView = SideMenuView()
+    let sideViewItemsVC = SideMenuItemsController()
     var cellHeight = Constants.screenSize.height / 20.0
     
     override func loadView() {
-        self.view = sideMenuView
+        self.view = customView
         self.view.backgroundColor = .white
         self.view.setShadow(opacity: 1, color: .lightGray, offset: CGSize(width: 0, height: 3), radius: 1)
         self.navigationController?.isNavigationBarHidden = true
-        sideMenuView.makeView()
+        customView.makeView()
+        customView.itemsContainer.addSubview(sideViewItemsVC.view)
+        sideViewItemsVC.view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
 //        setUpTableViews()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let viewModel = SideMenuViewModel()
         
+        
+//        let viewModel = SideMenuViewModel()
 //        // tableview에 표시할 데이터에 tableview bind {
 //        viewModel.bookclubs
 //            // 셀 개수에 따라 tableview 크기 맞추기

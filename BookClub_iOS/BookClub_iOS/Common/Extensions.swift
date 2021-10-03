@@ -200,6 +200,9 @@ extension UIImage {
     static let leftArrowImage = UIImage(named: "LeftArrow")!
     static let searchImage = UIImage(named: "Search")!
     static let bookclubLevelImage = UIImage(named: "BookClubLevel")!
+    static let alertIcon = UIImage(named: "AlertIcon")!.withRenderingMode(.alwaysTemplate)
+    static let myLibraryIcon = UIImage(named: "MyLibraryIcon")!.withRenderingMode(.alwaysTemplate)
+    static let settingIcon = UIImage(named: "SettingIcon")!.withRenderingMode(.alwaysTemplate)
 }
 
 extension UIButton {

@@ -7,25 +7,35 @@
 
 import UIKit
 
+
 final class SideMenuView: UIView {
+    
+    var profileImageView = UIImageView().then {
+        $0.image = UIImage(named: "SampleProfile")!
+    }
     
     var nameLabel = UILabel().then {
         $0.font = .defaultFont(size: .name_20, bold: true)
         $0.textColor = .white
-        $0.text = "이름"
+        $0.text = "Thama"
     }
     
     var idLabel = UILabel().then {
         $0.font = .defaultFont(size: .cellFont)
         $0.textColor = .white
-        $0.text = "아이디: hi06021"
+        $0.text = "@hi06021"
     }
     
     lazy var upperView = UIView().then {
         $0.backgroundColor = .mainColor
         $0.addSubview(nameLabel)
         $0.addSubview(idLabel)
+        $0.addSubview(profileImageView)
         $0.bottomRightCorner(radius: CGFloat(Constants.getAdjustedHeight(20.0)))
+    }
+    
+    var itemsContainer = UIView().then {
+        $0.backgroundColor = .white
     }
     
 //    var modifyAccountButonn = UIButton().then {
@@ -146,7 +156,7 @@ final class SideMenuView: UIView {
         super.init(frame: frame)
         self.backgroundColor = .black
         self.addSubview(upperView)
-        
+        self.addSubview(itemsContainer)
     }
     
     required init?(coder: NSCoder) {
@@ -159,14 +169,25 @@ final class SideMenuView: UIView {
             $0.width.equalToSuperview()
             $0.height.equalTo(Constants.getAdjustedHeight(150.0))
         }
+        profileImageView.snp.makeConstraints {
+            $0.width.height.equalTo(Constants.getAdjustedHeight(44.0))
+            $0.left.equalToSuperview().inset(Constants.getAdjustedWidth(22.0))
+            $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(19.0))
+        }
         idLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.left.equalTo(profileImageView.snp.right).offset(Constants.getAdjustedWidth(12.0))
             $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(23.0))
         }
         nameLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.left.equalTo(idLabel)
             $0.bottom.equalTo(idLabel.snp.top).offset(Constants.getAdjustedHeight(-7.0))
         }
+        itemsContainer.snp.makeConstraints {
+            $0.top.equalTo(upperView.snp.bottom)
+            $0.left.right.bottom.equalToSuperview()
+        }
+        profileImageView.setCornerRadius(radius: CGFloat(Constants.getAdjustedHeight(22.0)))
+        
 //        modifyAccountButonn.snp.makeConstraints {
 //            $0.centerY.equalTo(idLabel)
 //            $0.right.equalToSuperview().inset(20)
