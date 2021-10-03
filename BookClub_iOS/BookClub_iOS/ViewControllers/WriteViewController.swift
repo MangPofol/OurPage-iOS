@@ -105,7 +105,9 @@ class WriteViewController: UIViewController {
                 let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
                 menu.leftSide = true
                 menu.presentationStyle = .menuSlideIn
-                menu.menuWidth = Constants.screenSize.width * 0.85
+                menu.menuWidth = CGFloat(Constants.getAdjustedWidth(280.0))
+                menu.presentationStyle.presentingEndAlpha = 0.5
+                
                 self.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
