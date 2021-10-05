@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SideMenu
+import YPImagePicker
 
 class WriteViewController: UIViewController {
     let disposeBag = DisposeBag()
@@ -16,6 +17,8 @@ class WriteViewController: UIViewController {
     var viewModel: WriteViewModel!
     
     var selectedBook: Book!
+    
+    var uploadedImages: [UIImage] = []
     
     override func loadView() {
         self.view = customView
@@ -36,15 +39,59 @@ class WriteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        customView.uploadedImageCollection.delegate = self
+        
         viewModel = WriteViewModel(
             input: (
                 bookSelectionButtonTapped: customView.bookSelectionButton.button.rx.tap.asSignal(),
                 isMemoOn: customView.memoButton.isOnRx.asObservable(),
-                isTopicOn: customView.topicButton.isOnRx.asObservable()
+                isTopicOn: customView.topicButton.isOnRx.asObservable(),
+                imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal()
             )
         )
         
         // bind outputs
+//        viewModel!.bookModel
+//            .debug()
+//            .bind(to:
+//                    self.collectionView
+//                    .rx
+//                    .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
+//
+//                if element.searchedInfo == nil {
+//                    SearchServices.searchBookBy(isbn: element.bookModel.isbn).bind {
+//                        cell.searchedInfo.onNext($0.first)
+//                    }.disposed(by: cell.disposeBag)
+//                } else {
+//                    cell.searchedInfo.onNext(element.searchedInfo)
+//                }
+//
+//                cell.bookModel.onNext(element.bookModel)
+//            }.disposed(by: disposeBag)
+        
+        
+        
+        viewModel.uploadedImages
+            .debug()
+            .do {
+                self.customView.imageUploadButton.setTitle("\($0.count)/4", for: .normal)
+            }
+            .bind(to:
+                    self.customView.uploadedImageCollection
+                    .rx
+                    .items(cellIdentifier: UploadedImageCollectionViewCell.identifier, cellType: UploadedImageCollectionViewCell.self)) { (row, element, cell) in
+                cell.imageView.image = element
+                cell.deleteButton.rx.tap.bind {
+                    var images = self.viewModel.uploadedImages.value
+                    images.remove(at: row)
+                    self.viewModel.uploadedImages.accept(images)
+                    
+                }.disposed(by: cell.disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        
         viewModel.bookSelection
             .observeOn(MainScheduler.instance)
             .bind {
@@ -65,6 +112,44 @@ class WriteViewController: UIViewController {
             .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
             .bind {
                 print("isTopic", $0)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.imageUploading
+            .filter { $0 == true }
+            .bind { _ in
+                var config = YPImagePickerConfiguration()
+                // [Edit configuration here ...]
+                // Build a picker with your configuration
+                config.library.maxNumberOfItems = 4
+                config.library.defaultMultipleSelection = true
+                config.onlySquareImagesFromCamera = false
+                config.library.isSquareByDefault = false
+                config.showsPhotoFilters = false
+                config.startOnScreen = YPPickerScreen.library
+                config.library.skipSelectionsGallery = true
+                config.library.preselectedItems = nil
+    
+                YPImagePickerConfiguration.shared = config
+                
+                // And then use the default configuration like so:
+                let picker = YPImagePicker()
+                
+                picker.didFinishPicking { [unowned picker] items, cancelled in
+                    var photos = [UIImage]()
+                    for item in items {
+                        switch item {
+                        case .photo(let photo):
+                            photos.append(photo.image)
+                        case .video(let video):
+                            print(video)
+                        }
+                    }
+                    self.viewModel.uploadedImages.accept(self.viewModel.uploadedImages.value + photos)
+                    picker.dismiss(animated: true, completion: nil)
+                }
+                
+                self.present(picker, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
     }
@@ -88,7 +173,7 @@ class WriteViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "올리기", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .uploadIcon, style: .plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .selected)
@@ -129,5 +214,11 @@ class WriteViewController: UIViewController {
                             customView.contentTextView.textColor = .grayB0
                             
                         }}).disposed(by: disposeBag)
+    }
+}
+
+extension WriteViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: Constants.getAdjustedHeight(40.0), height: Constants.getAdjustedHeight(40.0))
     }
 }

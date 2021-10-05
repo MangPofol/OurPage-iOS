@@ -45,7 +45,6 @@ class BookSelectViewController: UIViewController {
         )
         
     // bind outputs {
-        
         // 책 목록에서 책 선택
         bookCollectionVC.collectionView.rx.didScroll
             .bind {
@@ -145,7 +144,7 @@ class BookSelectViewController: UIViewController {
             bookSelectionDisposeBag = DisposeBag()
             bookCollectionVC.viewModel.tappedBook
                 .bind {
-                    print($0)
+                    self.newBookSelected.onNext($0)
                 }
                 .disposed(by: bookSelectionDisposeBag)
         }

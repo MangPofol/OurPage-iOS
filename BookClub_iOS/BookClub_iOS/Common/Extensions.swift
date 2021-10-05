@@ -162,6 +162,7 @@ extension UIColor {
     static let grayD1 = UIColor(named: "GrayD1")!
     static let grayE3 = UIColor(named: "GrayE3")!
     static let lightMainColor = UIColor(named: "LightMainColor")!
+    static let pink_E5949D = UIColor(named: "Pink_E5949D")!
 }
 
 extension CALayer {
@@ -196,13 +197,16 @@ extension UIImage {
     static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
     static let sidebarButtonImage = UIImage(named: "SidebarButton")!
     static let updownArrowImage = UIImage(named: "UpDownArrow")!
-    static let rightArrowImage = UIImage(named: "RightArrow")!
+    static let rightArrowImage = UIImage(named: "RightArrow")!.withRenderingMode(.alwaysTemplate)
     static let leftArrowImage = UIImage(named: "LeftArrow")!
     static let searchImage = UIImage(named: "Search")!
     static let bookclubLevelImage = UIImage(named: "BookClubLevel")!
     static let alertIcon = UIImage(named: "AlertIcon")!.withRenderingMode(.alwaysTemplate)
     static let myLibraryIcon = UIImage(named: "MyLibraryIcon")!.withRenderingMode(.alwaysTemplate)
     static let settingIcon = UIImage(named: "SettingIcon")!.withRenderingMode(.alwaysTemplate)
+    static let uploadIcon = UIImage(named: "UploadIcon")!.withRenderingMode(.alwaysTemplate)
+    static let cameraIcon = UIImage(named: "CameraIcon")!.withRenderingMode(.alwaysTemplate)
+    static let deleteButtonImage = UIImage(named: "DeleteButtonImage")!
 }
 
 extension UIButton {
@@ -219,5 +223,26 @@ extension UIButton {
             bottom: 0,
             right: imageTitlePadding
         )
+    }
+    
+    func alignTextBelow(spacing: CGFloat = 8.0) {
+        guard let image = self.imageView?.image else {
+            return
+        }
+        
+        guard let titleLabel = self.titleLabel else {
+            return
+        }
+        
+        guard let titleText = titleLabel.text else {
+            return
+        }
+        
+        let titleSize = titleText.size(withAttributes: [
+            NSAttributedString.Key.font: titleLabel.font as Any
+        ])
+        
+        titleEdgeInsets = UIEdgeInsets(top: spacing, left: -image.size.width, bottom: -image.size.height, right: 0)
+        imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0, bottom: 0, right: -titleSize.width)
     }
 }
