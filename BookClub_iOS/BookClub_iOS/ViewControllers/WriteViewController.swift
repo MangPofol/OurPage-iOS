@@ -51,6 +51,16 @@ class WriteViewController: UIViewController {
             )
         )
         
+        customView.uploadedImageCollection.rx.itemSelected
+            .bind {
+                let vc = PagesViewController()
+                vc.chooseIdx = $0.row
+                vc.pageImages = self.viewModel.uploadedImages.value
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
+        
         // bind outputs
 //        viewModel!.bookModel
 //            .debug()
@@ -120,7 +130,7 @@ class WriteViewController: UIViewController {
             .bind { _ in
                 var config = YPImagePickerConfiguration()
                 // [Edit configuration here ...]
-                // Build a picker with your configuration
+                // Build a picker with y    our configuration
                 config.library.maxNumberOfItems = 4
                 config.library.defaultMultipleSelection = true
                 config.onlySquareImagesFromCamera = false
