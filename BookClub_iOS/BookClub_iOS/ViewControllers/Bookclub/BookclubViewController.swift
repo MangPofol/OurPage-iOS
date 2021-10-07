@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SideMenu
 
 class BookclubViewController: UIViewController {
 
@@ -43,6 +44,17 @@ class BookclubViewController: UIViewController {
                     !self.customView.clubMemberButton.isOn ? FilterTypeInBookclub.none: FilterTypeInBookclub.member },
                 customView.sortingButton.rx.tap.map { _ in
                     !self.customView.sortingButton.isOn ? FilterTypeInBookclub.none : FilterTypeInBookclub.sorting }))
+        
+        self.navigationItem.leftBarButtonItem!
+            .rx.tap
+            .bind {
+                let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
+                menu.leftSide = true
+                menu.presentationStyle = .menuSlideIn
+                menu.menuWidth = Constants.screenSize.width * 0.85
+                self.present(menu, animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
         
         // Book collection 스크롤 대응
         bookCollectionVC.collectionView.rx.didScroll
@@ -93,19 +105,7 @@ class BookclubViewController: UIViewController {
     }
     
     func setNavigationBar() {
-        guard let nav = self.navigationController else {
-            return
-        }
-        nav.navigationBar.barTintColor = .mainColor
-        nav.navigationBar.tintColor = .white
-        nav.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.white]
-
-        // bar underline 삭제
-        nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        nav.navigationBar.shadowImage = UIImage()
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
+        self.setDefaultConfiguration()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .updownArrowImage, style: .plain, target: nil, action: nil)
     }
 }

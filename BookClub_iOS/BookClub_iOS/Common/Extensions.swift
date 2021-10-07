@@ -154,7 +154,7 @@ extension UIColor {
     static let backgroundGray = UIColor(named: "BackgroundGray")!
     static let mainColor = UIColor(named: "MainColor")!
     static let gray1 = UIColor(named: "Gray1")!
-    static let black = UIColor(named: "Black")!
+//    static let black = UIColor(named: "Black")!
     static let grayC3 = UIColor(named: "GrayC3")!
     static let grayC4 = UIColor(named: "GrayC4")!
     static let grayB0 = UIColor(named: "GrayB0")!
@@ -244,5 +244,36 @@ extension UIButton {
         
         titleEdgeInsets = UIEdgeInsets(top: spacing, left: -image.size.width, bottom: -image.size.height, right: 0)
         imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0, bottom: 0, right: -titleSize.width)
+    }
+}
+
+extension UIViewController {
+    func setDefaultConfiguration() {
+        guard let nav = self.navigationController else {
+            return
+        }
+        nav.navigationBar.barTintColor = Constants.navigationbarColor
+        nav.navigationBar.tintColor = .black
+        nav.navigationBar.isTranslucent = false
+        nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.mainColor]
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Constants.navigationbarColor
+        appearance.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.mainColor]
+//        nav.navigationBar.standardAppearance = appearance;
+        nav.navigationBar.scrollEdgeAppearance = appearance
+        
+        // bar underline 삭제
+        nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        nav.navigationBar.shadowImage = UIImage()
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        // 백 버튼 텍스트 지우기
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        backBarButtonItem.tintColor = .mainColor
+        self.navigationItem.backBarButtonItem = backBarButtonItem
     }
 }

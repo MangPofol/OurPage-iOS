@@ -166,33 +166,7 @@ class WriteViewController: UIViewController {
     
     // MARK: - Private Funcs
     private func setNavigationBar() {
-        guard let nav = self.navigationController else {
-            return
-        }
-        nav.navigationBar.barTintColor = Constants.navigationbarColor
-        nav.navigationBar.tintColor = .black
-        nav.navigationBar.isTranslucent = false
-        nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
-
-        // bar underline 삭제
-        nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        nav.navigationBar.shadowImage = UIImage()
-
-        nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
-        self.navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .uploadIcon, style: .plain, target: nil, action: nil)
-        self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .selected)
-        
-        // 백 버튼 텍스트 지우기
-        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        backBarButtonItem.tintColor = .mainColor
-        self.navigationItem.backBarButtonItem = backBarButtonItem
-        
+        self.setDefaultConfiguration()
         // navigation bar button
         self.navigationItem.leftBarButtonItem!
             .rx.tap
@@ -206,6 +180,14 @@ class WriteViewController: UIViewController {
                 self.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
+        
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .uploadIcon, style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .selected)
+        
+        
     }
     
     private func setTextViewPlaceholder() {

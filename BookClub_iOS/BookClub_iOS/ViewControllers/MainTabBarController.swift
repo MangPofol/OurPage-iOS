@@ -13,10 +13,28 @@ class MainTabBarController: UITabBarController {
         
         setupVCs()
         removeTabbarItemsText()
-        tabBar.isTranslucent = false
-        tabBar.unselectedItemTintColor = .grayC4
-        tabBar.tintColor = .mainColor
-        tabBar.addShadow(location: .top, color: .lightGray, opacity: 1.0)
+        
+        
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = Constants.navigationbarColor
+        appearance.stackedLayoutAppearance.normal.iconColor = .grayC4
+        appearance.stackedLayoutAppearance.selected.iconColor = .mainColor
+        appearance.shadowImage = UIImage()
+        appearance.backgroundImage = UIImage()
+        
+        tabBar.standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            tabBar.scrollEdgeAppearance = appearance
+        } else {
+            // Fallback on earlier versions
+        }
+        tabBar.layer.shadowColor = UIColor.black.cgColor
+        tabBar.layer.shadowOpacity = 0.5
+        tabBar.layer.shadowOffset = CGSize.zero
+        tabBar.layer.shadowRadius = 2
+        self.tabBar.layer.borderColor = UIColor.clear.cgColor
+        self.tabBar.layer.borderWidth = 0
+        self.tabBar.clipsToBounds = false
     }
     
     override func viewDidLayoutSubviews() {
