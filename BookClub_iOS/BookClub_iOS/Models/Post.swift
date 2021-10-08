@@ -22,7 +22,7 @@ struct PostModel: Codable {
 }
 
 struct PostToCreate: Codable {
-    var id: Int
+    var bookId: Int
     var type: String
     var scope: String
     var isIncomplete: Bool

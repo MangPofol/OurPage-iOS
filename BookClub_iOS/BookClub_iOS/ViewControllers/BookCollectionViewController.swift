@@ -30,7 +30,6 @@ class BookCollectionViewController: UICollectionViewController {
         
         // bind outputs
         viewModel!.bookModel
-            .debug()
             .bind(to:
                     self.collectionView
                     .rx

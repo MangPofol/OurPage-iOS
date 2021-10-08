@@ -32,7 +32,7 @@ extension AuthAPI: TargetType {
     var task: Task {
         switch self {
         case .login(let id, let password):
-            return .requestJSONEncodable(LoginInfo(id: id, password: password))
+            return .requestJSONEncodable(LoginInfo(email: id, password: password))
         }
     }
     
@@ -42,6 +42,6 @@ extension AuthAPI: TargetType {
 }
 
 struct LoginInfo: Codable {
-    var id: String
+    var email: String
     var password: String
 }

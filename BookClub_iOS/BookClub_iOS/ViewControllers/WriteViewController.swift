@@ -16,7 +16,7 @@ class WriteViewController: UIViewController {
     let customView = WriteView()
     var viewModel: WriteViewModel!
     
-    var selectedBook: Book!
+    var selectedBook: Book?
     
     var uploadedImages: [UIImage] = []
     
@@ -31,7 +31,10 @@ class WriteViewController: UIViewController {
         super.viewWillAppear(true)
         
         if selectedBook != nil {
-            customView.bookSelectionButton.button.setTitle(selectedBook.bookModel.name, for: .normal)
+            customView.bookSelectionButton.button.setTitle(selectedBook!.bookModel.name, for: .normal)
+            if viewModel != nil {
+                viewModel.selectedBook.onNext(self.selectedBook)
+            }
         } else {
             customView.bookSelectionButton.button.setTitle("기록할 책을 선택하세요.", for: .normal)
         }
@@ -47,7 +50,10 @@ class WriteViewController: UIViewController {
                 bookSelectionButtonTapped: customView.bookSelectionButton.button.rx.tap.asSignal(),
                 isMemoOn: customView.memoButton.isOnRx.asObservable(),
                 isTopicOn: customView.topicButton.isOnRx.asObservable(),
-                imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal()
+                imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal(),
+                writeButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asSignal(),
+                titleText: customView.titleTextField.rx.text.map { $0 ?? "" },
+                contentText: customView.contentTextView.rx.text.map { $0 ?? "" }
             )
         )
         
@@ -61,26 +67,12 @@ class WriteViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        // bind outputs
-//        viewModel!.bookModel
-//            .debug()
-//            .bind(to:
-//                    self.collectionView
-//                    .rx
-//                    .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-//
-//                if element.searchedInfo == nil {
-//                    SearchServices.searchBookBy(isbn: element.bookModel.isbn).bind {
-//                        cell.searchedInfo.onNext($0.first)
-//                    }.disposed(by: cell.disposeBag)
-//                } else {
-//                    cell.searchedInfo.onNext(element.searchedInfo)
-//                }
-//
-//                cell.bookModel.onNext(element.bookModel)
-//            }.disposed(by: disposeBag)
-        
-        
+        viewModel.isWriting
+            .filter { $0 == true }
+            .bind { _ in
+                print("Writing...")
+            }
+            .disposed(by: disposeBag)
         
         viewModel.uploadedImages
             .debug()

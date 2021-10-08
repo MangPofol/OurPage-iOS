@@ -38,8 +38,10 @@ class PostServices {
             .rx.request(.createPost(post))
             .asObservable()
             .map {
+                print($0)
                 if $0.statusCode == 201 {
                     let data = try JSONDecoder().decode(PostToCreate.self, from: $0.data)
+                    print(data)
                     return data
                 } else {
                     print("Failed with Status Code: \($0.statusCode)")

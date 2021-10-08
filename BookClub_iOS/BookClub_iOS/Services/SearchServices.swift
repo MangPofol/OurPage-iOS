@@ -14,7 +14,12 @@ class SearchServices {
     static let provider = MoyaProvider<SearchAPI>()
     
     static func searchBookBy(isbn: String) -> Observable<[SearchedBook]> {
-        SearchServices.provider
+        var isbn = isbn
+        if isbn.contains(" ") {
+            isbn = isbn.components(separatedBy: " ").first!
+        }
+        
+        return SearchServices.provider
             .rx.request(.searchBookByisbn(isbn))
             .asObservable()
             .map {
@@ -23,7 +28,6 @@ class SearchServices {
                     let data = try JSONDecoder().decode(SearchedResult.self, from: $0.data)
                     return data.documents
                 } else {
-                    print($0.description)
                     return []
                 }
             }

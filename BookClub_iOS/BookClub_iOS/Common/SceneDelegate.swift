@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        AuthServices.login(id: "testerlnj@naver.com", password: "1234").bind { print($0) }
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let navController = UINavigationController()
