@@ -15,6 +15,7 @@ class WriteViewModel {
     // Inputs
     var uploadedImages = BehaviorRelay<[UIImage]>(value: [])
     var selectedBook = BehaviorSubject<Book?>(value: nil)
+    var uploadedImagesURLs = BehaviorRelay<[String]>(value: [])
     
     // Outputs
     var bookSelection: Observable<Bool>

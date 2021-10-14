@@ -18,8 +18,6 @@ class WriteViewController: UIViewController {
     
     var selectedBook: Book?
     
-    var uploadedImages: [UIImage] = []
-    
     override func loadView() {
         self.view = customView
         setNavigationBar()
@@ -87,7 +85,10 @@ class WriteViewController: UIViewController {
                 cell.deleteButton.rx.tap.bind {
                     var images = self.viewModel.uploadedImages.value
                     images.remove(at: row)
+                    var urls = self.viewModel.uploadedImagesURLs.value
+                    urls.remove(at: row)
                     self.viewModel.uploadedImages.accept(images)
+                    self.viewModel.uploadedImagesURLs.accept(urls)
                     
                 }.disposed(by: cell.disposeBag)
             }
@@ -139,15 +140,28 @@ class WriteViewController: UIViewController {
                 
                 picker.didFinishPicking { [unowned picker] items, cancelled in
                     var photos = [UIImage]()
+                    var datas = [Data]()
                     for item in items {
                         switch item {
                         case .photo(let photo):
                             photos.append(photo.image)
+                            datas.append(photo.image.jpegData(compressionQuality: 0.1)!)
                         case .video(let video):
                             print(video)
                         }
                     }
+                    
+                    var uploadedImagesURLs = [String]()
+                    FileServices.uploadFile(with: datas)
+                        .filter { $0 != nil }
+                        .map { $0! }
+                        .bind {
+                            uploadedImagesURLs = $0.components(separatedBy: ",")
+                        }
+                        .disposed(by: self.disposeBag)
+                    
                     self.viewModel.uploadedImages.accept(self.viewModel.uploadedImages.value + photos)
+                    self.viewModel.uploadedImagesURLs.accept(self.viewModel.uploadedImagesURLs.value + uploadedImagesURLs)
                     picker.dismiss(animated: true, completion: nil)
                 }
                 
