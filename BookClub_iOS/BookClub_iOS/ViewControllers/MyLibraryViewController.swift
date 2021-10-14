@@ -55,9 +55,16 @@ class MyLibraryViewController: UIViewController {
                         !self.customView.bookclubButton.isOn ? FilterType.none: FilterType.bookclub },
                     customView.sortingButton.rx.tap.map { _ in
                         !self.customView.sortingButton.isOn ? FilterType.none : FilterType.sorting }
-                )
+                ),
+                searchText: customView.searchBar
+                    .rx.text
+                    .orEmpty
+                    .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
+                    .distinctUntilChanged()
+                    .asObservable()
             )
         )
+        viewModel?.bookCollectionViewModel = bookCollectionVC.viewModel
         self.view.backgroundColor = .white
         
         // Left navigation button
@@ -77,14 +84,14 @@ class MyLibraryViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        // 검색 바 처리
-        customView.searchBar
-            .rx.text
-            .orEmpty
-            .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
-            .subscribe(onNext: { print($0) })
-            .disposed(by: disposeBag)
+        // 검색 바 처리/akjdlsfdlsfsdlkfhlsdflsdkfhls
+//        customView.searchBar
+//            .rx.text
+//            .orEmpty
+//            .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
+//            .distinctUntilChanged()
+//            .subscribe(onNext: { print($0) })
+//            .disposed(by: disposeBag)
         
         customView.bookclubSelector
             .rx.itemSelected

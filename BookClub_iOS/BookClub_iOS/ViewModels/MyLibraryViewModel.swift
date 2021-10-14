@@ -11,6 +11,7 @@ import RxCocoa
 
 class MyLibraryViewModel {
     let disposeBag = DisposeBag()
+    var bookCollectionViewModel: BookCollectionViewModel?
         
     var filterBy = PublishSubject<FilterBy>()
     
@@ -22,7 +23,8 @@ class MyLibraryViewModel {
     init(
         input: (
             typeTapped: Observable<BookListType>,
-            filterTapped: Observable<FilterType>
+            filterTapped: Observable<FilterType>,
+            searchText: Observable<String>
         )
     ) {
         
@@ -41,8 +43,23 @@ class MyLibraryViewModel {
         Observable.combineLatest(filterType, filterBy)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .subscribe(onNext: {
-                print($0, $1)
+                print($1)
+                let filterDisposeBag = DisposeBag()
                 // TODO: 맞는 필터 타입에 맞춰 data 재가공
+                switch $0 {
+                case .search:
+                    print("Filtering Mode: \($0)")
+                    _ = input.searchText.bind {
+                        print("Searching...: \($0)")
+                        self.bookCollectionViewModel?.filterBySearching(with: $0)
+                    }
+                case .none:
+                    print($0)
+                case .bookclub:
+                    print($0)
+                case .sorting:
+                    print($0)
+                }
             })
             .disposed(by: disposeBag)
     }

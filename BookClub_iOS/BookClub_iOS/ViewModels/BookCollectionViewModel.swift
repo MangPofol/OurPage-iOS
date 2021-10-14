@@ -7,9 +7,11 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 class BookCollectionViewModel {
-    var bookModel = BehaviorSubject<[Book]>(value: [])
+    var books = BehaviorRelay<[Book]>(value: [])
+    var fetchedBooks = BehaviorRelay<[Book]>(value: [])
     var bookInformation = Observable<[SearchedBook]>.just([])
     var category = BehaviorSubject<BookListType>(value: BookListType.NOW)
     var tappedBook: Observable<Book>
@@ -35,7 +37,8 @@ class BookCollectionViewModel {
             
             return books
         }.bind {
-            self.bookModel.onNext($0)
+            self.fetchedBooks.accept($0)
+            self.books.accept($0)
         }.disposed(by: disposeBag)
     }
     
@@ -47,10 +50,19 @@ class BookCollectionViewModel {
             print(#fileID, #function, #line, "")
             SearchServices.searchBookBy(title: title)
                 .bind {
-                    self.bookModel.onNext($0)
+                    self.books.accept($0)
                 }
                 .disposed(by: disposeBag)
         }
+    }
+    
+    func filterBySearching(with text: String) {
+        var books = self.fetchedBooks.value
+        books = books.filter {
+            print($0.bookModel.name)
+            return $0.bookModel.name.hasPrefix(text)
+        }
+        self.books.accept(books)
     }
     
 }

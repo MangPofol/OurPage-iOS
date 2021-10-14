@@ -29,7 +29,7 @@ class BookCollectionViewController: UICollectionViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: CGFloat(Constants.getAdjustedHeight(15.0)), right: 0)
         
         // bind outputs
-        viewModel!.bookModel
+        viewModel!.books
             .bind(to:
                     self.collectionView
                     .rx
