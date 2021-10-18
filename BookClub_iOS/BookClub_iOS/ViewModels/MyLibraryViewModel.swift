@@ -13,7 +13,7 @@ class MyLibraryViewModel {
     let disposeBag = DisposeBag()
     var bookCollectionViewModel: BookCollectionViewModel?
         
-    var filterBy = PublishSubject<FilterBy>()
+    var sortBy = PublishSubject<SortBy>()
     
     // outputs
     var bookListType = Observable.just(BookListType.NOW)
@@ -40,25 +40,23 @@ class MyLibraryViewModel {
                 return $0
             }
         
-        Observable.combineLatest(filterType, filterBy)
+        Observable.combineLatest(filterType, sortBy)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .subscribe(onNext: {
-                print($1)
-                let filterDisposeBag = DisposeBag()
+            .subscribe(onNext: { filterType, sortBy in
                 // TODO: 맞는 필터 타입에 맞춰 data 재가공
-                switch $0 {
+                switch filterType {
                 case .search:
-                    print("Filtering Mode: \($0)")
+                    print("Filtering Mode: \(filterType)")
                     _ = input.searchText.bind {
                         print("Searching...: \($0)")
                         self.bookCollectionViewModel?.filterBySearching(with: $0)
                     }
-                case .none:
-                    print($0)
                 case .bookclub:
-                    print($0)
+                    print(filterType)
                 case .sorting:
-                    print($0)
+                    self.bookCollectionViewModel?.filterBySorting(with: sortBy)
+                case .none:
+                    self.bookCollectionViewModel?.allFilterDisable()
                 }
             })
             .disposed(by: disposeBag)
@@ -78,7 +76,7 @@ enum FilterType: String {
     case sorting = "정렬"
 }
 
-enum FilterBy: String {
+enum SortBy: String {
     case byNew = "최신순"
     case byOld = "오래된순"
     case byName = "이름순"

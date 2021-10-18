@@ -56,13 +56,38 @@ class BookCollectionViewModel {
         }
     }
     
+    func allFilterDisable() {
+        self.books.accept(self.fetchedBooks.value)
+    }
+    
     func filterBySearching(with text: String) {
         var books = self.fetchedBooks.value
         books = books.filter {
-            print($0.bookModel.name)
             return $0.bookModel.name.hasPrefix(text)
         }
         self.books.accept(books)
     }
     
+    func filterBySorting(with sortType: SortBy) {
+        var books = self.fetchedBooks.value
+        print(sortType)
+        switch sortType {
+        case .byNew:
+            books.sort {
+                $0.bookModel.modifiedDate < $1.bookModel.modifiedDate
+            }
+        case .byOld:
+            books.sort {
+                $0.bookModel.modifiedDate > $1.bookModel.modifiedDate
+            }
+        case .byName:
+            books.sort {
+                $0.bookModel.name < $1.bookModel.name
+            }
+        case .none:
+            self.books.accept(self.fetchedBooks.value)
+            return
+        }
+        self.books.accept(books)
+    }
 }

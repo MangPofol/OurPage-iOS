@@ -142,24 +142,19 @@ class MyLibraryViewController: UIViewController {
             .disposed(by: disposeBag)
 
         // 필터 방식
-        self.customView.byNewButton.isOnRx
-            .skip(1)
+        Observable.combineLatest(self.customView.byNewButton.isOnRx, self.customView.byOldButton.isOnRx, self.customView.byNameButton.isOnRx)
             .subscribe(onNext: {
-                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byNew) }
-            })
-            .disposed(by: disposeBag)
-        self.customView.byOldButton.isOnRx
-            .skip(1)
-            .subscribe(onNext: {
-                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byOld) }
-            })
-            .disposed(by: disposeBag)
-        self.customView.byNameButton.isOnRx
-            .skip(1)
-            .subscribe(onNext: {
-                if $0 { self.viewModel?.filterBy.onNext(FilterBy.byName) }
-            })
-            .disposed(by: disposeBag)
+                print($0)
+                if $0.0 {
+                    self.viewModel?.sortBy.onNext(SortBy.byNew)
+                } else if $0.1 {
+                    self.viewModel?.sortBy.onNext(SortBy.byOld)
+                } else if $0.2 {
+                    self.viewModel?.sortBy.onNext(SortBy.byName)
+                } else {
+                    self.viewModel?.sortBy.onNext(SortBy.none)
+                }
+            }).disposed(by: disposeBag)
         
         // 뷰 모델로 부터 소속된 북클럽을 받아와서 북클럽 필터에 표시
         viewModel!.bookclubs
@@ -218,7 +213,7 @@ class MyLibraryViewController: UIViewController {
             self.customView.byNewButton.isOn = false
             self.customView.byOldButton.isOn = false
             self.customView.byNameButton.isOn = false
-            self.viewModel!.filterBy.onNext(.none)
+            self.viewModel!.sortBy.onNext(.none)
         }
         
         func setNavigationBar() {

@@ -11,7 +11,7 @@ import RxCocoa
 import SideMenu
 
 class BookclubViewController: UIViewController {
-
+    
     let disposeBag = DisposeBag()
     let customView = BookclubView()
     var viewModel: BookclubViewModel!
@@ -43,7 +43,15 @@ class BookclubViewController: UIViewController {
                 customView.clubMemberButton.rx.tap.map { _ in
                     !self.customView.clubMemberButton.isOn ? FilterTypeInBookclub.none: FilterTypeInBookclub.member },
                 customView.sortingButton.rx.tap.map { _ in
-                    !self.customView.sortingButton.isOn ? FilterTypeInBookclub.none : FilterTypeInBookclub.sorting }))
+                    !self.customView.sortingButton.isOn ? FilterTypeInBookclub.none : FilterTypeInBookclub.sorting }),
+            searchText: customView.searchBar
+                .rx.text
+                .orEmpty
+                .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
+                .distinctUntilChanged()
+                .asObservable()
+        )
+        viewModel.bookCollectionViewModel = self.bookCollectionVC.viewModel
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap
@@ -56,6 +64,20 @@ class BookclubViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        Observable.combineLatest(self.customView.byNewButton.isOnRx, self.customView.byOldButton.isOnRx, self.customView.byNameButton.isOnRx)
+            .subscribe(onNext: {
+                print($0)
+                if $0.0 {
+                    self.viewModel?.sortBy.onNext(SortBy.byNew)
+                } else if $0.1 {
+                    self.viewModel?.sortBy.onNext(SortBy.byOld)
+                } else if $0.2 {
+                    self.viewModel?.sortBy.onNext(SortBy.byName)
+                } else {
+                    self.viewModel?.sortBy.onNext(SortBy.none)
+                }
+            }).disposed(by: disposeBag)
+    
         // Book collection 스크롤 대응
         bookCollectionVC.collectionView.rx.didScroll
             .bind {
@@ -84,7 +106,7 @@ class BookclubViewController: UIViewController {
                     .items(cellIdentifier: MemberProfileCollectionViewCell.identifier, cellType: MemberProfileCollectionViewCell.self)) { (row, element, cell) in
                 cell.profileImageView.image = UIImage(named: "SampleProfile")
             }
-            .disposed(by: disposeBag)
+                    .disposed(by: disposeBag)
         
         let filterButtonsTapped = Observable.combineLatest(self.customView.searchButton.isOnRx, self.customView.clubMemberButton.isOnRx, self.customView.sortingButton.isOnRx)
         filterButtonsTapped
@@ -115,11 +137,11 @@ extension BookclubViewController: UICollectionViewDelegateFlowLayout {
         return Constants.profileImageSize()
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 10
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 10
-//    }
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    //        return 10
+    //    }
+    //
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    //        return 10
+    //    }
 }

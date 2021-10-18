@@ -9,13 +9,37 @@ import Foundation
 import RxSwift
 
 class BookclubViewModel {
+    var disposeBag = DisposeBag()
+    
+    var bookCollectionViewModel: BookCollectionViewModel?
+    var sortBy = PublishSubject<SortBy>()
     
     // outputs
     let profiles = Observable.just([1, 2, 3, 4])
     var filterType: Observable<FilterTypeInBookclub>
     
-    init(filterTapped: Observable<FilterTypeInBookclub>) {
+    init(filterTapped: Observable<FilterTypeInBookclub>, searchText: Observable<String>) {
         filterType = filterTapped.map { return $0 }
+        
+        Observable.combineLatest(filterTapped, sortBy.distinctUntilChanged())
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .subscribe(onNext: { filterType, sortBy in
+                switch filterType {
+                case .search:
+                    print("Filtering Mode: \(filterType)")
+                    _ = searchText.bind {
+                        print("Searching...: \($0)")
+                        self.bookCollectionViewModel?.filterBySearching(with: $0)
+                    }
+                case .member:
+                    print(filterType)
+                case .sorting:
+                    self.bookCollectionViewModel?.filterBySorting(with: sortBy)
+                case .none:
+                    self.bookCollectionViewModel?.allFilterDisable()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
 
