@@ -8,6 +8,7 @@
 import Foundation
 import UIKit.UITableView
 import BetterSegmentedControl
+import UIKit
 
 extension UITableView {
     func removeExtraLine() {
@@ -75,6 +76,10 @@ extension UIFont {
     
     static func defaultFont(size: FontSize, bold: Bool = false) -> UIFont {
         UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size.rawValue)!
+    }
+    
+    static func defaultFont(size: CGFloat, bold: Bool = false) -> UIFont {
+        UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size)!
     }
 }
 
@@ -153,6 +158,7 @@ extension UIView {
 extension UIColor {
     static let backgroundGray = UIColor(named: "BackgroundGray")!
     static let mainColor = UIColor(named: "MainColor")!
+    static let mainPink =  UIColor(hexString: "E5949D")
     static let gray1 = UIColor(named: "Gray1")!
 //    static let black = UIColor(named: "Black")!
     static let grayC3 = UIColor(named: "GrayC3")!
@@ -163,6 +169,24 @@ extension UIColor {
     static let grayE3 = UIColor(named: "GrayE3")!
     static let lightMainColor = UIColor(named: "LightMainColor")!
     static let pink_E5949D = UIColor(named: "Pink_E5949D")!
+    
+    // Hex to color
+    convenience init(hexString: String, alpha: CGFloat = 1.0) {
+        var hexFormatted: String = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
+        
+        if hexFormatted.hasPrefix("#") {
+            hexFormatted = String(hexFormatted.dropFirst())
+        }
+        
+        assert(hexFormatted.count == 6, "Invalid hex code used.")
+        
+        var rgbValue: UInt64 = 0
+        Scanner(string: hexFormatted).scanHexInt64(&rgbValue)
+        
+            
+        
+        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0, green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0, blue: CGFloat(rgbValue & 0x0000FF) / 255.0, alpha: alpha)
+    }
 }
 
 extension CALayer {
@@ -207,6 +231,7 @@ extension UIImage {
     static let uploadIcon = UIImage(named: "UploadIcon")!.withRenderingMode(.alwaysTemplate)
     static let cameraIcon = UIImage(named: "CameraIcon")!.withRenderingMode(.alwaysTemplate)
     static let deleteButtonImage = UIImage(named: "DeleteButtonImage")!
+    static let mainLogo = UIImage(named: "MainLogo")!
 }
 
 extension UIButton {
@@ -275,5 +300,13 @@ extension UIViewController {
         let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         backBarButtonItem.tintColor = .mainColor
         self.navigationItem.backBarButtonItem = backBarButtonItem
+    }
+}
+
+extension UITextField {
+    func addLeftPadding(value: Double) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: value, height: self.frame.height))
+        self.leftView = paddingView
+        self.leftViewMode = ViewMode.always
     }
 }
