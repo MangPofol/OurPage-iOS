@@ -10,7 +10,7 @@ import UIKit
 final class IDPWView: UIView {
     
     var idTextField = UITextField().then {
-        $0.backgroundColor = UIColor(hexString: "EFF0F3")
+        $0.backgroundColor = .textFieldBackgroundGray
         $0.placeholder = "아이디"
         $0.font = .defaultFont(size: 16.0)
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
@@ -27,7 +27,7 @@ final class IDPWView: UIView {
     }
     
     var passwordTextField = UITextField().then {
-        $0.backgroundColor = UIColor(hexString: "EFF0F3")
+        $0.backgroundColor = .textFieldBackgroundGray
         $0.placeholder = "비밀번호"
         $0.font = .defaultFont(size: 16.0)
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
@@ -37,7 +37,7 @@ final class IDPWView: UIView {
     }
     
     var passwordVerifyingTextField = UITextField().then {
-        $0.backgroundColor = UIColor(hexString: "EFF0F3")
+        $0.backgroundColor = .textFieldBackgroundGray
         $0.placeholder = "비밀번호 확인"
         $0.font = .defaultFont(size: 16.0)
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))

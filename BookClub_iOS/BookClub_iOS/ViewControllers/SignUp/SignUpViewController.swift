@@ -105,25 +105,24 @@ class SignUpViewController: UIViewController {
         appearance.backgroundColor = Constants.navigationbarColor
         appearance.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.mainColor]
         
+        // 백 버튼 텍스트 지우기
+        appearance.setBackIndicatorImage(.backbuttonImage, transitionMaskImage: .leftArrowImage)
+        self.navigationItem.backButtonTitle = ""
+        
         // bar underline 삭제
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         appearance.shadowImage = UIImage()
         appearance.shadowColor = .white
 //        nav.navigationBar.standardAppearance = appearance;
         nav.navigationBar.scrollEdgeAppearance = appearance
-        nav.navigationBar.addShadow(location: .bottom, opacity: 0.25)
+//        nav.navigationBar.addShadow(location: .bottom, opacity: 0.25)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .leftArrowImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .backbuttonImage, style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .mainColor
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
         self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
-        
-        // 백 버튼 텍스트 지우기
-        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        backBarButtonItem.tintColor = .mainColor
-        self.navigationItem.backBarButtonItem = backBarButtonItem
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap

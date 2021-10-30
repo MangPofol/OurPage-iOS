@@ -169,6 +169,7 @@ extension UIColor {
     static let grayE3 = UIColor(named: "GrayE3")!
     static let lightMainColor = UIColor(named: "LightMainColor")!
     static let pink_E5949D = UIColor(named: "Pink_E5949D")!
+    static let textFieldBackgroundGray = UIColor(hexString: "EFF0F3")
     
     // Hex to color
     convenience init(hexString: String, alpha: CGFloat = 1.0) {
@@ -232,6 +233,7 @@ extension UIImage {
     static let cameraIcon = UIImage(named: "CameraIcon")!.withRenderingMode(.alwaysTemplate)
     static let deleteButtonImage = UIImage(named: "DeleteButtonImage")!
     static let mainLogo = UIImage(named: "MainLogo")!
+    static let backbuttonImage = UIImage(named: "backbuttonImage")!
 }
 
 extension UIButton {

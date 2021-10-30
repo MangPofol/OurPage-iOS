@@ -15,15 +15,15 @@ class ProfileInformationViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
+        self.navigationItem.backButtonTitle = ""
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        customView.rx.tap
-            .bind {
-                // 다음 페이지로
-                print(#fileID, #function, #line, $0)
+        customView.nextButton.rx.tap
+            .bind { _ in
+                self.navigationController?.pushViewController(NicknameInputViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     }
