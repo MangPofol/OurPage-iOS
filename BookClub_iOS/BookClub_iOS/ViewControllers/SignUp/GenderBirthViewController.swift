@@ -22,6 +22,7 @@ class GenderBirthViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
+        self.navigationItem.backButtonTitle = ""
     }
     
     override func viewDidLoad() {
@@ -40,7 +41,8 @@ class GenderBirthViewController: UIViewController {
                     self.customView.menButton.isOnRx.map { _ in "MALE" },
                     self.customView.womenButton.isOnRx.map { _ in "FEMALE" }
                 ),
-                birth: Observable.just("2020년 11월 3일")
+                birth: Observable.just("2020년 11월 3일"),
+                nextButtonTapped: self.customView.nextButton.rx.tap
             )
         )
         
@@ -61,6 +63,14 @@ class GenderBirthViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        viewModel.nextConfirmed
+            .filter { $0 }
+            .bind {
+                if $0 {
+                    self.navigationController?.pushViewController(IntroduceViewController(), animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
         // }
     }
     
