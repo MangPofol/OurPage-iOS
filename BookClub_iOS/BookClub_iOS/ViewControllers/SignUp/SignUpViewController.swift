@@ -22,6 +22,8 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        SignUpViewModel.creatingUser = CreatingUser()
+        
         self.title = "회원가입" 
         setNavigationBar()
         

@@ -9,7 +9,7 @@ import UIKit
 
 final class GoalView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "책 읽는 스타일을 선택해주세요."
+        $0.text = "독서 목표를 설정해주세요."
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
     }

@@ -24,6 +24,9 @@ class GoalViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
+        self.customView.nextButton.isUserInteractionEnabled = true
+        self.customView.nextButton.backgroundColor = .mainPink
+        self.customView.nextButton.setTitleColor(.white, for: .normal)
     }
     
     override func viewDidLoad() {
@@ -36,30 +39,30 @@ class GoalViewController: UIViewController {
         self.customView.booksPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.booksPickerView.dataSource = self
         
-        viewModel = GoalViewModel(
-            input: (
-                period: self.customView.periodPickerView.rx.itemSelected.asObservable()
-                    .map { self.periods[$0.row] },
-                unit: self.customView.unitPickerView.rx.itemSelected.asObservable()
-                    .map { self.units[$0.row] },
-                books: self.customView.booksPickerView.rx.itemSelected.asObservable()
-                    .map { self.booksGoals[$0.row] },
-                nextButtonTapped: self.customView.nextButton.rx.tap
-            )
-        )
+        self.customView.unitPickerView.selectRow(1, inComponent: 0, animated: false)
+        self.customView.booksPickerView.selectRow(9, inComponent: 0, animated: false)
+    
+        viewModel = GoalViewModel(nextButtonTapped: self.customView.nextButton.rx.tap)
+        
+        // inputs
+        self.customView.periodPickerView.rx.itemSelected.asObservable()
+            .bind {
+                self.viewModel.periodText.onNext(self.periods[$0.row])
+            }.disposed(by: disposeBag)
+        self.customView.unitPickerView.rx.itemSelected.asObservable()
+            .bind {
+                self.viewModel.unitText.onNext(self.units[$0.row])
+            }.disposed(by: disposeBag)
+        self.customView.booksPickerView.rx.itemSelected.asObservable()
+            .bind {
+                self.viewModel.booksText.onNext(self.booksGoals[$0.row])
+            }.disposed(by: disposeBag)
         
         // bind results {
-        viewModel.isAbleToProgress
+        self.viewModel.isNextConfirmed
             .bind {
-                self.customView.nextInformationLabel.isHidden = !$0
                 if $0 {
-                    self.customView.nextButton.isUserInteractionEnabled = true
-                    self.customView.nextButton.backgroundColor = .mainPink
-                    self.customView.nextButton.setTitleColor(.white, for: .normal)
-                } else {
-                    self.customView.nextButton.isUserInteractionEnabled = false
-                    self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
-                    self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+                    print(SignUpViewModel.creatingUser)
                 }
             }
             .disposed(by: disposeBag)

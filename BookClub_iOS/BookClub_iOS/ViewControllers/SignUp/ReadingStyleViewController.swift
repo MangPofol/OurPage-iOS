@@ -91,6 +91,22 @@ class ReadingStyleViewController: UIViewController {
                 nextButtonTapped: self.customView.nextButton.rx.tap
             )
         )
+        
+        // 글자 수 제한
+        self.customView.customStyleTextField.rx.text.orEmpty
+            .asObservable()
+            .filter {
+                $0 != "+ 직접 입력하기 (최대 30자)"
+            }
+            .scan("") { old, new in
+                if new.count > 30 {
+                    return old
+                } else {
+                    return new
+                }
+            }
+            .bind(to: self.customView.customStyleTextField.rx.text)
+            .disposed(by: disposeBag)
     
         // bind results {
         viewModel.isStyleSelected
@@ -111,6 +127,7 @@ class ReadingStyleViewController: UIViewController {
         viewModel.isNextConfirmed
             .bind {
                 if $0 {
+                    print(SignUpViewModel.creatingUser)
                     self.navigationController?.pushViewController(GoalViewController(), animated: true)
                 }
             }

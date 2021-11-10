@@ -29,10 +29,6 @@ class GenderBirthViewController: UIViewController {
     override func loadView() {
         self.view = customView
         self.navigationItem.backButtonTitle = ""
-        
-        self.customView.yearPickerView.selectRow(77, inComponent: 0, animated: true)
-        self.customView.monthPickerView.selectRow(0, inComponent: 0, animated: true)
-        self.customView.dayPickerView.selectRow(0, inComponent: 0, animated: true)
     }
     
     override func viewDidLoad() {
@@ -46,6 +42,10 @@ class GenderBirthViewController: UIViewController {
         
         self.customView.dayPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.dayPickerView.dataSource = self
+        
+        self.customView.yearPickerView.selectRow(77, inComponent: 0, animated: false)
+        self.customView.monthPickerView.selectRow(0, inComponent: 0, animated: false)
+        self.customView.dayPickerView.selectRow(0, inComponent: 0, animated: false)
         
         viewModel = GenderBirthViewModel(
             input: (

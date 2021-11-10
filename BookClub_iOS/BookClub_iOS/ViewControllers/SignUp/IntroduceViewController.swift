@@ -52,6 +52,7 @@ class IntroduceViewController: UIViewController {
         viewModel.isNextConfirmed
             .bind {
                 if $0 {
+                    print(SignUpViewModel.creatingUser)
                     self.navigationController?.pushViewController(GenreViewController(), animated: true)
                 }
             }

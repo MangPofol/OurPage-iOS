@@ -31,6 +31,7 @@ class SignUpViewModel {
         
         idConfirmed = input.idText
             .debounce(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .distinctUntilChanged()
             .flatMap { id -> Observable<Bool> in
                 SignUpViewModel.creatingUser.email = id
                 

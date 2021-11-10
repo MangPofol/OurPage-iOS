@@ -11,22 +11,22 @@ import RxSwift
 import RxCocoa
 
 class GoalViewModel {
-    var isAbleToProgress: Observable<Bool>
     var isNextConfirmed: Observable<Bool>
     
-    init(
-        input: (
-            period: Observable<String>,
-            unit: Observable<String>,
-            books: Observable<String>,
-            nextButtonTapped: ControlEvent<()>
-        )
-    ) {
-        isAbleToProgress = Observable.combineLatest(input.period, input.unit, input.books)
+    var periodText = BehaviorSubject<String>(value: "1")
+    var unitText = BehaviorSubject<String>(value: "개월")
+    var booksText = BehaviorSubject<String>(value: "10")
+    
+    init(nextButtonTapped: ControlEvent<()>) {
+        let goalSentence = Observable.combineLatest(periodText, unitText, booksText)
             .map {
-                print($0, $1, $2)
-                return true
+                "\($0)\($1) 동안 \($2)권의 책을 기록하기"
             }
-        isNextConfirmed = input.nextButtonTapped.withLatestFrom(isAbleToProgress).map { $0 }
+        
+        isNextConfirmed = nextButtonTapped.withLatestFrom(goalSentence)
+            .do(onNext: {
+                SignUpViewModel.creatingUser.goal = $0
+            })
+            .map { _ in true }
     }
 }

@@ -20,7 +20,13 @@ class IntroduceViewModel {
             nextButtonTapped: ControlEvent<()>
         )
     ) {
-        isIntroduceConfirmed = input.introduceText.map { $0.count > 0 }
+        isIntroduceConfirmed = input.introduceText
+            .do {
+                if $0.count > 0 {
+                    SignUpViewModel.creatingUser.introduce = $0
+                }
+            }
+            .map { $0.count > 0 }
         isNextConfirmed = input.nextButtonTapped.withLatestFrom(isIntroduceConfirmed).map { $0 }
     }
 }

@@ -16,22 +16,13 @@ class GenreViewController: UIViewController {
     
     var disposeBag = DisposeBag()
     
+    var viewModel: GenreViewModel!
+    
     let items = [["소설", "시", "에세이", "경제/경영"], ["자기계발", "인문학", "역사/문화"], ["종교", "정치/사회", "여행", "만화"], ["사회과학", "역사", "예술/대중문화"], ["과학", "기술/공학", "컴퓨터/IT", "기타"]]
     
     var selectedItems: [String] = [] {
         didSet {
-            let isOk = selectedItems.count > 0
-            
-            self.customView.nextInformationLabel.isHidden = !isOk
-            if isOk {
-                self.customView.nextButton.isUserInteractionEnabled = true
-                self.customView.nextButton.backgroundColor = .mainPink
-                self.customView.nextButton.setTitleColor(.white, for: .normal)
-            } else {
-                self.customView.nextButton.isUserInteractionEnabled = false
-                self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
-                self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
-            }
+            viewModel.selectedGenres.onNext(selectedItems)
         }
     }
     
@@ -45,11 +36,28 @@ class GenreViewController: UIViewController {
         
         self.customView.genreCollectionView.delegate = self
         self.customView.genreCollectionView.dataSource = self
-    
-        self.customView.nextButton.rx.tap
-            .bind { _ in
-                if self.selectedItems.count > 0 {
-                    SignUpViewModel.creatingUser.genres.append(contentsOf: self.selectedItems)
+        
+        viewModel = GenreViewModel(nextButtonTapped: self.customView.nextButton.rx.tap)
+        
+        viewModel.isAbleToProgress
+            .bind { isOk in
+                self.customView.nextInformationLabel.isHidden = !isOk
+                if isOk {
+                    self.customView.nextButton.isUserInteractionEnabled = true
+                    self.customView.nextButton.backgroundColor = .mainPink
+                    self.customView.nextButton.setTitleColor(.white, for: .normal)
+                } else {
+                    self.customView.nextButton.isUserInteractionEnabled = false
+                    self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
+                    self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.isNextConfirmed
+            .bind {
+                if $0 {
+                    print(SignUpViewModel.creatingUser)
                     self.navigationController?.pushViewController(ReadingStyleViewController(), animated: true)
                 }
             }
