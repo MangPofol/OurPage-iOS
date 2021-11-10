@@ -18,7 +18,7 @@ class NicknameViewModel {
     init(
         input: (
             nicknameText: Observable<String>,
-            nextButtonTapped: ControlEvent<()>
+            nextButtonTapped: Observable<Bool>
         )
     ) {
         nicknameConfirmed = input.nicknameText
@@ -27,6 +27,6 @@ class NicknameViewModel {
                 return Constants.isValidString(str: $0, regEx: Constants.USERNICKNAME_RULE)
             }
         
-        nextConfirmed = input.nextButtonTapped.map { true }
+        nextConfirmed = input.nextButtonTapped.map { _ in true }
     }
 }

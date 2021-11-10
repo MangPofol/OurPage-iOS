@@ -46,24 +46,20 @@ class SignUpViewController: UIViewController {
             .skip(1)
             .bind {
                 if !$0 {
-                    self.customView.idConfirmMessageLabel.text = "사용할 수 없는 아이디 입니다."
+                    self.customView.idConfirmMessageLabel.text = "사용할 수 없는 이메일 입니다."
                 } else {
                     self.customView.idConfirmMessageLabel.text = ""
                 }
             }
             .disposed(by: disposeBag)
         
-//        viewModel.passwordConfirmed
-//            .observeOn(MainScheduler.asyncInstance)
-//            .skip(1)
-//            .bind {
-//                if !$0 {
-//                    self.customView.idConfirmMessageLabel.text = "사용할 수 없는 아이디 입니다."
-//                } else {
-//                    self.customView.idConfirmMessageLabel.text = ""
-//                }
-//            }
-//            .disposed(by: disposeBag)
+        viewModel.passwordConfirmed
+            .observeOn(MainScheduler.asyncInstance)
+            .skip(1)
+            .bind {
+                print("비밀번호 컨펌: \($0)")
+            }
+            .disposed(by: disposeBag)
         
         viewModel.passwordVerifyingComfirmed
             .observeOn(MainScheduler.asyncInstance)
@@ -74,6 +70,13 @@ class SignUpViewController: UIViewController {
                 } else {
                     self.customView.passwordConfirmMessageLabel.text = ""
                 }
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.inputsConfirmed
+            .observeOn(MainScheduler.asyncInstance)
+            .bind {
+                self.navigationItem.rightBarButtonItem?.isEnabled = $0
             }
             .disposed(by: disposeBag)
         
@@ -123,6 +126,7 @@ class SignUpViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
         self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap

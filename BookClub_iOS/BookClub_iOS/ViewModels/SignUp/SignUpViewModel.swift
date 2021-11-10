@@ -73,7 +73,6 @@ class SignUpViewModel {
         
         nextConfirmed = input.nextButtonTapped.withLatestFrom(inputsConfirmed)
             .map { _ in
-//                return $0
                 return true
             }
     }

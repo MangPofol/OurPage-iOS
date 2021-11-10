@@ -17,12 +17,22 @@ class GenderBirthViewController: UIViewController {
     var disposeBag = DisposeBag()
     
     var years = Array(1920...2010)
+    var months = Array(1...12)
+    var days = Array(1...31) {
+        didSet {
+            self.customView.dayPickerView.reloadAllComponents()
+        }
+    }
     
     var viewModel: GenderBirthViewModel!
     
     override func loadView() {
         self.view = customView
         self.navigationItem.backButtonTitle = ""
+        
+        self.customView.yearPickerView.selectRow(77, inComponent: 0, animated: true)
+        self.customView.monthPickerView.selectRow(0, inComponent: 0, animated: true)
+        self.customView.dayPickerView.selectRow(0, inComponent: 0, animated: true)
     }
     
     override func viewDidLoad() {
@@ -30,24 +40,48 @@ class GenderBirthViewController: UIViewController {
         
         self.customView.yearPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.yearPickerView.dataSource = self
+        
         self.customView.monthPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.monthPickerView.dataSource = self
+        
         self.customView.dayPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.dayPickerView.dataSource = self
         
         viewModel = GenderBirthViewModel(
             input: (
-                gender: Observable.merge(
-                    self.customView.menButton.isOnRx.map { _ in "MALE" },
-                    self.customView.womenButton.isOnRx.map { _ in "FEMALE" }
-                ),
-                birth: Observable.just("2020년 11월 3일"),
+                isMenSelected: self.customView.menButton.isOnRx,
+                isWomenSelected: self.customView.womenButton.isOnRx,
                 nextButtonTapped: self.customView.nextButton.rx.tap
             )
         )
         
+        // bind inputs {
+        self.customView.yearPickerView.rx.itemSelected
+            .bind {
+                self.viewModel.selectedYear.onNext(self.years[$0.row])
+            }
+            .disposed(by: disposeBag)
+        
+        self.customView.monthPickerView.rx.itemSelected
+            .bind {
+                self.viewModel.selectedMonth.onNext(self.months[$0.row])
+            }
+            .disposed(by: disposeBag)
+        
+        self.customView.dayPickerView.rx.itemSelected
+            .bind {
+                self.viewModel.selectedDay.onNext(self.days[$0.row])
+            }
+            .disposed(by: disposeBag)
+        // }
         
         // bind outputs {
+        viewModel.newDays
+            .bind {
+                self.days = Array(1...$0)
+            }
+            .disposed(by: disposeBag)
+        
         viewModel.isAbleToProgress
             .bind {
                 self.customView.nextInformationLabel.isHidden = !$0
@@ -75,24 +109,30 @@ class GenderBirthViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
-//        self.customView.yearPickerView.subviews[1].backgroundColor = .textFieldBackgroundGray
         self.customView.yearPickerView.subviews[0].layoutMargins = UIEdgeInsets.zero
         self.customView.yearPickerView.subviews[0].subviews[0].layoutMargins = UIEdgeInsets.zero
-        print(#fileID, #function, #line, self.customView.yearPickerView.subviews[0].subviews)
+    
     }
 }
 
 extension GenderBirthViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: Constants.getAdjustedWidth(200), height: Constants.getAdjustedHeight(60.0)))
-            
         let pickerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: Constants.getAdjustedWidth(200), height: Constants.getAdjustedHeight(60.0)))
         pickerLabel.font = .defaultFont(size: .medium, bold: true)
         pickerLabel.textAlignment = .center
         pickerLabel.textColor = .mainColor
-        pickerLabel.text = "\(years[row])"
     
-        view.addSubview(pickerLabel)
+        switch pickerView {
+        case self.customView.yearPickerView:
+            pickerLabel.text = "\(years[row])"
+        case self.customView.monthPickerView:
+            pickerLabel.text = "\(months[row])"
+        case self.customView.dayPickerView:
+            pickerLabel.text = "\(days[row])"
+        default:
+            break
+        }
+        
         return pickerLabel
     }
     
@@ -105,6 +145,15 @@ extension GenderBirthViewController: UIPickerViewDelegate, UIPickerViewDataSourc
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return years.count
+        switch pickerView {
+        case self.customView.yearPickerView:
+            return years.count
+        case self.customView.monthPickerView:
+            return months.count
+        case self.customView.dayPickerView:
+            return days.count
+        default:
+            return 0
+        }
     }
 }

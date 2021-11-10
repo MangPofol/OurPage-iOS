@@ -22,6 +22,9 @@ class ProfileInformationViewController: UIViewController {
         super.viewDidLoad()
 
         customView.nextButton.rx.tap
+            .do { _ in
+                self.customView.nextButton.animateButton()
+            }
             .bind { _ in
                 self.navigationController?.pushViewController(NicknameInputViewController(), animated: true)
             }

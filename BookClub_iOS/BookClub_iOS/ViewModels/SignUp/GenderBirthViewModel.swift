@@ -12,21 +12,66 @@ import RxCocoa
 class GenderBirthViewModel {
     var genderConfirmed: Observable<Bool>
     var birthConfirmed: Observable<Bool>
+    
+    var newDays: Observable<Int>
+    
     var isAbleToProgress: Observable<Bool>
     var nextConfirmed: Observable<Bool>
     
+    var disposeBag = DisposeBag()
+    
+    // Initial date
+    var selectedYear = BehaviorSubject(value: 1997)
+    var selectedMonth = BehaviorSubject(value: 1)
+    var selectedDay = BehaviorSubject(value: 1)
+    
     init(
         input: (
-            gender: Observable<String>,
-            birth: Observable<String>,
+            isMenSelected: Observable<Bool>,
+            isWomenSelected: Observable<Bool>,
             nextButtonTapped: ControlEvent<()>
         )
     ) {
-        genderConfirmed = Observable.just(true)
+        let dateComponents = BehaviorSubject(value: (1997, 1, 1))
+        Observable.combineLatest(selectedYear.asObservable(), selectedMonth.asObservable(), selectedDay.asObservable())
+            .bind {
+                dateComponents.onNext(($0, $1, $2))
+            }.disposed(by: disposeBag)
+        
+        let selectedGender = input.isMenSelected.withLatestFrom(input.isWomenSelected) { men, women -> String? in
+            if men { return "MALE" }
+            if women { return "FEMALE" }
+            return nil
+        }
+        
+        genderConfirmed = selectedGender
+            .do {
+                if $0 != nil {
+                    SignUpViewModel.creatingUser.sex = $0!
+                }
+            }
+            .map { $0 != nil }
+        
         birthConfirmed = Observable.just(true)
+        
+        newDays = Observable.combineLatest(selectedYear, selectedMonth)
+            .map {
+                let calendar = Calendar.current
+                let date = Date.date(year: $0, month: $1, day: 1)!
+
+                let interval = calendar.dateInterval(of: .month, for: date)!
+                let days = calendar.dateComponents([.day], from: interval.start, to: interval.end).day!
+                return days
+            }.distinctUntilChanged()
         
         isAbleToProgress = Observable.combineLatest(genderConfirmed, birthConfirmed).map { $0 && $1 }
         
-        nextConfirmed = input.nextButtonTapped.withLatestFrom(isAbleToProgress).map { $0 }
+        nextConfirmed = input.nextButtonTapped.withLatestFrom(dateComponents)
+            .map {
+                let birth = Date.date(year: $0, month: $1, day: $2)!
+                SignUpViewModel.creatingUser.birthdate = birth.toString()
+                print(#fileID, #function, #line, SignUpViewModel.creatingUser)
+                return true
+            }
     }
 }

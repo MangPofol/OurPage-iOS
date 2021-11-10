@@ -34,6 +34,12 @@ extension Date {
         formatter.dateFormat = "yyyy.MM.dd"
         return formatter.string(from: self)
     }
+    
+    static func date(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0, seconds: Int = 0) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.date(from: "\(year)-\(month)-\(day) \(hour):\(minute):\(seconds)")
+    }
 }
 
 extension BetterSegmentedControl {
@@ -153,6 +159,26 @@ extension UIView {
         self.layer.cornerRadius = radius
         self.layer.maskedCorners = [.layerMaxXMaxYCorner] // Top right corner, Top left corner respectively
     }
+    
+    // button tap animation
+    func showAnimation(_ completionBlock: @escaping (() -> Void)) {
+        isUserInteractionEnabled = false
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveLinear,
+                       animations: { [weak self] in
+            self?.transform = CGAffineTransform.init(scaleX: 0.95, y: 0.95)}) { (done) in
+            UIView.animate(withDuration: 0.1,
+                           delay: 0,
+                           options: .curveLinear,
+                           animations: { [weak self] in
+                self?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+            }) { [weak self] (_) in
+                self?.isUserInteractionEnabled = true
+                completionBlock()
+            }
+        }
+    }
 }
 
 extension UIColor {
@@ -271,6 +297,25 @@ extension UIButton {
         
         titleEdgeInsets = UIEdgeInsets(top: spacing, left: -image.size.width, bottom: -image.size.height, right: 0)
         imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0, bottom: 0, right: -titleSize.width)
+    }
+    
+    // Animation
+    func animateButton(duration: Double = 0.1, scale: Double = 0.9) {
+        self.isUserInteractionEnabled = false
+        UIView.animate(withDuration: duration,
+                       delay: 0,
+                       options: .curveLinear,
+                       animations: {
+            self.transform = CGAffineTransform.init(scaleX: scale, y: scale)}) { (done) in
+            UIView.animate(withDuration: duration,
+                           delay: 0,
+                           options: .curveLinear,
+                           animations: {
+                self.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+            }) { _ in
+                self.isUserInteractionEnabled = true
+            }
+        }
     }
 }
 
