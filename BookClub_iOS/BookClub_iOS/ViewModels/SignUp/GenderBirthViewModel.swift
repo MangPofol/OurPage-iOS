@@ -68,8 +68,8 @@ class GenderBirthViewModel {
         
         nextConfirmed = input.nextButtonTapped.withLatestFrom(dateComponents)
             .map {
-                let birth = Date.date(year: $0, month: $1, day: $2)!
-                SignUpViewModel.creatingUser.birthdate = birth.toString()
+                let birth = "\($0)-\($1)-\($2)T11:11:11"
+                SignUpViewModel.creatingUser.birthdate = birth
                 print(#fileID, #function, #line, SignUpViewModel.creatingUser)
                 return true
             }
