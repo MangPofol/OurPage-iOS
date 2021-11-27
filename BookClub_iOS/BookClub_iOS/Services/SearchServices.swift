@@ -31,7 +31,7 @@ class SearchServices {
                     return []
                 }
             }
-            .catchErrorJustReturn([])
+            .catchAndReturn([])
     }
     
     static func getThumbnailBy(isbn: String) -> Observable<String?> {
@@ -47,7 +47,7 @@ class SearchServices {
                     return nil
                 }
             }
-            .catchErrorJustReturn(nil)
+            .catchAndReturn(nil)
     }
     
     static func searchBookBy(title: String) -> Observable<[Book]> {
@@ -70,6 +70,6 @@ class SearchServices {
                     return []
                 }
             }
-            .catchErrorJustReturn([])
+            .catchAndReturn([])
     }
 }

@@ -30,7 +30,7 @@ class PostServices {
                     return []
                 }
             }
-            .catchErrorJustReturn([])
+            .catchAndReturn([])
     }
     
     static func createPost(post: PostToCreate) -> Observable<PostToCreate?> {
@@ -48,7 +48,7 @@ class PostServices {
                     return nil
                 }
             }
-            .catchErrorJustReturn(nil)
+            .catchAndReturn(nil)
     }
     
     static func updatePost(post: PostModel) {

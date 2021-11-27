@@ -15,6 +15,8 @@ struct EmailStruct: Codable {
 enum UserAPI {
     case validateDuplicate(email: EmailStruct)
     case createUser(user: CreatingUser)
+    case login(email: String, password: String)
+    case getUserInfor(userID: String)
 }
 
 extension UserAPI: TargetType {
@@ -28,6 +30,10 @@ extension UserAPI: TargetType {
             return "/users/validate-duplicate"
         case .createUser(_):
             return "/users"
+        case .login(_, _):
+            return "/login"
+        case .getUserInfor(_):
+            return "/users"
         }
     }
     
@@ -37,6 +43,10 @@ extension UserAPI: TargetType {
             return .post
         case .createUser(_):
             return .post
+        case .login(_, _):
+            return .post
+        case .getUserInfor(_):
+            return .get
         }
     }
     
@@ -50,12 +60,14 @@ extension UserAPI: TargetType {
             return .requestJSONEncodable(email)
         case .createUser(let user):
             return .requestJSONEncodable(user)
+        case .login(let email, let password):
+            return .requestJSONEncodable(LoginUser(email: email, password: password))
+        case .getUserInfor(let userID):
+            return .requestParameters(parameters: ["userId": "\(userID)"], encoding: URLEncoding.default)
         }
     }
     
     var headers: [String : String]? {
         nil
     }
-    
-    
 }

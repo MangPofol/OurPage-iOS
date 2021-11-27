@@ -175,7 +175,7 @@ class MyLibraryViewController: UIViewController {
         
         // 스크롤시 상단 버튼 숨기기
         bookCollectionVC.collectionView.rx.didScroll
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .bind {
                 if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height {
                     self.customView.typeControl.snp.updateConstraints {

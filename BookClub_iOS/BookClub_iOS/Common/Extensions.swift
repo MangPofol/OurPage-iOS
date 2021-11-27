@@ -9,6 +9,7 @@ import Foundation
 import UIKit.UITableView
 import BetterSegmentedControl
 import UIKit
+import CryptoKit
 
 extension UITableView {
     func removeExtraLine() {
@@ -25,6 +26,16 @@ extension UITableView {
         self.beginUpdates()
         self.deleteRows(at: [indexPath], with: animation)
         self.endUpdates()
+    }
+}
+
+extension String {
+    func toSHA256() -> String {
+        let original = self.data(using: .utf8)!
+        let sha256 = SHA256.hash(data: original)
+        return sha256.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
     }
 }
 

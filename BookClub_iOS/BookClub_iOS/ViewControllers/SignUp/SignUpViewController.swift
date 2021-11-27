@@ -44,7 +44,7 @@ class SignUpViewController: UIViewController {
         
         // bind outputs {
         viewModel.idConfirmed
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .skip(1)
             .bind {
                 if !$0 {
@@ -56,7 +56,7 @@ class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.passwordConfirmed
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .skip(1)
             .bind {
                 print("비밀번호 컨펌: \($0)")
@@ -64,7 +64,7 @@ class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.passwordVerifyingComfirmed
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .skip(1)
             .bind {
                 if !$0 {
@@ -76,14 +76,14 @@ class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.inputsConfirmed
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .bind {
                 self.navigationItem.rightBarButtonItem?.isEnabled = $0
             }
             .disposed(by: disposeBag)
         
         viewModel.nextConfirmed
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .bind {
                 print(SignUpViewModel.creatingUser)
                 if $0 {

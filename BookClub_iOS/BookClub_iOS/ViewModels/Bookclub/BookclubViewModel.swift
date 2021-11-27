@@ -22,7 +22,7 @@ class BookclubViewModel {
         filterType = filterTapped.map { return $0 }
         
         Observable.combineLatest(filterTapped, sortBy.distinctUntilChanged())
-            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .subscribe(onNext: { filterType, sortBy in
                 switch filterType {
                 case .search:

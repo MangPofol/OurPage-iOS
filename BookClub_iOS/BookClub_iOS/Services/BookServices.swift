@@ -52,7 +52,7 @@ class BookServices {
                     return nil
                 }
             }
-            .catchErrorJustReturn(nil)
+            .catchAndReturn(nil)
     }
     
     // 책 업데이트

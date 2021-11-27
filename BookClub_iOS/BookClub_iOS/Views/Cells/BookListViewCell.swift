@@ -54,7 +54,7 @@ class BookListViewCell: UICollectionViewCell {
     }
     
     private func bindOutputs() {
-        bookModel.observeOn(MainScheduler.instance)
+        bookModel.observe(on: MainScheduler.instance)
             .filter { $0 != nil}
             .bind { book in
                 // DB 먼저 검사
@@ -62,7 +62,7 @@ class BookListViewCell: UICollectionViewCell {
             }
             .disposed(by: disposeBag)
         
-        searchedInfo.observeOn(MainScheduler.asyncInstance)
+        searchedInfo.observe(on: MainScheduler.instance)
             .filter { $0 != nil }
             .bind {
                 self.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail))

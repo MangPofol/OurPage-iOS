@@ -96,7 +96,7 @@ class WriteViewController: UIViewController {
         
         
         viewModel.bookSelection
-            .observeOn(MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .bind {
                 if $0 {
                     self.navigationController?.pushViewController(BookSelectViewController(), animated: true)
@@ -105,14 +105,14 @@ class WriteViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.isMemo
-            .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .bind {
                 print("isMemo", $0)
             }
             .disposed(by: disposeBag)
         
         viewModel.isTopic
-            .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .bind {
                 print("isTopic", $0)
             }

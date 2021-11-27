@@ -43,37 +43,36 @@ class UserServices {
                 return nil
             }
     }
+    
+    static func login(email: String, password: String) -> Observable<Bool> {
+        UserServices.provider
+            .rx.request(.login(email: email, password: password))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    if let headerFields = $0.response!.allHeaderFields as? [String: String], let URL = $0.request?.url {
+                        let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: URL)
+                        HTTPCookieStorage.shared.setCookie(cookies.first!)
+                    }
+                    return true
+                }
+                
+                return false
+            }
+    }
+    
+    static func getUserInfo(userID: String) {
+        UserServices.provider
+            .rx.request(.getUserInfor(userID: userID))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    
+                }
+            }
+    }
 }
 
 struct CreatedResult: Codable {
     var data: CreatedUser
-}
-
-struct CreatedUser: Codable {
-    var userId: Int = -1
-    var email: String = ""
-    var nickname: String = ""
-    var sex: String = ""
-    var birthdate: String = ""
-    var introduce: String = ""
-    var style: String = ""
-    var goal: String = ""
-    var profileImgLocation: String = ""
-    var genres: [String] = []
-    var isDormant: Bool = false
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(userId, forKey: .userId)
-        try container.encode(email, forKey: .email)
-        try container.encode(nickname, forKey: .nickname)
-        try container.encode(sex, forKey: .sex)
-        try container.encode(birthdate, forKey: .birthdate)
-        try container.encode(introduce, forKey: .introduce)
-        try container.encode(style, forKey: .style)
-        try container.encode(goal, forKey: .goal)
-        try container.encode(profileImgLocation, forKey: .profileImgLocation)
-        try container.encode(genres, forKey: .genres)
-        try container.encode(isDormant, forKey: .isDormant)
-    }
 }
