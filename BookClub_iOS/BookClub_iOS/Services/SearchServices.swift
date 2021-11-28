@@ -60,7 +60,7 @@ class SearchServices {
                     
                     var books = [Book]()
                     for (index, value) in data.documents.enumerated() {
-                        let book = Book(bookModel: BookModel(category: "NOW", createdDate: "", id: index, isbn: value.isbn, likedList: [], modifiedDate: "", name: value.title), searchedInfo: value)
+                        let book = Book(bookModel: BookModel(category: "NOW", createdDate: "", id: index, isbn: value.isbn, modifiedDate: "", name: value.title), searchedInfo: value)
                         
                         books.append(book)
                     }

@@ -13,7 +13,7 @@ class SideMenuItemsController: TabmanViewController {
 
     private var viewControllers = [UIViewController(), UIViewController(), UIViewController()]
     private let vcTitles = ["알림", "나의 북클럽", "설정"]
-    private let vcIcons: [UIImage] = [.alertIcon, .myLibraryIcon, .settingIcon]
+    private let vcIcons: [UIImage] = [.alertIcon, .MyLibraryIcon, .settingIcon]
     
     override func viewDidLoad() {
         super.viewDidLoad()

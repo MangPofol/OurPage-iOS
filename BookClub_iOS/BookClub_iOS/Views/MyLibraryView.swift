@@ -15,40 +15,54 @@ class MyLibraryView: UIView {
     let collectionViewLayout = UICollectionViewFlowLayout()
     
     // custom segment control
-    let typeControl = BetterSegmentedControl(frame: .zero).then {
-        $0.backgroundColor = .white
-    }
+    let typeControl = BetterSegmentedControl(
+        frame: .zero,
+        segments: LabelSegment.segments(withTitles: ["읽는 중", "완독", "읽고 싶은"],
+                                        normalFont: UIFont.defaultFont(size: .medium),
+                                        normalTextColor: .mainColor,
+                                        selectedFont: UIFont.defaultFont(size: .medium, bold: true),
+                                        selectedTextColor: .white),
+        options: [.cornerRadius(8.adjustedHeight),
+                  .backgroundColor(UIColor(hexString: "EFF0F3")),
+                  .indicatorViewBackgroundColor(.mainColor)]
+    )
     
     // 검색, 북클럽, 정렬 버튼
     let searchButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("검색", for: .normal)
         $0.setTitleColor(.black, for: .normal)
+        $0.setImage(.SearchIconRegular.resize(to: CGSize(width: 8.11.adjustedWidth, height: 8.11.adjustedHeight)), for: .normal)
+        $0.tintColor = .mainColor
+//        $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 43.adjustedWidth, bottom: 0, right: 0)
+//        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8.adjustedWidth)
+        $0.semanticContentAttribute = .forceRightToLeft
+        $0.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), imageTitlePadding: 8.0)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
     }
     let bookclubButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("북클럽", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
     }
     let sortingButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("정렬", for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.setTitleColor(.black, for: .normal)
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.gray1.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
     }
     
-    lazy var buttonStack = UIStackView(arrangedSubviews: [searchButton, bookclubButton, sortingButton]).then {
-        $0.axis = .horizontal
-        $0.spacing = 5
-        $0.distribution = .fillEqually
-        searchButton.relatedButtons = [bookclubButton, sortingButton]
-        bookclubButton.relatedButtons = [searchButton, sortingButton]
-        sortingButton.relatedButtons = [searchButton, bookclubButton]
+    lazy var upperView = UIView().then {
+        $0.backgroundColor = .white
+        $0.addSubview(typeControl)
+        $0.addSubview(searchButton)
+        $0.addSubview(bookclubButton)
+        $0.addSubview(sortingButton)
+        $0.addShadow(location: .bottom, color: UIColor(hexString: "E5E5E5"))
     }
     
     // 선택하면 나올 컨트롤들 {
@@ -107,7 +121,7 @@ class MyLibraryView: UIView {
         $0.addSubview(searchBar)
         $0.addSubview(bookclubSelector)
         $0.addSubview(sortButtonStack)
-        $0.backgroundColor = .white
+        $0.backgroundColor = .clear
         searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
         sortButtonStack.snp.makeConstraints {
             $0.top.bottom.left.equalToSuperview()
@@ -123,11 +137,14 @@ class MyLibraryView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(typeControl)
-        self.addSubview(buttonStack)
+        self.backgroundColor = .white
+        self.addSubview(upperView)
         self.addSubview(bookCollectionContainer)
         self.addSubview(selectedControl)
         setSegmentedControls()
+        searchButton.relatedButtons = [bookclubButton, sortingButton]
+        bookclubButton.relatedButtons = [searchButton, sortingButton]
+        sortingButton.relatedButtons = [searchButton, bookclubButton]
     }
     
     required init?(coder: NSCoder) {
@@ -136,25 +153,46 @@ class MyLibraryView: UIView {
     
     func makeView() {
         // autolayout set
+        upperView.snp.makeConstraints {
+            $0.top.left.right.equalToSuperview()
+            $0.height.equalTo(111.adjustedHeight)
+        }
         typeControl.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide).inset(10)
+            $0.top.equalToSuperview().inset(21.95.adjustedHeight)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(Constants.getAdjustedWidth(335.0))
+            $0.left.right.equalToSuperview().inset(20.adjustedWidth)
+            $0.height.equalTo(35.adjustedHeight)
         }
-        buttonStack.snp.makeConstraints {
-            $0.top.equalTo(typeControl.snp.bottom).offset(Constants.getAdjustedHeight(14.0))
+        
+        searchButton.snp.makeConstraints {
+            $0.top.equalTo(typeControl.snp.bottom).offset(13.0.adjustedHeight)
             $0.left.equalTo(typeControl)
-            $0.width.equalTo(Constants.getAdjustedWidth(61.0 * 3.0) + Constants.buttonStackSpacing * 2.0)
-            $0.height.equalTo(Constants.getAdjustedHeight(25))
+            $0.width.equalTo(61.adjustedWidth)
+            $0.height.equalTo(26.adjustedHeight)
         }
+        
+        bookclubButton.snp.makeConstraints {
+            $0.top.equalTo(typeControl.snp.bottom).offset(13.0.adjustedHeight)
+            $0.left.equalTo(searchButton.snp.right).offset(8.adjustedWidth)
+            $0.width.equalTo(51.adjustedWidth)
+            $0.height.equalTo(26.adjustedHeight)
+        }
+        
+        sortingButton.snp.makeConstraints {
+            $0.top.equalTo(typeControl.snp.bottom).offset(13.0.adjustedHeight)
+            $0.left.equalTo(bookclubButton.snp.right).offset(8.adjustedWidth)
+            $0.width.equalTo(51.adjustedWidth)
+            $0.height.equalTo(26.adjustedHeight)
+        }
+        
         selectedControl.snp.makeConstraints {
-            $0.top.equalTo(buttonStack.snp.bottom).offset(Constants.getAdjustedHeight(31.0))
-            $0.left.equalTo(buttonStack)
+            $0.top.equalTo(searchButton.snp.bottom).offset(Constants.getAdjustedHeight(31.0))
+            $0.left.equalTo(searchButton)
             $0.width.equalTo(Constants.getAdjustedWidth(335.0))
             $0.height.equalTo(0)
         }
         bookCollectionContainer.snp.remakeConstraints {
-            $0.top.equalTo(selectedControl.snp.bottom).offset(Constants.getAdjustedHeight(23.0))
+            $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.getAdjustedWidth(335.0))
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
@@ -168,11 +206,11 @@ class MyLibraryView: UIView {
     }
     
     func setSegmentedControls() {
-        typeControl.segments = LabelSegment.segments(withTitles: ["읽는 중", "완독", "읽고 싶은"],
-                                                     normalFont: UIFont.defaultFont(size: .medium),
-                                                     normalTextColor: .black,
-                                                     selectedFont: UIFont.defaultFont(size: .medium, bold: true),
-                                                     selectedTextColor: .mainColor)
-        typeControl.setCustomSegment(underlineColor: .mainColor, indicatorHeight: Constants.getAdjustedWidth(2.0))
+//        typeControl.segments = LabelSegment.segments(withTitles: ["읽는 중", "완독", "읽고 싶은"],
+//                                                     normalFont: UIFont.defaultFont(size: .medium),
+//                                                     normalTextColor: .black,
+//                                                     selectedFont: UIFont.defaultFont(size: .medium, bold: true),
+//                                                     selectedTextColor: .mainColor)
+//        typeControl.setCustomSegment(underlineColor: .mainColor, indicatorHeight: Constants.getAdjustedWidth(2.0))
     }
 }

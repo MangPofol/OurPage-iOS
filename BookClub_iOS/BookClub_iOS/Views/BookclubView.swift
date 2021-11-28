@@ -56,7 +56,7 @@ class BookclubView: UIView {
         $0.setTitle("검색", for: .normal)
         
         $0.imageView?.contentMode = .scaleAspectFit
-        $0.setImage(.searchImage.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.setImage(.SearchIconRegular.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.imageView?.tintColor = .mainColor
         $0.semanticContentAttribute = .forceRightToLeft
         $0.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), imageTitlePadding: 8.0)

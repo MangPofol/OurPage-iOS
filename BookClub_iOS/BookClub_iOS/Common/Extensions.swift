@@ -255,22 +255,43 @@ extension CALayer {
 
 extension UIImage {
     static let writeViewIcon = UIImage(named: "WriteViewIcon")!
-    static let myLibraryViewIcon = UIImage(named: "MyLibraryViewIcon")!
-    static let bookclubViewIcon = UIImage(named: "BookclubViewIcon")!
-    static let sidebarButtonImage = UIImage(named: "SidebarButton")!
     static let updownArrowImage = UIImage(named: "UpDownArrow")!
     static let rightArrowImage = UIImage(named: "RightArrow")!.withRenderingMode(.alwaysTemplate)
     static let leftArrowImage = UIImage(named: "LeftArrow")!
-    static let searchImage = UIImage(named: "Search")!
+    static let SearchIconRegular = UIImage(named: "SearchIconRegular")!.withRenderingMode(.alwaysTemplate)
     static let bookclubLevelImage = UIImage(named: "BookClubLevel")!
     static let alertIcon = UIImage(named: "AlertIcon")!.withRenderingMode(.alwaysTemplate)
-    static let myLibraryIcon = UIImage(named: "MyLibraryIcon")!.withRenderingMode(.alwaysTemplate)
     static let settingIcon = UIImage(named: "SettingIcon")!.withRenderingMode(.alwaysTemplate)
     static let uploadIcon = UIImage(named: "UploadIcon")!.withRenderingMode(.alwaysTemplate)
     static let cameraIcon = UIImage(named: "CameraIcon")!.withRenderingMode(.alwaysTemplate)
     static let deleteButtonImage = UIImage(named: "DeleteButtonImage")!
     static let mainLogo = UIImage(named: "MainLogo")!
     static let backbuttonImage = UIImage(named: "backbuttonImage")!
+    
+    // Icons
+    static let PersonIcon = UIImage(named: "PersonIcon")!.withRenderingMode(.alwaysTemplate)
+    static let MyLibraryIcon = UIImage(named: "MyLibraryIcon")!.withRenderingMode(.alwaysTemplate)
+    static let SidebarButtonImage = UIImage(named: "SideMenuIcon")!
+    static let BookclubIcon = UIImage(named: "BookclubIcon")!
+    
+    func resize(to size: CGSize) -> UIImage {
+        let render = UIGraphicsImageRenderer(size: size)
+        let renderImage = render.image { context in
+            self.draw(in: CGRect(origin: .zero, size: size))
+        }
+        
+        return renderImage.withRenderingMode(.alwaysTemplate)
+    }
+}
+
+extension Double {
+    var adjustedWidth: Double {
+        (Double(Constants.screenSize.width) * self) / 375.0
+    }
+    
+    var adjustedHeight: Double {
+        (Double(Constants.screenSize.height) * self) / 812.0
+    }
 }
 
 extension UIButton {
@@ -330,28 +351,37 @@ extension UIButton {
     }
 }
 
+extension UINavigationBar {
+    func setDefault() {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .white
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.mainColor, .font: UIFont.defaultFont(size: .big, bold: true)]
+        appearance.shadowColor = nil
+        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 4.adjustedWidth, height: 9.adjustedHeight)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 4.adjustedWidth, height: 9.adjustedHeight)))
+        
+        self.isTranslucent = false
+        self.tintColor = .mainColor
+        self.standardAppearance = appearance
+        self.scrollEdgeAppearance = appearance
+        self.compactAppearance = appearance
+        if #available(iOS 15.0, *) {
+            self.compactScrollEdgeAppearance = appearance
+        }
+        self.layoutIfNeeded()
+        
+    }
+}
+
 extension UIViewController {
     func setDefaultConfiguration() {
         guard let nav = self.navigationController else {
             return
         }
-        nav.navigationBar.barTintColor = Constants.navigationbarColor
-        nav.navigationBar.tintColor = .black
-        nav.navigationBar.isTranslucent = false
-        nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.mainColor]
-
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = Constants.navigationbarColor
-        appearance.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true), .foregroundColor: UIColor.mainColor]
-//        nav.navigationBar.standardAppearance = appearance;
-        nav.navigationBar.scrollEdgeAppearance = appearance
-        
         // bar underline 삭제
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        nav.navigationBar.shadowImage = UIImage()
+        nav.navigationBar.shadowImage = nil
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .sidebarButtonImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21.adjustedWidth, height: 16.05.adjustedHeight)), style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
         // 백 버튼 텍스트 지우기

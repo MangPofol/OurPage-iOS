@@ -25,9 +25,9 @@ class ToggleButton: UIButton {
             isOnRx.onNext(isOn)
             self.backgroundColor = isOn ? onColor : normalColor
             self.setTitleColor( isOn ? onTextColor : normalTextColor, for: .normal)
+            self.tintColor = isOn ? onTextColor : normalTextColor
             if let imgView = self.imageView {
                 imgView.backgroundColor = isOn ? onColor : normalColor
-                imageView?.tintColor = isOn ? onTextColor : normalTextColor
             }
             if isOn == true {
                 relatedButtons.forEach {

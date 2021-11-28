@@ -47,9 +47,9 @@ class MainTabBarController: UITabBarController {
     func setupVCs() {
         
         viewControllers = [
-            createNavController(for: WriteViewController(), image: .writeViewIcon, title: "Record"),
-            createNavController(for: MyLibraryViewController(), image: .myLibraryViewIcon, title: "내 서재"),
-            createNavController(for: BookclubViewController(), image: .bookclubViewIcon, title: "북클럽")
+            createNavController(for: WriteViewController(), image: .PersonIcon.resize(to: CGSize(width: 27.adjustedWidth, height: 30.adjustedHeight)), title: "Record"),
+            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98.adjustedWidth, height: 29.adjustedHeight)), title: "내 서재"),
+            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53.adjustedWidth, height: 29.adjustedHeight)), title: "북클럽")
         ]
         self.setViewControllers(viewControllers, animated: true)
         self.customizableViewControllers = viewControllers
@@ -57,7 +57,7 @@ class MainTabBarController: UITabBarController {
         for controller in array! {
             controller.tabBarItem.imageInsets = UIEdgeInsets(top: 20, left: 0, bottom: -10, right: 0)
         }
-
+        
     }
     
     fileprivate func createNavController(for rootViewController: UIViewController,
@@ -72,7 +72,7 @@ class MainTabBarController: UITabBarController {
         if let items = tabBarController?.tabBar.items {
             for item in items {
                 item.title = nil
-//                item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0);
+                //                item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0);
             }
         }
     }

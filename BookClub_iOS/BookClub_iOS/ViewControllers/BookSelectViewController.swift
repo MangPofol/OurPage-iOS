@@ -92,7 +92,7 @@ class BookSelectViewController: UIViewController {
         super.viewDidAppear(animated)
         
         // searchBar 돋보기 오른쪽으로
-        let imageView = UIImageView(image: .searchImage)
+        let imageView = UIImageView(image: .SearchIconRegular)
         customView.searchBar.searchTextField.rightView = imageView
         customView.searchBar.searchTextField.rightViewMode = .always
     }

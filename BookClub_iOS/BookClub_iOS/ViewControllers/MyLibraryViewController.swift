@@ -25,7 +25,10 @@ class MyLibraryViewController: UIViewController {
         customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
         customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
+//        self.view.backgroundColor = UIColor(hexString: "E5E5E5")
         customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
+        bookCollectionVC.view.backgroundColor = .white
+        bookCollectionVC.collectionView.backgroundColor = .white
         bookCollectionVC.view.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
@@ -65,11 +68,9 @@ class MyLibraryViewController: UIViewController {
             )
         )
         viewModel?.bookCollectionViewModel = bookCollectionVC.viewModel
-        self.view.backgroundColor = .white
         
         // Left navigation button
         setNavigationBar()
-        self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
         
         // bind inputs {
         
@@ -117,6 +118,9 @@ class MyLibraryViewController: UIViewController {
             .bind {
                 let status = $0.0 || $0.1 || $0.2
                 self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? Constants.selectedControlHeight : 0) }
+                self.customView.bookCollectionContainer.snp.updateConstraints {
+                    $0.top.equalTo(self.customView.upperView.snp.bottom).offset(status ? 64.adjustedHeight : 20.adjustedHeight)
+                }
             }
             .disposed(by: disposeBag)
         
@@ -177,26 +181,34 @@ class MyLibraryViewController: UIViewController {
         bookCollectionVC.collectionView.rx.didScroll
             .observe(on: MainScheduler.instance)
             .bind {
-                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height {
-                    self.customView.typeControl.snp.updateConstraints {
-                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.bookCollectionVC.collectionView.contentOffset.y)
+                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.upperView.bounds.height {
+                    self.customView.upperView.snp.updateConstraints {
+                        $0.top.equalToSuperview().offset(-self.bookCollectionVC.collectionView.contentOffset.y)
                     }
                 } else {
-                    UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-                        self.customView.typeControl.snp.updateConstraints {
-                            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-upperSize())
+                    UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
+                        self.customView.upperView.snp.updateConstraints {
+                            $0.top.equalToSuperview().offset(-self.customView.upperView.frame.height)
                         }
                         self.customView.layoutIfNeeded()
                     })
                 }
+//                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height {
+//                    self.customView.typeControl.snp.updateConstraints {
+//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.bookCollectionVC.collectionView.contentOffset.y)
+//                    }
+//                } else {
+//                    UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+//                        self.customView.typeControl.snp.updateConstraints {
+//                            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-upperSize())
+//                        }
+//                        self.customView.layoutIfNeeded()
+//                    })
+//                }
             }
             .disposed(by: disposeBag)
         
-        // private funcs
-        func upperSize() -> Double {
-            return Double(self.customView.typeControl.bounds.height + self.customView.buttonStack.bounds.height + self.customView.selectedControl.bounds.height + CGFloat(Constants.getAdjustedHeight(23.0) + Constants.getAdjustedHeight(14.0) + Constants.getAdjustedHeight(23.0)))
-        }
-        
+        // private funcs        
         func setSearchBar(_ isOn: Bool) {
             self.customView.searchBar.isHidden = !isOn
             self.customView.searchBar.text = nil
@@ -217,7 +229,9 @@ class MyLibraryViewController: UIViewController {
         }
         
         func setNavigationBar() {
+            self.title = ""
             self.setDefaultConfiguration()
+            self.navigationController?.navigationBar.setDefault()
         }
     }
 }

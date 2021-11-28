@@ -12,9 +12,21 @@ struct BookModel: Codable {
     var createdDate: String
     var id: Int
     var isbn: String
-    var likedList: [Liked]
+//    var likedList: [Liked]
     var modifiedDate: String
     var name: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(category, forKey: .category)
+        try container.encode(createdDate, forKey: .createdDate)
+        try container.encode(id, forKey: .id)
+        try container.encode(isbn, forKey: .isbn)
+//        try container.encode(likedList, forKey: .likedList)
+        try container.encode(modifiedDate, forKey: .modifiedDate)
+        try container.encode(name, forKey: .name)
+    }
 }
 
 struct Book {
