@@ -12,12 +12,12 @@ class BookclubSelectorCell: UICollectionViewCell {
     
     var titleLabel = UILabel().then {
         $0.font = .defaultFont(size: .small)
-        $0.textColor = .black
+        $0.textColor = .mainColor
     }
     
     var checkMark = UILabel().then {
         $0.font = .defaultFont(size: .small)
-        $0.textColor = .black
+        $0.textColor = .mainColor
         $0.text = "✓ "
     }
     
@@ -43,9 +43,9 @@ class BookclubSelectorCell: UICollectionViewCell {
                     self.checkMark.textColor = .white
                 }
                 else {
-                    self.contentView.backgroundColor = UIColor.gray1
-                    self.titleLabel.textColor = .black
-                    self.checkMark.textColor = .black
+                    self.contentView.backgroundColor = UIColor(hexString: "EFF0F3")
+                    self.titleLabel.textColor = .mainColor
+                    self.checkMark.textColor = .mainColor
                 }
             }
         }

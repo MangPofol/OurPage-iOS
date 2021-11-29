@@ -59,7 +59,7 @@ class MyLibraryViewController: UIViewController {
                     customView.sortingButton.rx.tap.map { _ in
                         !self.customView.sortingButton.isOn ? FilterType.none : FilterType.sorting }
                 ),
-                searchText: customView.searchBar
+                searchText: customView.searchTextField
                     .rx.text
                     .orEmpty
                     .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
@@ -117,7 +117,19 @@ class MyLibraryViewController: UIViewController {
             .skip(1)
             .bind {
                 let status = $0.0 || $0.1 || $0.2
-                self.customView.selectedControl.snp.updateConstraints { $0.height.equalTo(status ? Constants.selectedControlHeight : 0) }
+                
+                if $0.0 {
+                    self.customView.searchTextField.isHidden = false
+                } else if $0.1 {
+                    self.customView.bookclubSelector.isHidden = false
+                } else if $0.2 {
+                    self.customView.sortButtonStack.isHidden = false
+                } else {
+                    self.customView.searchTextField.isHidden = true
+                    self.customView.bookclubSelector.isHidden = true
+                    self.customView.sortButtonStack.isHidden = true
+                }
+                
                 self.customView.bookCollectionContainer.snp.updateConstraints {
                     $0.top.equalTo(self.customView.upperView.snp.bottom).offset(status ? 64.adjustedHeight : 20.adjustedHeight)
                 }
@@ -210,14 +222,14 @@ class MyLibraryViewController: UIViewController {
         
         // private funcs        
         func setSearchBar(_ isOn: Bool) {
-            self.customView.searchBar.isHidden = !isOn
-            self.customView.searchBar.text = nil
+            self.customView.searchTextField.isHidden = !isOn
+            self.customView.searchTextField.text = nil
         }
         
         func setBookclubSelector(_ isOn: Bool) {
             self.customView.bookclubSelector.reloadData()
             self.customView.bookclubSelector.isHidden = !isOn
-            self.customView.searchBar.text = nil
+            self.customView.searchTextField.text = nil
         }
         
         func setSortButtons(_ isOn: Bool) {

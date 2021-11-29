@@ -67,43 +67,53 @@ class MyLibraryView: UIView {
     
     // 선택하면 나올 컨트롤들 {
     // 서치바
-    lazy var searchBar = UISearchBar().then {
+    lazy var searchTextField = UITextField().then {
         $0.isHidden = true
-        $0.searchBarStyle = .prominent
-        $0.backgroundImage = UIImage()
-        $0.barTintColor = .white
-        $0.searchTextField.backgroundColor = .white
         $0.placeholder = "책 제목을 입력하세요."
-        $0.searchTextField.font = .defaultFont(size: .small)
+        $0.font = .defaultFont(size: .small)
+        $0.leftViewMode = .always
+        $0.backgroundColor = .white
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1, cornerRadius: 8.adjustedHeight)
+        // 아이콘 추가
+        let imageView = UIImageView(frame: CGRect(x: 10.adjustedWidth, y: 9.adjustedHeight, width: 6.adjustedWidth, height: 6.adjustedHeight))
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .mainColor
+        imageView.image = .SearchIconRegular.resize(to: CGSize(width: 6.adjustedWidth, height: 6.adjustedHeight))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 23.adjustedWidth, height: 25.adjustedHeight))
+        view.addSubview(imageView)
+        $0.leftView = view
     }
     
     // 북클럽 선택
     lazy var bookclubSelector = UICollectionView(frame: .zero, collectionViewLayout: bookclubSelectorLayout).then {
         $0.isHidden = true
-        $0.backgroundColor = .white
+        $0.backgroundColor = .clear
         $0.allowsMultipleSelection = true
     }
     
     // 정렬 방법 선택
-    let byNewButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let byNewButton = ToggleButton(normalColor: UIColor(hexString: "EFF0F3"), onColor: .mainColor).then {
         $0.setTitle("최신순", for: .normal)
+        $0.onTextColor = .white
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .gray1
+        $0.setTitleColor(.mainColor, for: .normal)
+        $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
     }
-    let byOldButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let byOldButton = ToggleButton(normalColor: UIColor(hexString: "EFF0F3"), onColor: .mainColor).then {
         $0.setTitle("오래된순", for: .normal)
+        $0.onTextColor = .white
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .gray1
+        $0.setTitleColor(.mainColor, for: .normal)
+        $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
     }
-    let byNameButton = ToggleButton(normalColor: .gray1, onColor: .mainColor).then {
+    let byNameButton = ToggleButton(normalColor: UIColor(hexString: "EFF0F3"), onColor: .mainColor).then {
         $0.setTitle("이름순", for: .normal)
+        $0.onTextColor = .white
         $0.titleLabel?.font = .defaultFont(size: .small)
-        $0.setTitleColor(.black, for: .normal)
-        $0.backgroundColor = .gray1
+        $0.setTitleColor(.mainColor, for: .normal)
+        $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
     }
     lazy var sortButtonStack = UIStackView(arrangedSubviews: [byNewButton, byOldButton, byNameButton]).then {
@@ -117,17 +127,17 @@ class MyLibraryView: UIView {
         byNameButton.relatedButtons = [byNewButton, byOldButton]
     }
     
-    lazy var selectedControl = UIView().then {
-        $0.addSubview(searchBar)
-        $0.addSubview(bookclubSelector)
-        $0.addSubview(sortButtonStack)
-        $0.backgroundColor = .clear
-        searchBar.snp.makeConstraints { $0.edges.equalToSuperview() }
-        sortButtonStack.snp.makeConstraints {
-            $0.top.bottom.left.equalToSuperview()
-            $0.width.equalTo(Constants.screenSize.width * 0.45)
-        }
-    }
+//    lazy var selectedControl = UIView().then {
+//        $0.addSubview(searchTextField)
+//        $0.addSubview(bookclubSelector)
+//        $0.addSubview(sortButtonStack)
+//        $0.backgroundColor = .clear
+//        searchTextField.snp.makeConstraints { $0.edges.equalToSuperview() }
+//        sortButtonStack.snp.makeConstraints {
+//            $0.top.bottom.left.equalToSuperview()
+//            $0.width.equalTo(Constants.screenSize.width * 0.45)
+//        }
+//    }
     
     // }
     
@@ -140,7 +150,9 @@ class MyLibraryView: UIView {
         self.backgroundColor = .white
         self.addSubview(upperView)
         self.addSubview(bookCollectionContainer)
-        self.addSubview(selectedControl)
+        self.addSubview(searchTextField)
+        self.addSubview(bookclubSelector)
+        self.addSubview(sortButtonStack)
         setSegmentedControls()
         searchButton.relatedButtons = [bookclubButton, sortingButton]
         bookclubButton.relatedButtons = [searchButton, sortingButton]
@@ -184,12 +196,23 @@ class MyLibraryView: UIView {
             $0.width.equalTo(51.adjustedWidth)
             $0.height.equalTo(26.adjustedHeight)
         }
-        
-        selectedControl.snp.makeConstraints {
-            $0.top.equalTo(searchButton.snp.bottom).offset(Constants.getAdjustedHeight(31.0))
-            $0.left.equalTo(searchButton)
-            $0.width.equalTo(Constants.getAdjustedWidth(335.0))
-            $0.height.equalTo(0)
+        searchTextField.snp.makeConstraints {
+            $0.top.equalTo(upperView.snp.bottom).offset(14.adjustedHeight)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(typeControl)
+            $0.height.equalTo(25.adjustedHeight)
+        }
+        bookclubSelector.snp.makeConstraints {
+            $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
+            $0.left.equalTo(typeControl)
+            $0.right.equalTo(typeControl)
+            $0.height.equalTo(19.adjustedHeight)
+        }
+        sortButtonStack.snp.makeConstraints {
+            $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
+            $0.left.equalTo(typeControl)
+            $0.width.equalTo(162.adjustedWidth)
+            $0.height.equalTo(19.adjustedHeight)
         }
         bookCollectionContainer.snp.remakeConstraints {
             $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
@@ -197,12 +220,6 @@ class MyLibraryView: UIView {
             $0.width.equalTo(Constants.getAdjustedWidth(335.0))
             $0.bottom.equalTo(self.safeAreaLayoutGuide).offset(-10)
         }
-        bookclubSelector.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.left.equalTo(typeControl)
-            $0.width.equalTo(Constants.screenSize.width * 0.75)
-        }
-        bookclubSelector.contentInset.top = (30.0 - Constants.bookclubSelectorSize().height) / 2.0
     }
     
     func setSegmentedControls() {
