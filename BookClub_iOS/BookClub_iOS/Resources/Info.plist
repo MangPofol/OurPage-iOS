@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSCameraUsageDescription</key>
-    <string>카메라를 사용합니다.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>사진을 사용합니다.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>마이크를 사용합니다.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>카메라를 사용합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사진을 사용합니다.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>마이크를 사용합니다.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -17,6 +17,9 @@
 	<array>
 		<string>Poppins-Bold.ttf</string>
 		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-Black.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Poppins-Medium.ttf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

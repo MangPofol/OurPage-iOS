@@ -40,6 +40,13 @@ extension String {
 }
 
 extension Date {
+    func toEnglishMonthDay() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM dd"
+//        formatter.locale = Locale(identifier: "en_US")
+        return formatter.string(from: self)
+    }
+    
     func toString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
@@ -76,6 +83,14 @@ extension UIFont {
         case small = 10.0
     }
     
+    enum BoldLevel: String {
+        case black = "Black"
+        case bold = "Bold"
+        case semiBold = "SemiBold"
+        case medium = "Medium"
+        case regular = "Regular"
+    }
+    
     // Make preferred font bold or italic {
     func withTraits(traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
         let descriptor = fontDescriptor.withSymbolicTraits(traits)
@@ -95,8 +110,8 @@ extension UIFont {
         UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size.rawValue)!
     }
     
-    static func defaultFont(size: CGFloat, bold: Bool = false) -> UIFont {
-        UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size)!
+    static func defaultFont(size: CGFloat, boldLevel: BoldLevel = .regular) -> UIFont {
+        UIFont(name: "Poppins-\(boldLevel.rawValue)", size: size)!
     }
 }
 
@@ -142,6 +157,7 @@ extension UIView {
     func setCornerRadius(radius: CGFloat) {
         self.layer.cornerRadius = radius
         self.clipsToBounds = radius > 0
+        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
     }
     
     func makeBorder(color: CGColor = UIColor.black.cgColor, width: CGFloat = CGFloat(1.0), cornerRadius: CGFloat = CGFloat(0.0)) {
@@ -163,6 +179,12 @@ extension UIView {
         self.clipsToBounds = true
         self.layer.cornerRadius = radius
         self.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner] // Top right corner, Top left corner respectively
+    }
+    
+    func bottomRoundCorner(radius: CGFloat) {
+        self.clipsToBounds = true
+        self.layer.cornerRadius = radius
+        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
     }
     
     func bottomRightCorner(radius: CGFloat) {
@@ -254,7 +276,6 @@ extension CALayer {
 }
 
 extension UIImage {
-    static let writeViewIcon = UIImage(named: "WriteViewIcon")!
     static let updownArrowImage = UIImage(named: "UpDownArrow")!
     static let rightArrowImage = UIImage(named: "RightArrow")!.withRenderingMode(.alwaysTemplate)
     static let leftArrowImage = UIImage(named: "LeftArrow")!
@@ -273,14 +294,27 @@ extension UIImage {
     static let MyLibraryIcon = UIImage(named: "MyLibraryIcon")!.withRenderingMode(.alwaysTemplate)
     static let SidebarButtonImage = UIImage(named: "SideMenuIcon")!
     static let BookclubIcon = UIImage(named: "BookclubIcon")!
+    static let RightArrowBoldIcon = UIImage(named: "RightArrowBoldIcon")!
+    static let RightArrowWithLeftPadding = UIImage(named: "RightArrowWithLeftPadding")!
+    static let RightArrowButtonImage = UIImage(named: "RightArrowButtonImage")!
+    static let DownArrow = UIImage(named: "DownArrow")!
+    static let WriteIcon = UIImage(named: "WriteViewIcon")!.withRenderingMode(.alwaysTemplate)
+    static let SettingIconWithBackground = UIImage(named: "SettingIconWithBackground")!
     
-    func resize(to size: CGSize) -> UIImage {
+    // Images
+    static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
+    
+    func resize(to size: CGSize, isAlwaysTemplate: Bool = true) -> UIImage {
         let render = UIGraphicsImageRenderer(size: size)
         let renderImage = render.image { context in
             self.draw(in: CGRect(origin: .zero, size: size))
         }
         
-        return renderImage.withRenderingMode(.alwaysTemplate)
+        if isAlwaysTemplate {
+            return renderImage.withRenderingMode(.alwaysTemplate)
+        } else {
+            return renderImage
+        }
     }
 }
 

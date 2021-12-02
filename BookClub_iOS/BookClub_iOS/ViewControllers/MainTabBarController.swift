@@ -47,7 +47,7 @@ class MainTabBarController: UITabBarController {
     func setupVCs() {
         
         viewControllers = [
-            createNavController(for: WriteViewController(), image: .PersonIcon.resize(to: CGSize(width: 27.adjustedWidth, height: 30.adjustedHeight)), title: "Record"),
+            createNavController(for: HomeViewController(), image: .PersonIcon.resize(to: CGSize(width: 27.adjustedWidth, height: 30.adjustedHeight)), title: ""),
             createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98.adjustedWidth, height: 29.adjustedHeight)), title: "내 서재"),
             createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53.adjustedWidth, height: 29.adjustedHeight)), title: "북클럽")
         ]
