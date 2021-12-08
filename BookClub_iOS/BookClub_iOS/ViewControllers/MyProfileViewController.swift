@@ -21,6 +21,8 @@ class MyProfileViewController: UIViewController {
         
         // navigation bar
         self.navigationController?.navigationBar.setDefault()
+        self.navigationController?.navigationBar.setBarShadow()
+        self.removeBackButtonTitle()
         self.title = "내 정보"
         
         let collectionLayout = UICollectionViewFlowLayout()
@@ -43,5 +45,26 @@ class MyProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        customView.tasteSettingButton
+            .rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(MyTasteViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        customView.readingStyleButton
+            .rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(MyTasteViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
+    
+        customView.goalSettingButton
+            .rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(ModifyGoalViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
 }

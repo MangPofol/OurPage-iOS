@@ -46,13 +46,13 @@ final class MyProfileView: UIView {
     
 // {
     var tasteTitleLabel = UILabel().then {
-        $0.font = .defaultFont(size: 12, boldLevel: .bold)
+        $0.font = .defaultFont(size: 14, boldLevel: .bold)
         $0.text = "책 취향"
         $0.textColor = .mainColor
     }
     
     var genreTitleLabel = UILabel().then {
-        $0.font = .defaultFont(size: 10, boldLevel: .bold)
+        $0.font = .defaultFont(size: 12, boldLevel: .medium)
         $0.text = "좋아하는 장르"
         $0.textColor = .mainColor
     }
@@ -64,9 +64,11 @@ final class MyProfileView: UIView {
     }
     
     var tasteSettingButton = UIButton().then {
-        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 4.28, height: 7).resized(basedOn: .height)), for: .normal)
+        $0.setImage(.RightArrowBoldIcon, for: .normal)
         $0.backgroundColor = .clear
         $0.tintColor = .mainColor
+        $0.imageView?.contentMode = .scaleAspectFit
+        $0.imageEdgeInsets = UIEdgeInsets(top: 9.adjustedHeight, left: 29.adjustedWidth, bottom: 9.adjustedHeight, right: 6.72.adjustedWidth)
     }
     
     lazy var genreContainerView = UIView().then {
@@ -78,7 +80,7 @@ final class MyProfileView: UIView {
         $0.setCornerRadius(radius: 10.adjustedHeight)
         
         genreTitleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(14.adjustedHeight)
+            $0.top.equalToSuperview().inset(10.adjustedHeight)
             $0.left.equalToSuperview().inset(20.adjustedWidth)
         }
         
@@ -87,19 +89,19 @@ final class MyProfileView: UIView {
             $0.left.equalToSuperview().inset(20.adjustedWidth)
             $0.width.equalTo(239.adjustedWidth)
             $0.height.equalTo(22.adjustedHeight)
-            $0.bottom.equalToSuperview().inset(14.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(10.adjustedHeight)
         }
         
         tasteSettingButton.snp.makeConstraints {
-            $0.right.equalToSuperview()
-            $0.width.equalTo(32.adjustedWidth)
-            $0.height.equalTo(7.adjustedHeight)
+            $0.right.equalToSuperview().inset(6.adjustedWidth)
+            $0.width.equalTo(40.adjustedWidth)
+            $0.height.equalTo(25.adjustedHeight)
             $0.centerY.equalTo(genreCollectionView)
         }
     }
 
     var readingStyleButton = ButtonWithRightIcon(frame: .zero, image: .RightArrowBoldIcon, title: "책 읽는 스타일", iconPadding: 12.72.adjustedWidth, textPadding: 20.adjustedWidth, iconSize: CGSize(width: 4.28, height: 7).resized(basedOn: .height)).then {
-        $0.textLabel.font = .defaultFont(size: 10, boldLevel: .bold)
+        $0.textLabel.font = .defaultFont(size: 12, boldLevel: .medium)
         $0.textLabel.textColor = .mainColor
         $0.iconView.contentMode = .scaleAspectFit
         $0.backgroundColor = .white
@@ -120,21 +122,21 @@ final class MyProfileView: UIView {
     
 // {
     var routineTitleLabel = UILabel().then {
-        $0.font = .defaultFont(size: 12, boldLevel: .bold)
+        $0.font = .defaultFont(size: 14, boldLevel: .bold)
         $0.text = "책 루틴"
         $0.textColor = .mainColor
     }
     
     var goalSettingButton = ButtonWithRightIcon(frame: .zero, image: .RightArrowBoldIcon, title: "목표 관리", iconPadding: 12.72.adjustedWidth, textPadding: 20.adjustedWidth, iconSize: CGSize(width: 4.28, height: 7).resized(basedOn: .height)).then {
-        $0.textLabel.font = .defaultFont(size: 10, boldLevel: .bold)
+        $0.textLabel.font = .defaultFont(size: 12, boldLevel: .medium)
         $0.textLabel.textColor = .mainColor
         $0.iconView.contentMode = .scaleAspectFit
         $0.backgroundColor = .white
         $0.setCornerRadius(radius: 10.adjustedHeight)
     }
     
-    var checkListSettingButton = ButtonWithRightIcon(frame: .zero, image: .RightArrowBoldIcon, title: "목표 관리", iconPadding: 12.72.adjustedWidth, textPadding: 20.adjustedWidth, iconSize: CGSize(width: 4.28, height: 7).resized(basedOn: .height)).then {
-        $0.textLabel.font = .defaultFont(size: 10, boldLevel: .bold)
+    var checkListSettingButton = ButtonWithRightIcon(frame: .zero, image: .RightArrowBoldIcon, title: "체크리스트 관리", iconPadding: 12.72.adjustedWidth, textPadding: 20.adjustedWidth, iconSize: CGSize(width: 4.28, height: 7).resized(basedOn: .height)).then {
+        $0.textLabel.font = .defaultFont(size: 12, boldLevel: .medium)
         $0.textLabel.textColor = .mainColor
         $0.iconView.contentMode = .scaleAspectFit
         $0.backgroundColor = .white
@@ -213,7 +215,7 @@ class MyGenreCollectionViewCell: UICollectionViewCell {
     
     var titleLabel = UILabel().then {
         $0.textColor = .white
-        $0.font = .defaultFont(size: 8)
+        $0.font = .defaultFont(size: 10)
     }
     
     func configure(name: String?) {

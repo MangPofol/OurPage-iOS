@@ -144,6 +144,14 @@ extension UIView {
         self.layer.shadowOpacity = opacity
         self.layer.shadowRadius = radius
     }
+    
+    func removeShadow() {
+        self.layer.shadowOffset = CGSize(width: 0 , height: 0)
+        self.layer.shadowColor = UIColor.clear.cgColor
+        self.layer.cornerRadius = 0.0
+        self.layer.shadowRadius = 0.0
+        self.layer.shadowOpacity = 0.0
+    }
 }
 
 extension UIView {
@@ -301,6 +309,7 @@ extension UIImage {
     static let DownArrow = UIImage(named: "DownArrow")!
     static let WriteIcon = UIImage(named: "WriteViewIcon")!.withRenderingMode(.alwaysTemplate)
     static let SettingIconWithBackground = UIImage(named: "SettingIconWithBackground")!
+    static let UpArrow = UIImage(named: "UpArrow")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
@@ -438,6 +447,14 @@ extension UINavigationBar {
         self.layoutIfNeeded()
         
     }
+    
+    func setBarShadow() {
+        self.addShadow(location: .bottom, color: .lightGray)
+    }
+    
+    func removeBarShadow() {
+        self.removeShadow()
+    }
 }
 
 extension UIViewController {
@@ -453,6 +470,12 @@ extension UIViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
         // 백 버튼 텍스트 지우기
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        backBarButtonItem.tintColor = .mainColor
+        self.navigationItem.backBarButtonItem = backBarButtonItem
+    }
+    
+    func removeBackButtonTitle() {
         let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         backBarButtonItem.tintColor = .mainColor
         self.navigationItem.backBarButtonItem = backBarButtonItem
@@ -473,5 +496,40 @@ extension UITabBar {
         var sizeThatFits = super.sizeThatFits(size)
         sizeThatFits.height = 75.adjustedHeight // 원하는 길이
         return sizeThatFits
+    }
+}
+
+extension UIView {
+    private static let kRotationAnimationKey = "rotationanimationkey"
+    
+    func rotate(duration: Double = 1) {
+        if layer.animation(forKey: UIView.kRotationAnimationKey) == nil {
+            let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
+            
+            rotationAnimation.fromValue = 0.0
+            rotationAnimation.toValue = Float.pi * 2.0
+            rotationAnimation.duration = duration
+            rotationAnimation.repeatCount = Float.infinity
+            
+            layer.add(rotationAnimation, forKey: UIView.kRotationAnimationKey)
+        }
+    }
+    
+    func rotateWithoutAnimation(degree: Double) {
+        self.transform = CGAffineTransform(rotationAngle: CGFloat(degree))
+    }
+    
+    func rotateBack() {
+        self.transform = CGAffineTransform.identity
+    }
+    
+    func stopRotating() {
+        if layer.animation(forKey: UIView.kRotationAnimationKey) != nil {
+            layer.removeAnimation(forKey: UIView.kRotationAnimationKey)
+        }
+    }
+    
+    func isRotating() -> Bool {
+        return layer.animation(forKey: UIView.kRotationAnimationKey) != nil
     }
 }

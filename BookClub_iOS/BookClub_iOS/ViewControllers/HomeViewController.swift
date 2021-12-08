@@ -25,6 +25,11 @@ class HomeViewController: UIViewController {
         self.setDefaultConfiguration()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.navigationBar.removeBarShadow()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,10 +49,16 @@ class HomeViewController: UIViewController {
                 owner.customView.checkListTableView.snp.updateConstraints {
                     $0.height.equalTo(owner.checkListOpened ? 188.adjustedHeight : 0)
                 }
+
                 UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
                     owner.view.layoutIfNeeded()
+                    if owner.checkListOpened {
+                        owner.customView.checkListHeader.openButton.rotateWithoutAnimation(degree: Double.pi)
+                    } else {
+                        owner.customView.checkListHeader.openButton.transform = CGAffineTransform.identity
+                    }
+                    
                 }, completion: { _ in
-                    print(#fileID, #function, #line, "")
                     if !owner.checkListOpened {
                         owner.customView.checkListHeader.setCornerRadius(radius: 8.adjustedHeight)
                     }

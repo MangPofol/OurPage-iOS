@@ -88,7 +88,7 @@ class GenreCollectionViewCell: UICollectionViewCell {
     
     var titleLabel = UILabel().then {
         $0.textColor = UIColor(hexString: "C3C5D1")
-        $0.font = .defaultFont(size: 14.0)
+        $0.font = .defaultFont(size: 12.0)
     }
     
     func configure(name: String?) {
@@ -110,8 +110,8 @@ class GenreCollectionViewCell: UICollectionViewCell {
         self.makeBorder(color: UIColor(hexString: "C3C5D1").cgColor, width: 1.0)
         self.contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(5)
-            $0.left.right.equalToSuperview().inset(15)
+            $0.top.bottom.equalToSuperview().inset(5.adjustedHeight)
+            $0.left.right.equalToSuperview().inset(15.adjustedWidth)
         }
     }
     
@@ -122,12 +122,12 @@ class GenreCollectionViewCell: UICollectionViewCell {
         let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
 
         var frame = layoutAttributes.frame
-        frame.size.height = 31.0
+        frame.size.height = 25.adjustedHeight
         frame.size.width = ceil(size.width)
 
         layoutAttributes.frame = frame
 //        self.layer.cornerRadius = 10.0 / min(frame.width, frame.height)
-        self.layer.cornerRadius = 10.0
+        self.layer.cornerRadius = 10.0.adjustedHeight
         self.layer.masksToBounds = true
         return layoutAttributes
     }

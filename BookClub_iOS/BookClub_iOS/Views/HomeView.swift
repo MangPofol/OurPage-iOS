@@ -66,7 +66,7 @@ final class HomeView: UIView {
     
     var goalButton = UIButton().then {
         $0.setTitle("1년에 10권 읽고 기록하기", for: .normal)
-        $0.titleLabel?.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15.3.adjustedWidth, bottom: 0, right: 0)
         $0.setTitleColor(.mainColor, for: .normal)
         $0.contentHorizontalAlignment = .left
@@ -181,7 +181,7 @@ final class HomeView: UIView {
 final class WriteRecordButton: UIView {
     var titleLabel = UILabel().then {
         $0.text = "기록 쓰러가기"
-        $0.font = .defaultFont(size: 12, boldLevel: .bold)
+        $0.font = .defaultFont(size: 14, boldLevel: .bold)
         $0.textColor = .white
     }
     
@@ -216,13 +216,14 @@ final class WriteRecordButton: UIView {
 final class CheckListButton: UIView {
     var titleLabel = UILabel().then {
         $0.text = "CHECK LIST"
-        $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.textColor = .mainColor
     }
     
     var settingButton = UIButton().then {
         $0.setImage(.settingIcon, for: .normal)
         $0.tintColor = .mainColor
+        $0.imageEdgeInsets = UIEdgeInsets(top: 7.adjustedHeight, left: 7.5.adjustedHeight, bottom: 8.adjustedHeight, right: 7.5.adjustedHeight)
         $0.imageView?.contentMode = .scaleAspectFit
     }
     
@@ -231,7 +232,9 @@ final class CheckListButton: UIView {
     }
     
     var openButton = UIButton().then {
+        $0.backgroundColor = .clear
         $0.setImage(.DownArrow, for: .normal)
+        $0.imageEdgeInsets = UIEdgeInsets(top: 9.14.adjustedHeight, left: 7.59.adjustedHeight, bottom: 10.38.adjustedHeight, right: 7.89.adjustedHeight)
         $0.tintColor = .mainColor
         $0.imageView?.contentMode = .scaleAspectFit
     }
@@ -261,12 +264,12 @@ final class CheckListButton: UIView {
         
         openButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().inset(15.adjustedWidth)
-            $0.width.height.equalTo(10.adjustedWidth)
+            $0.right.equalToSuperview().inset(7.adjustedWidth)
+            $0.width.height.equalTo(25.adjustedHeight)
         }
         
         lineView.snp.makeConstraints {
-            $0.right.equalTo(openButton.snp.left).offset(-11.adjustedWidth)
+            $0.right.equalTo(openButton.snp.left).offset(-3.adjustedWidth)
             $0.centerY.equalToSuperview()
             $0.width.equalTo(1.adjustedWidth)
             $0.height.equalTo(11.adjustedHeight)
@@ -274,8 +277,8 @@ final class CheckListButton: UIView {
         
         settingButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.right.equalTo(lineView.snp.left).offset(-11.adjustedWidth)
-            $0.width.height.equalTo(10.adjustedWidth)
+            $0.right.equalTo(lineView.snp.left).offset(-3.adjustedWidth)
+            $0.width.height.equalTo(25.adjustedHeight)
         }
     }
 }
