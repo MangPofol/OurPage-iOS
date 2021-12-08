@@ -74,7 +74,7 @@ extension BetterSegmentedControl {
 }
 
 extension UIFont {
-    enum FontSize: CGFloat {
+    enum FontSize: Double {
         case name_20 = 20.0
         case big = 18.0
         case medium = 14.0
@@ -85,6 +85,7 @@ extension UIFont {
     
     enum BoldLevel: String {
         case black = "Black"
+        case extraBold = "ExtraBold"
         case bold = "Bold"
         case semiBold = "SemiBold"
         case medium = "Medium"
@@ -107,11 +108,11 @@ extension UIFont {
     // }
     
     static func defaultFont(size: FontSize, bold: Bool = false) -> UIFont {
-        UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size.rawValue)!
+        UIFont(name: bold ? "Poppins-Bold" : "Poppins-Regular", size: size.rawValue.adjustedHeight)!
     }
     
-    static func defaultFont(size: CGFloat, boldLevel: BoldLevel = .regular) -> UIFont {
-        UIFont(name: "Poppins-\(boldLevel.rawValue)", size: size)!
+    static func defaultFont(size: Double, boldLevel: BoldLevel = .regular) -> UIFont {
+        UIFont(name: "Poppins-\(boldLevel.rawValue)", size: size.adjustedHeight)!
     }
 }
 
@@ -318,6 +319,39 @@ extension UIImage {
     }
 }
 
+extension CGSize {
+    static var baseSize: CGSize {
+        return CGSize(width: 375.0, height: 812.0)
+    }
+    
+    func resized(basedOn dimension: Dimension) -> CGSize {
+        let screenWidth  = UIScreen.main.bounds.size.width
+        let screenHeight = UIScreen.main.bounds.size.height
+        
+        var ratio:  CGFloat = 0.0
+        var width:  CGFloat = 0.0
+        var height: CGFloat = 0.0
+        
+        switch dimension {
+        case .width:
+            ratio  = self.height / self.width
+            width  = screenWidth * (self.width / CGSize.baseSize.width)
+            height = width * ratio
+        case .height:
+            ratio  = self.width / self.height
+            height = screenHeight * (self.height / CGSize.baseSize.height)
+            width  = height * ratio
+        }
+        
+        return CGSize(width: width, height: height)
+    }
+}
+
+enum Dimension {
+    case width
+    case height
+}
+
 extension Double {
     var adjustedWidth: Double {
         (Double(Constants.screenSize.width) * self) / 375.0
@@ -389,9 +423,9 @@ extension UINavigationBar {
     func setDefault() {
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .white
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.mainColor, .font: UIFont.defaultFont(size: .big, bold: true)]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.mainColor, .font: UIFont.defaultFont(size: 18, boldLevel: .extraBold)]
         appearance.shadowColor = nil
-        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 4.adjustedWidth, height: 9.adjustedHeight)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 4.adjustedWidth, height: 9.adjustedHeight)))
+        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)))
         
         self.isTranslucent = false
         self.tintColor = .mainColor
@@ -415,7 +449,7 @@ extension UIViewController {
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         nav.navigationBar.shadowImage = nil
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21.adjustedWidth, height: 16.05.adjustedHeight)), style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21, height: 16.05).resized(basedOn: .height)), style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
         // 백 버튼 텍스트 지우기
@@ -430,5 +464,14 @@ extension UITextField {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: value, height: self.frame.height))
         self.leftView = paddingView
         self.leftViewMode = ViewMode.always
+    }
+}
+
+extension UITabBar {
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
+        print(#fileID, #function, #line, "")
+        var sizeThatFits = super.sizeThatFits(size)
+        sizeThatFits.height = 75.adjustedHeight // 원하는 길이
+        return sizeThatFits
     }
 }

@@ -39,23 +39,20 @@ class MainTabBarController: UITabBarController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let height = CGFloat(Constants.getAdjustedHeight(75.0))
-        tabBar.frame.size.height = height
-        tabBar.frame.origin.y = view.frame.height - height
     }
     
     func setupVCs() {
         
         viewControllers = [
-            createNavController(for: HomeViewController(), image: .PersonIcon.resize(to: CGSize(width: 27.adjustedWidth, height: 30.adjustedHeight)), title: ""),
-            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98.adjustedWidth, height: 29.adjustedHeight)), title: "내 서재"),
-            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53.adjustedWidth, height: 29.adjustedHeight)), title: "북클럽")
+            createNavController(for: HomeViewController(), image: .PersonIcon.resize(to: CGSize(width: 27, height: 30).resized(basedOn: .height)), title: ""),
+            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: "내 서재"),
+            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53, height: 29).resized(basedOn: .height)), title: "북클럽")
         ]
         self.setViewControllers(viewControllers, animated: true)
         self.customizableViewControllers = viewControllers
         let array = self.customizableViewControllers
         for controller in array! {
-            controller.tabBarItem.imageInsets = UIEdgeInsets(top: 20, left: 0, bottom: -10, right: 0)
+            controller.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
         
     }

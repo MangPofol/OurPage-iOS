@@ -62,16 +62,10 @@ class HomeViewController: UIViewController {
             .withUnretained(self)
             .bind { (owner, _) in
                 let vc = MyProfileViewController()
-                let navi = UINavigationController(rootViewController: vc)
-                navi.setDefaultConfiguration()
-                navi.modalPresentationStyle = .fullScreen
-                owner.present(navi, animated: true)
+                owner.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
     // }
     }
 
 }
-
-
-// 6252 3852 0730

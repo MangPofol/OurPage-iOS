@@ -56,12 +56,12 @@ final class HomeView: UIView {
     }
     
     var myProfileButton = UIButton().then {
-        $0.setImage(.RightArrowWithLeftPadding, for: .normal)
+        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 5.48, height: 9.51).resized(basedOn: .height)), for: .normal)
         $0.backgroundColor = .clear
         $0.tintColor = .mainColor
         
         $0.imageView?.contentMode = .scaleAspectFit
-        $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 35.adjustedWidth)
+        $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 375.adjustedWidth - 40.adjustedWidth, bottom: 0, right: 0)
     }
     
     var goalButton = UIButton().then {
@@ -74,12 +74,13 @@ final class HomeView: UIView {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: 8.adjustedHeight)
         
-        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 6.adjustedWidth, height: 10.adjustedHeight)), for: .normal)
+        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 5.48, height: 9.51).resized(basedOn: .height)), for: .normal)
         
         $0.imageView?.snp.remakeConstraints {
             $0.top.bottom.equalToSuperview()
             $0.right.equalToSuperview().inset(17.adjustedWidth)
         }
+        $0.imageView?.contentMode = .scaleAspectFit
         $0.tintColor = .mainColor
         $0.imageView?.contentMode = .center
     }
@@ -150,7 +151,7 @@ final class HomeView: UIView {
         }
         myProfileButton.snp.makeConstraints {
             $0.centerY.equalTo(welcomeLabel)
-            $0.width.equalTo(316.adjustedWidth)
+            $0.width.equalToSuperview()
             $0.height.equalTo(29.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
