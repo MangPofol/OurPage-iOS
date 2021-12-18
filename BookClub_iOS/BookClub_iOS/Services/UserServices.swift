@@ -28,22 +28,6 @@ class UserServices {
             }
     }
     
-    static func createUser(user: CreatingUser) -> Observable<CreatedUser?> {
-        UserServices.provider
-            .rx.request(.createUser(user: user))
-            .asObservable()
-            .map {
-                print($0)
-                print(try $0.mapJSON())
-                if $0.statusCode == 201 {
-                    let result = try JSONDecoder().decode(CreatedResult.self, from: $0.data)
-                    print(result)
-                    return result.data
-                }
-                return nil
-            }
-    }
-    
     static func login(email: String, password: String) -> Observable<Bool> {
         UserServices.provider
             .rx.request(.login(email: email, password: password))

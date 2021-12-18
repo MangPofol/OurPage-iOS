@@ -15,8 +15,8 @@ class SignUpViewModel {
     
     var inputsConfirmed = Observable<Bool>.just(false)
     var idConfirmed: Observable<Bool>
-    var passwordConfirmed: Observable<Bool>
-    var passwordVerifyingComfirmed: Observable<Bool>
+    var passwordConfirmed: Observable<PasswordConfirmType>
+    var passwordVerifyingComfirmed: Observable<PasswordConfirmType>
     var nextConfirmed: Observable<Bool>
     
     init(
@@ -30,7 +30,7 @@ class SignUpViewModel {
         SignUpViewModel.creatingUser = CreatingUser()
         
         idConfirmed = input.idText
-            .debounce(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .flatMap { id -> Observable<Bool> in
                 SignUpViewModel.creatingUser.email = id
@@ -43,30 +43,30 @@ class SignUpViewModel {
             }
         
         passwordConfirmed = input.passwordText
-            .debounce(.milliseconds(500), scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
-            .map { password -> Bool in
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .map { password -> PasswordConfirmType in
                 if Constants.isValidString(str: password, regEx: Constants.USERPW_RULE) {
-                    return true
+                    return .Okay
                 }
-                return false
+                return .NotValid
             }
         
         passwordVerifyingComfirmed = Observable.combineLatest(passwordConfirmed, input.passwordText, input.passwordVerifyingText)
-            .map { pwConfirmed, password, verifying -> Bool in
+            .map { pwConfirmed, password, verifying -> PasswordConfirmType in
                 SignUpViewModel.creatingUser.password = verifying
                 
-                if !pwConfirmed {
-                    return false
+                if pwConfirmed == .NotValid {
+                    return .NotValid
                 }
                 
                 if password == verifying {
-                    return true
+                    return .Okay
                 } else {
-                    return false
+                    return .NotSame
                 }
             }
         
-        inputsConfirmed = Observable.combineLatest(idConfirmed, passwordConfirmed, passwordVerifyingComfirmed)
+        inputsConfirmed = Observable.combineLatest(idConfirmed, passwordConfirmed.map { $0 == .Okay }, passwordVerifyingComfirmed.map { $0 == .Okay })
             .map { id, pw, verifying -> Bool in
                 return id && pw && verifying
             }
@@ -77,4 +77,10 @@ class SignUpViewModel {
                 return true
             }
     }
+}
+
+enum PasswordConfirmType {
+    case NotValid
+    case NotSame
+    case Okay
 }

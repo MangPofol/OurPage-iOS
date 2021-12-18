@@ -12,7 +12,7 @@ final class IDPWView: UIView {
     var idTextField = UITextField().then {
         $0.backgroundColor = .textFieldBackgroundGray
         $0.placeholder = "이메일"
-        $0.font = .defaultFont(size: 16.0)
+        $0.font = .defaultFont(size: 16.0, boldLevel: .bold)
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
         $0.addLeftPadding(value: Constants.getAdjustedWidth(13.0))
         $0.autocorrectionType = .no

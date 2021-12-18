@@ -310,6 +310,7 @@ extension UIImage {
     static let WriteIcon = UIImage(named: "WriteViewIcon")!.withRenderingMode(.alwaysTemplate)
     static let SettingIconWithBackground = UIImage(named: "SettingIconWithBackground")!
     static let UpArrow = UIImage(named: "UpArrow")!
+    static let XIcon = UIImage(named: "XIcon")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!

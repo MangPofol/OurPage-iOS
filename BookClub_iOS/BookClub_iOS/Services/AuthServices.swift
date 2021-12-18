@@ -10,8 +10,18 @@ import Moya
 import RxMoya
 import RxSwift
 
-class AuthServices {
-    static let provider = MoyaProvider<AuthAPI>()
+class AuthServices: Networkable {
+    typealias Target = AuthAPI
+    static let provider = makeProvider()
+    
+    static func createUser(user: CreatingUser) -> Observable<Bool> {
+        AuthServices.provider
+            .rx.request(.createUser(user))
+            .asObservable()
+            .map {
+                return $0.statusCode == 201
+            }
+    }
     
     static func login(id: String, password: String) -> Observable<Bool> {
         AuthServices.provider.rx.request(.login(id, password))

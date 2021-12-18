@@ -12,14 +12,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-//        AuthServices.login(id: "testerlnj@naver.com", password: "1234").bind { print($0) }
-        
-//        let navController = UINavigationController()
-//        navController.viewControllers = [MyLibraryViewController()]
-//        navController.navigationBar.isTranslucent = false
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = MainTabBarController() // RootViewController를 연결
+        window?.rootViewController = LoginViewController() // RootViewController를 연결
         window?.makeKeyAndVisible()
     }
 

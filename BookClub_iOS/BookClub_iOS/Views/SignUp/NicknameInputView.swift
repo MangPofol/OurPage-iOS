@@ -9,7 +9,7 @@ import UIKit
 
 final class NicknameInputView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "닉네임을 입력해주세요."
+        $0.text = "당신의 닉네임은?"
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
     }
@@ -36,6 +36,7 @@ final class NicknameInputView: UIView {
         $0.isUserInteractionEnabled = false
         $0.setTitle("다음", for: .normal)
         $0.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 18, boldLevel: .bold)
         $0.backgroundColor = .textFieldBackgroundGray
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(8.0))
     }

@@ -46,7 +46,9 @@ class SignUpViewController: UIViewController {
         viewModel.idConfirmed
             .observe(on: MainScheduler.instance)
             .skip(1)
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else { return }
+                
                 if !$0 {
                     self.customView.idConfirmMessageLabel.text = "사용할 수 없는 이메일 입니다."
                 } else {
@@ -66,10 +68,15 @@ class SignUpViewController: UIViewController {
         viewModel.passwordVerifyingComfirmed
             .observe(on: MainScheduler.instance)
             .skip(1)
-            .bind {
-                if !$0 {
-                    self.customView.passwordConfirmMessageLabel.text = "사용할 수 없는 비밀번호 입니다."
-                } else {
+            .bind { [weak self] in
+                guard let self = self else { return }
+                
+                switch $0 {
+                case .NotValid:
+                    self.customView.passwordConfirmMessageLabel.text = "사용할 수 없는 비밀번호 입니다. (6~12자)"
+                case .NotSame:
+                    self.customView.passwordConfirmMessageLabel.text = "비밀번호가 일치하지 않습니다."
+                case .Okay:
                     self.customView.passwordConfirmMessageLabel.text = ""
                 }
             }
@@ -84,7 +91,9 @@ class SignUpViewController: UIViewController {
         
         viewModel.nextConfirmed
             .observe(on: MainScheduler.instance)
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else { return }
+                
                 print(SignUpViewModel.creatingUser)
                 if $0 {
                     self.navigationController?.pushViewController(ProfileInformationViewController(), animated: true)
@@ -122,7 +131,7 @@ class SignUpViewController: UIViewController {
         nav.navigationBar.scrollEdgeAppearance = appearance
 //        nav.navigationBar.addShadow(location: .bottom, opacity: 0.25)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .backbuttonImage, style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .XIcon.resize(to: CGSize(width: 10.adjustedHeight, height: 10.adjustedHeight)), style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .mainColor
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: nil, action: nil)

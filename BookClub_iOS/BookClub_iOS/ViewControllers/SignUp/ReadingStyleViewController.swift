@@ -9,6 +9,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import RxKeyboard
 
 class ReadingStyleViewController: UIViewController {
 
@@ -21,6 +22,8 @@ class ReadingStyleViewController: UIViewController {
     override func loadView() {
         self.view = customView
         self.navigationItem.backButtonTitle = ""
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "건너뛰기", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: 14, boldLevel: .bold), .foregroundColor: UIColor.mainColor], for: .normal)
     }
     
     override func viewDidLoad() {
@@ -133,6 +136,32 @@ class ReadingStyleViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         // }
+        
+        self.navigationItem.rightBarButtonItem?
+            .rx.tap
+            .bind { [weak self] in
+                SignUpViewModel.creatingUser.style = ""
+                self?.navigationController?.pushViewController(GoalViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        RxKeyboard.instance.visibleHeight
+            .skip(1)
+            .drive(onNext: { [weak self] height in
+                UIView.animate(withDuration: 0) {
+                    if height == 0 {
+                        self?.customView.nextInformationLabel.snp.updateConstraints {
+                            $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(75.0))
+                        }
+                    } else {
+                        self?.customView.nextInformationLabel.snp.updateConstraints {
+                            $0.bottom.equalToSuperview().inset(height)
+                        }
+                    }
+                }
+                self?.view.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
     }
     
     

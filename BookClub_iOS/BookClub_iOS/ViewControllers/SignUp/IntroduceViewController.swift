@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxKeyboard
 
 class IntroduceViewController: UIViewController {
 
@@ -58,5 +59,23 @@ class IntroduceViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         // }
+        
+        RxKeyboard.instance.visibleHeight
+            .skip(1)
+            .drive(onNext: { [weak self] height in
+                UIView.animate(withDuration: 0) {
+                    if height == 0 {
+                        self?.customView.nextInformationLabel.snp.updateConstraints {
+                            $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(75.0))
+                        }
+                    } else {
+                        self?.customView.nextInformationLabel.snp.updateConstraints {
+                            $0.bottom.equalToSuperview().inset(height)
+                        }
+                    }
+                }
+                self?.view.layoutIfNeeded()
+            })
+            .disposed(by: disposeBag)
     }
 }

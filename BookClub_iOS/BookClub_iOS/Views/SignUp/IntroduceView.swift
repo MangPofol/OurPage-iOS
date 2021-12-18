@@ -9,7 +9,7 @@ import UIKit
 
 final class IntroduceView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "나를 30자로 표현해 본다면?"
+        $0.text = "책 읽는 당신을 30자로 표현해 본다면?"
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
     }
@@ -29,6 +29,7 @@ final class IntroduceView: UIView {
         $0.isUserInteractionEnabled = false
         $0.setTitle("다음", for: .normal)
         $0.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 18, boldLevel: .bold)
         $0.backgroundColor = .textFieldBackgroundGray
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(8.0))
     }

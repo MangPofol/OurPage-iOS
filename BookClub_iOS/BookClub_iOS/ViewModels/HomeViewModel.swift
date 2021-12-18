@@ -13,9 +13,11 @@ import RxCocoa
 class HomeViewModel {
     var checkListToggle: Observable<Bool>
     var openMyProfileView: Observable<Bool>
+    var openModifyGoalView : Observable<Bool>
     
-    init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>) {
+    init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>, goalButtonTapped: ControlEvent<()>) {
         checkListToggle = checkListButtonTapped.map { true }
         openMyProfileView = myProfileButtonTapped.map { true }
+        openModifyGoalView = goalButtonTapped.map { true }
     }
 }

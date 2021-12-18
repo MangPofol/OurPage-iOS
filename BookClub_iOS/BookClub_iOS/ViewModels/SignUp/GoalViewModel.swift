@@ -18,7 +18,7 @@ class GoalViewModel {
     var unitText = BehaviorSubject<String>(value: "개월")
     var booksText = BehaviorSubject<String>(value: "10")
     
-    init(nextButtonTapped: ControlEvent<()>) {
+    init(nextButtonTapped: Observable<Void>) {
         let goalSentence = Observable.combineLatest(periodText, unitText, booksText)
             .map {
                 "\($0)\($1) 동안 \($2)권의 책을 기록하기"
@@ -27,17 +27,14 @@ class GoalViewModel {
         isNextConfirmed = nextButtonTapped.withLatestFrom(goalSentence)
                 .do(onNext: {
                     SignUpViewModel.creatingUser.goal = $0
-                    let original = SignUpViewModel.creatingUser.password.data(using: .utf8)!
-                    let sha256 = SHA256.hash(data: original)
-                    SignUpViewModel.creatingUser.password = sha256.compactMap {
-                        String(format: "%02x", $0)
-                    }.joined()
+//                    let original = SignUpViewModel.creatingUser.password.data(using: .utf8)!
+//                    let sha256 = SHA256.hash(data: original)
+//                    SignUpViewModel.creatingUser.password = sha256.compactMap {
+//                        String(format: "%02x", $0)
+//                    }.joined()
                 })
                 .flatMap { _ in
-                    UserServices.createUser(user: SignUpViewModel.creatingUser)
-                }
-                .map {
-                    return $0 != nil
+                    AuthServices.createUser(user: SignUpViewModel.creatingUser)
                 }
     }
 }

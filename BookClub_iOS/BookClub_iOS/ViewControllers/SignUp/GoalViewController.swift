@@ -28,6 +28,8 @@ class GoalViewController: UIViewController {
         self.customView.nextButton.isUserInteractionEnabled = true
         self.customView.nextButton.backgroundColor = .mainPink
         self.customView.nextButton.setTitleColor(.white, for: .normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "건너뛰기", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: 14, boldLevel: .bold), .foregroundColor: UIColor.mainColor], for: .normal)
     }
     
     override func viewDidLoad() {
@@ -43,27 +45,31 @@ class GoalViewController: UIViewController {
         self.customView.unitPickerView.selectRow(1, inComponent: 0, animated: false)
         self.customView.booksPickerView.selectRow(9, inComponent: 0, animated: false)
     
-        viewModel = GoalViewModel(nextButtonTapped: self.customView.nextButton.rx.tap)
+        viewModel = GoalViewModel(nextButtonTapped: Observable.merge(self.navigationItem.rightBarButtonItem!.rx.tap.asObservable(), self.customView.nextButton.rx.tap.asObservable()))
         
         // inputs
         self.customView.periodPickerView.rx.itemSelected.asObservable()
-            .bind {
-                self.viewModel.periodText.onNext(self.periods[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.periodText.onNext(owner.periods[val.row])
             }.disposed(by: disposeBag)
         self.customView.unitPickerView.rx.itemSelected.asObservable()
-            .bind {
-                self.viewModel.unitText.onNext(self.units[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.unitText.onNext(owner.units[val.row])
             }.disposed(by: disposeBag)
         self.customView.booksPickerView.rx.itemSelected.asObservable()
-            .bind {
-                self.viewModel.booksText.onNext(self.booksGoals[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.booksText.onNext(owner.booksGoals[val.row])
             }.disposed(by: disposeBag)
         
         // bind results {
         self.viewModel.isNextConfirmed
             .bind {
+                let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                 if $0 {
-                    print(SignUpViewModel.creatingUser)
+                    sceneDelegate.window?.rootViewController = MainTabBarController()
                 }
             }
             .disposed(by: disposeBag)

@@ -14,7 +14,6 @@ struct EmailStruct: Codable {
 
 enum UserAPI {
     case validateDuplicate(email: EmailStruct)
-    case createUser(user: CreatingUser)
     case login(email: String, password: String)
     case getUserInfor(userID: String)
 }
@@ -28,8 +27,6 @@ extension UserAPI: TargetType {
         switch self {
         case .validateDuplicate(_):
             return "/users/validate-duplicate"
-        case .createUser(_):
-            return "/users"
         case .login(_, _):
             return "/login"
         case .getUserInfor(_):
@@ -40,8 +37,6 @@ extension UserAPI: TargetType {
     var method: Moya.Method {
         switch self {
         case .validateDuplicate(_):
-            return .post
-        case .createUser(_):
             return .post
         case .login(_, _):
             return .post
@@ -58,8 +53,6 @@ extension UserAPI: TargetType {
         switch self {
         case .validateDuplicate(let email):
             return .requestJSONEncodable(email)
-        case .createUser(let user):
-            return .requestJSONEncodable(user)
         case .login(let email, let password):
             return .requestJSONEncodable(LoginUser(email: email, password: password))
         case .getUserInfor(let userID):

@@ -9,13 +9,14 @@ import UIKit
 
 final class ProfileInformationView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "나의 독서 프로필 채워보기"
+        $0.text = "독서의 순간을 함께 기록하는\nOur page에 오신 것을 환영합니다!"
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
+        $0.numberOfLines = 2
     }
     
     var contentLabel = UILabel().then {
-        $0.text = "프로필을 당신만의 독서취향으로 채워보세요."
+        $0.text = "독서 취향과 함께 당신을 소개해주세요."
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .medium)
     }
@@ -23,6 +24,7 @@ final class ProfileInformationView: UIView {
     var nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
         $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 18, boldLevel: .bold)
         $0.backgroundColor = .mainPink
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(8.0))
     }

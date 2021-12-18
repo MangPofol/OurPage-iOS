@@ -9,6 +9,7 @@ import Foundation
 import Moya
 
 enum AuthAPI {
+    case createUser(_ creatingUser: CreatingUser)
     case login(_ id: String, _ password: String)
 }
 
@@ -18,11 +19,21 @@ extension AuthAPI: TargetType {
     }
     
     var path: String {
-        "/login"
+        switch self {
+        case .createUser(_):
+            return "/auth/signup"
+        case .login(_, _):
+            return "/auth/login"
+        }
     }
     
     var method: Moya.Method {
-        .post
+        switch self {
+        case .createUser(_):
+            return .post
+        case .login(_, _):
+            return .post
+        }
     }
     
     var sampleData: Data {
@@ -31,13 +42,15 @@ extension AuthAPI: TargetType {
     
     var task: Task {
         switch self {
+        case .createUser(let creatingUser):
+            return .requestJSONEncodable(creatingUser)
         case .login(let id, let password):
             return .requestJSONEncodable(LoginInfo(email: id, password: password))
         }
     }
     
     var headers: [String : String]? {
-        ["Content-Type": "application/json"]
+        nil
     }
 }
 

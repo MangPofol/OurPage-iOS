@@ -29,6 +29,9 @@ class GenreViewController: UIViewController {
     override func loadView() {
         self.view = customView
         self.navigationItem.backButtonTitle = ""
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "건너뛰기", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: 14, boldLevel: .bold), .foregroundColor: UIColor.mainColor], for: .normal)
+        
     }
     
     override func viewDidLoad() {
@@ -40,26 +43,34 @@ class GenreViewController: UIViewController {
         viewModel = GenreViewModel(nextButtonTapped: self.customView.nextButton.rx.tap)
         
         viewModel.isAbleToProgress
-            .bind { isOk in
-                self.customView.nextInformationLabel.isHidden = !isOk
+            .withUnretained(self)
+            .bind { (owner, isOk) in
+                owner.customView.nextInformationLabel.isHidden = !isOk
                 if isOk {
-                    self.customView.nextButton.isUserInteractionEnabled = true
-                    self.customView.nextButton.backgroundColor = .mainPink
-                    self.customView.nextButton.setTitleColor(.white, for: .normal)
+                    owner.customView.nextButton.isUserInteractionEnabled = true
+                    owner.customView.nextButton.backgroundColor = .mainPink
+                    owner.customView.nextButton.setTitleColor(.white, for: .normal)
                 } else {
-                    self.customView.nextButton.isUserInteractionEnabled = false
-                    self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
-                    self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+                    owner.customView.nextButton.isUserInteractionEnabled = false
+                    owner.customView.nextButton.backgroundColor = .textFieldBackgroundGray
+                    owner.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
                 }
             }
             .disposed(by: disposeBag)
         
         viewModel.isNextConfirmed
-            .bind {
+            .bind { [weak self] in
                 if $0 {
                     print(SignUpViewModel.creatingUser)
-                    self.navigationController?.pushViewController(ReadingStyleViewController(), animated: true)
+                    self?.navigationController?.pushViewController(ReadingStyleViewController(), animated: true)
                 }
+            }
+            .disposed(by: disposeBag)
+        
+        self.navigationItem.rightBarButtonItem?
+            .rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(ReadingStyleViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     }

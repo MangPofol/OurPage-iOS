@@ -9,9 +9,10 @@ import UIKit
 
 final class GoalView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "독서 목표를 설정해주세요."
+        $0.text = "마지막으로\n당신의 독서 목표를 알려주세요!"
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
+        $0.numberOfLines = 2
     }
     
     var periodPickerView = UIPickerView()
