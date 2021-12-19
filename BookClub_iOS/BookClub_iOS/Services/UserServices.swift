@@ -11,8 +11,10 @@ import RxSwift
 import RxMoya
 import Moya
 
-class UserServices {
-    static let provider = MoyaProvider<UserAPI>()
+class UserServices: Networkable {
+    typealias Target = UserAPI
+    
+    static let provider = makeProvider()
     
     static func validateDuplicate(email: String) -> Observable<Bool> {
         UserServices.provider
@@ -28,31 +30,27 @@ class UserServices {
             }
     }
     
-    static func login(email: String, password: String) -> Observable<Bool> {
+    static func getCurrentUserInfo() -> Observable<CreatedUser?> {
         UserServices.provider
-            .rx.request(.login(email: email, password: password))
+            .rx.request(.getCurrentUserInfo)
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    if let headerFields = $0.response!.allHeaderFields as? [String: String], let URL = $0.request?.url {
-                        let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: URL)
-                        HTTPCookieStorage.shared.setCookie(cookies.first!)
-                    }
-                    return true
+                    let response = try? JSONDecoder().decode(CreatedResult.self, from: $0.data)
+                    return response?.data
+                } else {
+                    return nil
                 }
-                
-                return false
             }
     }
     
-    static func getUserInfo(userID: String) {
+    static func updateUser(user: UpdatingUser, id: String) -> Observable<Bool> {
         UserServices.provider
-            .rx.request(.getUserInfor(userID: userID))
+            .rx.request(.updateUser(user: user, id: id))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
-                if $0.statusCode == 200 {
-                    
-                }
+                return $0.statusCode == 204
             }
     }
 }

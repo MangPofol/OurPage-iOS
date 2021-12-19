@@ -40,6 +40,19 @@ class HomeViewController: UIViewController {
         )
         
     // bind outputs {
+        Constants.CurrentUser
+            .debug()
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { (owner, user) in
+                owner.customView.userNameLabel.text = "\(user.nickname)님"
+                if user.goal != "" {
+                    owner.customView.goalButton.setTitle(user.goal, for: .normal)
+                }
+                
+            }
+            .disposed(by: disposeBag)
+        
         viewModel.checkListToggle
             .withUnretained(self)
             .do {(owner, _) in owner.checkListOpened.toggle()}

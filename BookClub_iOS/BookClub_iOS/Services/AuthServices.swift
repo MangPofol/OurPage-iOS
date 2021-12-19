@@ -27,13 +27,11 @@ class AuthServices: Networkable {
         AuthServices.provider.rx.request(.login(id, password))
             .asObservable()
             .map {
-                if let headerFields = $0.response!.allHeaderFields as? [String: String], let URL = $0.request?.url {
-                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: URL)
-                    print(cookies)
-                    let cookieStorage = HTTPCookieStorage.shared
-                    cookieStorage.setCookie(cookies.first!)
-                }
                 if $0.statusCode == 200 {
+                    let token = try? JSONDecoder().decode(LoginResult.self, from: $0.data)
+                    if let token = token {
+                        KeyChainController.shared.create(Constants.ServiceString, account: "Token", value: token.token)
+                    }
                     return true
                 } else {
                     return false
@@ -41,4 +39,8 @@ class AuthServices: Networkable {
                 
             }
     }
+}
+
+struct LoginResult: Codable {
+    var token: String
 }

@@ -34,7 +34,7 @@ class BookCollectionViewModel {
 //        self.fetchedBooks.accept([book, book, book, book, book, book, book, book, book, book, book, book, book, book, book])
 //        self.books.accept([book, book, book, book, book, book, book, book, book, book, book, book, book, book, book])
         
-        BookServices.getBooksBy(email: email, category: category).map { values -> [Book] in
+        BookServices.getBooksBy(category: category).map { values -> [Book] in
             var books = [Book]()
             
             values.forEach {

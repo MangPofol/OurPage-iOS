@@ -10,17 +10,19 @@ import RxMoya
 import Moya
 import RxSwift
 
-class BookServices {
-    static let provider = MoyaProvider<BookAPI>()
+class BookServices: Networkable {
+    typealias Target = BookAPI
+    
+    static let provider = makeProvider()
     
     struct BooksResponse: Codable {
         var data: [BookModel]
     }
     
     // email, category로 책 목록 받아오기
-    static func getBooksBy(email: String, category: String) -> Observable<[BookModel]> {
+    static func getBooksBy(category: String) -> Observable<[BookModel]> {
         BookServices.provider
-            .rx.request(.getBooksByEmailAndCategory(email, category))
+            .rx.request(.getBooksByCurrentUserAndCategory(category))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
@@ -28,11 +30,9 @@ class BookServices {
                         let data = try JSONDecoder().decode(BooksResponse.self, from: $0.data)
                         return data.data
                     } catch {
-                        print(error.localizedDescription)
                         return []
                     }
                 } else {
-                    print("Failed with Status Code: \($0.statusCode)")
                     return []
                 }
             }
@@ -48,7 +48,6 @@ class BookServices {
                     let data = try JSONDecoder().decode(BookToCreate.self, from: $0.data)
                     return data
                 } else {
-                    print("Failed with Status Code: \($0.statusCode)")
                     return nil
                 }
             }

@@ -10,8 +10,10 @@ import Moya
 import RxMoya
 import RxSwift
 
-class PostServices {
-    static let provider = MoyaProvider<PostAPI>()
+class PostServices: Networkable {
+    typealias Target = PostAPI
+    
+    static let provider = makeProvider()
     
     struct PostsResponse: Codable {
         var data: [PostModel]

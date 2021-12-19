@@ -17,7 +17,7 @@ class LoginViewModel {
         let idAndPassword = Observable.combineLatest(idText, passwordText)
         isLoginConfirmed = loginButtonTapped.withLatestFrom(idAndPassword)
             .flatMap {
-                UserServices.login(email: $0, password: $1.toSHA256())
+                AuthServices.login(id: $0, password: $1)
             }
     }
 }

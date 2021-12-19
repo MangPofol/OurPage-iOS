@@ -65,7 +65,7 @@ final class HomeView: UIView {
     }
     
     var goalButton = UIButton().then {
-        $0.setTitle("1년에 10권 읽고 기록하기", for: .normal)
+        $0.setTitle("독서 목표를 입력해주세요.", for: .normal)
         $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15.3.adjustedWidth, bottom: 0, right: 0)
         $0.setTitleColor(.mainColor, for: .normal)

@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum BookAPI {
-    case getBooksByEmailAndCategory(_ email: String, _ category: String)
+    case getBooksByCurrentUserAndCategory(_ category: String)
     case createBook(_ bookToCreate: BookToCreate)
     case updateBook(_ id: String, _ bookToCreate: BookToCreate)
     case deleteBook(_ id: String)
@@ -17,14 +17,23 @@ enum BookAPI {
     case undoLikeBook(_ id: String)
 }
 
-extension BookAPI: TargetType {
+extension BookAPI: TargetType, AccessTokenAuthorizable {
+    var authorizationType: AuthorizationType? {
+        switch self {
+        case .getBooksByCurrentUserAndCategory(_):
+            return .bearer
+        default:
+            return nil
+        }
+    }
+    
     var baseURL: URL {
         return URL(string: Constants.APISource + "/books")!
     }
     
     var path: String {
         switch self {
-        case .getBooksByEmailAndCategory(_, _):
+        case .getBooksByCurrentUserAndCategory(_):
             return ""
         case .createBook(_):
             return ""
@@ -41,7 +50,7 @@ extension BookAPI: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .getBooksByEmailAndCategory(_, _):
+        case .getBooksByCurrentUserAndCategory(_):
             return .get
         case .createBook(_):
             return .post
@@ -62,8 +71,8 @@ extension BookAPI: TargetType {
     
     var task: Task {
         switch self {
-        case .getBooksByEmailAndCategory(let email, let category):
-            return .requestParameters(parameters: ["email": email, "category": category], encoding: URLEncoding.default)
+        case .getBooksByCurrentUserAndCategory(let category):
+            return .requestParameters(parameters: ["category": category], encoding: URLEncoding.default)
         case .createBook(let bookToCreate):
             return .requestJSONEncodable(bookToCreate)
         case .updateBook(_, let bookToCreate):
@@ -80,6 +89,4 @@ extension BookAPI: TargetType {
     var headers: [String : String]? {
         return ["Content-type": "application/json"]
     }
-    
-    
 }

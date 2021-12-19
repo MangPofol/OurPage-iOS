@@ -9,10 +9,13 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class MyProfileViewController: UIViewController {
 
     let customView = MyProfileView()
+    
+    var myGenres = BehaviorSubject<[String]>(value: [])
     
     var disposeBag = DisposeBag()
     
@@ -32,7 +35,7 @@ class MyProfileViewController: UIViewController {
         
         customView.genreCollectionView.setCollectionViewLayout(collectionLayout, animated: false)
         
-        Observable.just(["인문", "경제/경영", "소설"])
+        myGenres
             .bind(to: customView.genreCollectionView.rx.items) { (collectionView: UICollectionView, row: Int, element: String) -> UICollectionViewCell in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyGenreCollectionViewCell.identifier, for: IndexPath(row: row, section: 0)) as! MyGenreCollectionViewCell
                 cell.configure(name: element)
@@ -45,6 +48,20 @@ class MyProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Constants.CurrentUser
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { (owner, user) in
+                owner.customView.nicknameLabel.text = user.nickname
+                owner.customView.idLabel.text = user.email
+                owner.customView.introduceLabel.text = user.introduce
+                owner.customView.profileImageView.kf.setImage(
+                    with: URL(string: user.profileImgLocation),
+                    placeholder: UIImage(named: "SampleProfile"))
+                owner.myGenres.onNext(user.genres)
+            }
+            .disposed(by: disposeBag)
         
         customView.tasteSettingButton
             .rx.tap

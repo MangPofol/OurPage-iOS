@@ -15,7 +15,7 @@ protocol Networkable {
 extension Networkable {
     static func makeProvider() -> MoyaProvider<Target> {
         let authPlugin = AccessTokenPlugin { _ in
-            return ""
+            return KeyChainController.shared.getAuthorizationString(service: Constants.ServiceString, account: "Token") ?? ""
         }
         
         let loggerPlugin = NetworkLoggerPlugin()

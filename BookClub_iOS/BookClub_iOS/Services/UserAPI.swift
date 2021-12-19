@@ -14,11 +14,21 @@ struct EmailStruct: Codable {
 
 enum UserAPI {
     case validateDuplicate(email: EmailStruct)
-    case login(email: String, password: String)
-    case getUserInfor(userID: String)
+    case getCurrentUserInfo
+    case updateUser(user: UpdatingUser, id: String)
 }
 
-extension UserAPI: TargetType {
+extension UserAPI: TargetType, AccessTokenAuthorizable {
+    
+    var authorizationType: AuthorizationType? {
+        switch self {
+        case .getCurrentUserInfo, .updateUser(_):
+            return .bearer
+        default:
+            return nil
+        }
+    }
+    
     var baseURL: URL {
         return URL(string: Constants.APISource)!
     }
@@ -27,10 +37,10 @@ extension UserAPI: TargetType {
         switch self {
         case .validateDuplicate(_):
             return "/users/validate-duplicate"
-        case .login(_, _):
-            return "/login"
-        case .getUserInfor(_):
-            return "/users"
+        case .getCurrentUserInfo:
+            return "/users/current"
+        case .updateUser(_, let id):
+            return "/users/\(id)"
         }
     }
     
@@ -38,10 +48,10 @@ extension UserAPI: TargetType {
         switch self {
         case .validateDuplicate(_):
             return .post
-        case .login(_, _):
-            return .post
-        case .getUserInfor(_):
+        case .getCurrentUserInfo:
             return .get
+        case .updateUser(_, _):
+            return .put
         }
     }
     
@@ -53,10 +63,10 @@ extension UserAPI: TargetType {
         switch self {
         case .validateDuplicate(let email):
             return .requestJSONEncodable(email)
-        case .login(let email, let password):
-            return .requestJSONEncodable(LoginUser(email: email, password: password))
-        case .getUserInfor(let userID):
-            return .requestParameters(parameters: ["userId": "\(userID)"], encoding: URLEncoding.default)
+        case .getCurrentUserInfo:
+            return .requestPlain
+        case .updateUser(let user, _):
+            return .requestJSONEncodable(user)
         }
     }
     

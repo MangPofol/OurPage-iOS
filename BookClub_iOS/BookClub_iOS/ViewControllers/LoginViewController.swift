@@ -37,9 +37,10 @@ class LoginViewController: UIViewController {
         viewModel.isLoginConfirmed
             .bind {
                 if $0 {
-                    let vc = MainTabBarController()
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: true, completion: nil)
+                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                    if let window = sceneDelegate.window {
+                        window.rootViewController = MainTabBarController()
+                    }
                 }
             }
             .disposed(by: disposeBag)
