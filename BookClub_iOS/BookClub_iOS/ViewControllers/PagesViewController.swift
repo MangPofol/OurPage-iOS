@@ -85,8 +85,8 @@ class ImagePreviewContentViewController: UIViewController {
         self.imageView.image = image
         
         closeButton.rx.tap
-            .bind {
-                self.parent?.dismiss(animated: true, completion: nil)
+            .bind { [weak self] in
+                self?.parent?.dismiss(animated: true, completion: nil)
             }.disposed(by: disposeBag)
     }
 }

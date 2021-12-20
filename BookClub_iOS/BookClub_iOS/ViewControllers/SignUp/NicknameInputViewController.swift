@@ -31,8 +31,8 @@ class NicknameInputViewController: UIViewController {
                 nicknameText: self.customView.nicknameTextField.rx.text
                     .filter { $0 != nil }.map { $0! },
                 nextButtonTapped: self.customView.nextButton.rx.tap
-                    .do { _ in
-                        self.customView.nextButton.animateButton()
+                    .do { [weak self] _ in
+                        self?.customView.nextButton.animateButton()
                     }.map { true }
             )
         )

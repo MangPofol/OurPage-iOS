@@ -261,7 +261,7 @@ class BookclubView: UIView {
         }
         // }
         
-        bookCollectionContainer.snp.remakeConstraints {
+        bookCollectionContainer.snp.remakeConstraints { [unowned self] in
             $0.top.equalTo(selectedControl.snp.bottom).offset(Constants.getAdjustedHeight(12.0))
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.screenSize.width * 0.9)

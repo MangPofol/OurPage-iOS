@@ -40,7 +40,7 @@ class BookClubListTableViewCell: UITableViewCell {
             $0.bottom.equalToSuperview().inset(5)
             $0.right.equalTo(exitButton.snp.left).offset(-5)
         }
-        exitButton.snp.makeConstraints {
+        exitButton.snp.makeConstraints { [unowned self] in
             $0.right.top.equalToSuperview()
             $0.bottom.equalToSuperview().inset(5)
             $0.width.equalTo(self.contentView.bounds.width / 7.5)

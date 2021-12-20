@@ -23,12 +23,32 @@ struct PostModel: Codable {
 
 struct PostToCreate: Codable {
     var bookId: Int
-    var type: String
     var scope: String
     var isIncomplete: Bool
-    var imgLocation: String
+    var location: String
+    var readTime: String
+    var hyperlinkTitle: String
+    var hyperlink: String
     var title: String
     var content: String
+    var postImgLocations: [String]
+    var clubIdListForScope: [String]
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(bookId, forKey: .bookId)
+        try container.encode(scope, forKey: .scope)
+        try container.encode(isIncomplete, forKey: .isIncomplete)
+        try container.encode(location, forKey: .location)
+        try container.encode(readTime, forKey: .readTime)
+        try container.encode(hyperlinkTitle, forKey: .hyperlinkTitle)
+        try container.encode(hyperlink, forKey: .hyperlink)
+        try container.encode(title, forKey: .title)
+        try container.encode(content, forKey: .content)
+        try container.encode(postImgLocations, forKey: .postImgLocations)
+        try container.encode(clubIdListForScope, forKey: .clubIdListForScope)
+    }
 }
 
 struct PostToUpdate: Codable {

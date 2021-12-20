@@ -21,8 +21,8 @@ class BookCollectionViewModel {
     init(bookTapped: Observable<Book>) {
         tappedBook = bookTapped
         
-        category.bind {
-            self.getBooksBy(email: "k@naver.com", category: $0.rawValue)
+        category.bind { [weak self] in
+            self?.getBooksBy(email: "k@naver.com", category: $0.rawValue)
         }.disposed(by: disposeBag)
     }
     
@@ -43,9 +43,9 @@ class BookCollectionViewModel {
             }
             
             return books
-        }.bind {
-            self.fetchedBooks.accept($0)
-            self.books.accept($0)
+        }.bind { [weak self] in
+            self?.fetchedBooks.accept($0)
+            self?.books.accept($0)
         }.disposed(by: disposeBag)
     }
     
@@ -56,19 +56,19 @@ class BookCollectionViewModel {
         } else {
             print(#fileID, #function, #line, "")
             SearchServices.searchBookBy(title: title)
-                .bind {
-                    self.books.accept($0)
+                .bind { [weak self] in
+                    self?.books.accept($0)
                 }
                 .disposed(by: disposeBag)
         }
     }
     
     func allFilterDisable() {
-        self.books.accept(self.fetchedBooks.value)
+        self.books.accept(fetchedBooks.value)
     }
     
     func filterBySearching(with text: String) {
-        var books = self.fetchedBooks.value
+        var books = fetchedBooks.value
         books = books.filter {
             return $0.bookModel.name.hasPrefix(text)
         }
@@ -92,7 +92,7 @@ class BookCollectionViewModel {
                 $0.bookModel.name < $1.bookModel.name
             }
         case .none:
-            self.books.accept(self.fetchedBooks.value)
+            self.books.accept(fetchedBooks.value)
             return
         }
         self.books.accept(books)

@@ -20,7 +20,7 @@ class HotViewController: UITableViewController {
         
         self.tableView.register(HotViewCell.self, forCellReuseIdentifier: HotViewCell.identifier)
         // bind outputs
-        viewModel.hots.bind(to: self.tableView.rx.items(cellIdentifier: HotViewCell.identifier, cellType: HotViewCell.self)) { (row, element, cell) in
+        viewModel.hots.bind(to: tableView.rx.items(cellIdentifier: HotViewCell.identifier, cellType: HotViewCell.self)) { (row, element, cell) in
             cell.titleLabel.text = element.content
             cell.bookLabel.text = element.book
         }.disposed(by: disposeBag)

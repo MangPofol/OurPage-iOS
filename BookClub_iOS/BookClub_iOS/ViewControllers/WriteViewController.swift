@@ -46,8 +46,6 @@ class WriteViewController: UIViewController {
         viewModel = WriteViewModel(
             input: (
                 bookSelectionButtonTapped: customView.bookSelectionButton.button.rx.tap.asSignal(),
-                isMemoOn: customView.memoButton.isOnRx.asObservable(),
-                isTopicOn: customView.topicButton.isOnRx.asObservable(),
                 imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal(),
                 writeButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asSignal(),
                 titleText: customView.titleTextField.rx.text.map { $0 ?? "" },
@@ -56,12 +54,13 @@ class WriteViewController: UIViewController {
         )
         
         customView.uploadedImageCollection.rx.itemSelected
-            .bind {
+            .withUnretained(self)
+            .bind { (owner, val) in
                 let vc = PagesViewController()
-                vc.chooseIdx = $0.row
-                vc.pageImages = self.viewModel.uploadedImages.value
+                vc.chooseIdx = val.row
+                vc.pageImages = owner.viewModel.uploadedImages.value
                 vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true, completion: nil)
+                owner.present(vc, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
         
@@ -74,21 +73,21 @@ class WriteViewController: UIViewController {
         
         viewModel.uploadedImages
             .debug()
-            .do {
-                self.customView.imageUploadButton.setTitle("\($0.count)/4", for: .normal)
+            .do { [weak self] in
+                self?.customView.imageUploadButton.setTitle("\($0.count)/4", for: .normal)
             }
             .bind(to:
                     self.customView.uploadedImageCollection
                     .rx
                     .items(cellIdentifier: UploadedImageCollectionViewCell.identifier, cellType: UploadedImageCollectionViewCell.self)) { (row, element, cell) in
                 cell.imageView.image = element
-                cell.deleteButton.rx.tap.bind {
-                    var images = self.viewModel.uploadedImages.value
+                cell.deleteButton.rx.tap.withUnretained(self).bind { (owner, _) in
+                    var images = owner.viewModel.uploadedImages.value
                     images.remove(at: row)
-                    var urls = self.viewModel.uploadedImagesURLs.value
+                    var urls = owner.viewModel.uploadedImagesURLs.value
                     urls.remove(at: row)
-                    self.viewModel.uploadedImages.accept(images)
-                    self.viewModel.uploadedImagesURLs.accept(urls)
+                    owner.viewModel.uploadedImages.accept(images)
+                    owner.viewModel.uploadedImagesURLs.accept(urls)
                     
                 }.disposed(by: cell.disposeBag)
             }
@@ -97,30 +96,17 @@ class WriteViewController: UIViewController {
         
         viewModel.bookSelection
             .observe(on: MainScheduler.instance)
-            .bind {
+            .bind { [weak self] in
                 if $0 {
-                    self.navigationController?.pushViewController(BookSelectViewController(), animated: true)
+                    self?.navigationController?.pushViewController(BookSelectViewController(), animated: true)
                 }
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.isMemo
-            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-            .bind {
-                print("isMemo", $0)
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.isTopic
-            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-            .bind {
-                print("isTopic", $0)
             }
             .disposed(by: disposeBag)
         
         viewModel.imageUploading
             .filter { $0 == true }
-            .bind { _ in
+            .bind { [weak self] _ in
+                guard let self = self else { return }
                 var config = YPImagePickerConfiguration()
                 // [Edit configuration here ...]
                 // Build a picker with y    our configuration
@@ -176,14 +162,14 @@ class WriteViewController: UIViewController {
         // navigation bar button
         self.navigationItem.leftBarButtonItem!
             .rx.tap
-            .bind {
+            .bind { [weak self] in
                 let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
                 menu.leftSide = true
                 menu.presentationStyle = .menuSlideIn
                 menu.menuWidth = CGFloat(Constants.getAdjustedWidth(280.0))
                 menu.presentationStyle.presentingEndAlpha = 0.5
                 
-                self.present(menu, animated: true, completion: nil)
+                self?.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
         
@@ -198,18 +184,18 @@ class WriteViewController: UIViewController {
     
     private func setTextViewPlaceholder() {
         customView.contentTextView.rx.didBeginEditing
-            .subscribe(onNext: { [self] in
-                        if(customView.contentTextView.text == "내용을 입력하세요." ){
-                            customView.contentTextView.text = nil
-                            customView.contentTextView.textColor = .black
+            .subscribe(onNext: { [weak self] in
+                if(self?.customView.contentTextView.text == "내용을 입력하세요." ){
+                    self?.customView.contentTextView.text = nil
+                    self?.customView.contentTextView.textColor = .black
                             
                         }}).disposed(by: disposeBag)
         
         customView.contentTextView.rx.didEndEditing
-            .subscribe(onNext: { [self] in
-                        if(customView.contentTextView.text == nil || customView.contentTextView.text == ""){
-                            customView.contentTextView.text = "내용을 입력하세요."
-                            customView.contentTextView.textColor = .grayB0
+            .subscribe(onNext: { [weak self] in
+                if(self?.customView.contentTextView.text == nil || self?.customView.contentTextView.text == ""){
+                    self?.customView.contentTextView.text = "내용을 입력하세요."
+                    self?.customView.contentTextView.textColor = .grayB0
                             
                         }}).disposed(by: disposeBag)
     }

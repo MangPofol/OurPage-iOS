@@ -20,6 +20,7 @@ class BookListViewCell: UICollectionViewCell {
         $0.image = UIImage(named: "SampleBook")!
         $0.contentMode = .scaleAspectFit
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(10.0)))
+        $0.kf.indicatorType = .activity
     }
     var bookTitleLabel = UILabel().then {
         $0.text = "책 제목"
@@ -56,16 +57,16 @@ class BookListViewCell: UICollectionViewCell {
     private func bindOutputs() {
         bookModel.observe(on: MainScheduler.instance)
             .filter { $0 != nil}
-            .bind { book in
+            .bind { [weak self] book in
                 // DB 먼저 검사
-                self.bookTitleLabel.text = book!.name
+                self?.bookTitleLabel.text = book!.name
             }
             .disposed(by: disposeBag)
         
         searchedInfo.observe(on: MainScheduler.instance)
             .filter { $0 != nil }
-            .bind {
-                self.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail))
+            .bind { [weak self] in
+                self?.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail))
             }
             .disposed(by: disposeBag)
     }

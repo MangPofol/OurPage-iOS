@@ -14,10 +14,12 @@ class HomeViewModel {
     var checkListToggle: Observable<Bool>
     var openMyProfileView: Observable<Bool>
     var openModifyGoalView : Observable<Bool>
+    var openWriteView: Observable<Bool>
     
-    init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>, goalButtonTapped: ControlEvent<()>) {
+    init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>, goalButtonTapped: ControlEvent<()>, writeButtonTapped: ControlEvent<()>) {
         checkListToggle = checkListButtonTapped.map { true }
         openMyProfileView = myProfileButtonTapped.map { true }
         openModifyGoalView = goalButtonTapped.map { true }
+        openWriteView = writeButtonTapped.map { true }
     }
 }

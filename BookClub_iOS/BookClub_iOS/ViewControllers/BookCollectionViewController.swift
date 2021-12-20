@@ -31,7 +31,7 @@ class BookCollectionViewController: UICollectionViewController {
         // bind outputs
         viewModel!.books
             .bind(to:
-                    self.collectionView
+                    collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
                 

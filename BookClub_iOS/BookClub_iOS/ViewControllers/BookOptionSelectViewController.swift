@@ -40,25 +40,26 @@ class BookOptionSelectViewController: UIViewController {
         }.disposed(by: disposeBag)
         
         viewModel.isAddingBook
-            .bind {
-                switch $0 {
+            .withUnretained(self)
+            .bind { (owner, type) in
+                switch type {
                 case .NOW:
-                    self.dismiss(animated: true) {
-                        if self.bookSelectVC != nil {
-                            self.bookSelectVC?.newBookSelected.onNext(self.selectedBook)
+                    owner.dismiss(animated: true) {
+                        if owner.bookSelectVC != nil {
+                            owner.bookSelectVC?.newBookSelected.onNext(owner.selectedBook)
                         }
                     }
                 case .AFTER:
-                    self.dismiss(animated: true) {
-                        if self.bookSelectVC != nil {
-                            self.bookSelectVC?.newBookSelected.onNext(self.selectedBook)
+                    owner.dismiss(animated: true) {
+                        if owner.bookSelectVC != nil {
+                            owner.bookSelectVC?.newBookSelected.onNext(owner.selectedBook)
                         }
                     }
                 case .BEFORE:
-                    self.dismiss(animated: true) {
-                        if self.bookSelectVC != nil {
-                            self.bookSelectVC?.customView.searchBar.searchTextField.text = ""
-                            self.bookSelectVC?.customView.searchBar.searchTextField.sendActions(for: .valueChanged)
+                    owner.dismiss(animated: true) {
+                        if owner.bookSelectVC != nil {
+                            owner.bookSelectVC?.customView.searchBar.text = ""
+                            owner.bookSelectVC?.customView.searchBar.sendActions(for: .valueChanged)
 //                            self.bookSelectVC?.searchMode(false)
                             
                         }

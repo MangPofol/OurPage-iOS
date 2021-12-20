@@ -36,7 +36,8 @@ class HomeViewController: UIViewController {
         viewModel = HomeViewModel(
             checkListButtonTapped: customView.checkListHeader.openButton.rx.tap,
             myProfileButtonTapped: customView.myProfileButton.rx.tap,
-            goalButtonTapped: customView.goalButton.rx.tap
+            goalButtonTapped: customView.goalButton.rx.tap,
+            writeButtonTapped: customView.writeButton.writeButton.rx.tap
         )
         
     // bind outputs {
@@ -95,6 +96,13 @@ class HomeViewController: UIViewController {
             .withUnretained(self)
             .bind { (owner, _) in
                 owner.navigationController?.pushViewController(ModifyGoalViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.openWriteView
+            .withUnretained(self)
+            .bind { (owner, _) in
+                owner.navigationController?.pushViewController(WriteViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     // }

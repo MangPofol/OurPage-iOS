@@ -214,7 +214,7 @@ class MyLibraryView: UIView {
             $0.width.equalTo(162.adjustedWidth)
             $0.height.equalTo(19.adjustedHeight)
         }
-        bookCollectionContainer.snp.remakeConstraints {
+        bookCollectionContainer.snp.remakeConstraints { [unowned self] in
             $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.getAdjustedWidth(335.0))

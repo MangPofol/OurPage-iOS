@@ -25,7 +25,7 @@ class CreateBookClubViewController: UIViewController {
             $0.bottom.left.right.equalToSuperview()
             $0.height.equalTo(Constants.screenSize.height / 12.5)
         }
-        customView.snp.makeConstraints {
+        customView.snp.makeConstraints { [unowned self] in
             $0.bottom.equalTo(underBarButton.snp.top)
             $0.top.equalTo(self.view.safeAreaLayoutGuide)
             $0.left.right.equalToSuperview()
@@ -54,7 +54,7 @@ class CreateBookClubViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap
-            .bind {
+            .bind { [weak self] in
                 // Define the menu
                 let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
                 menu.leftSide = true
@@ -63,7 +63,7 @@ class CreateBookClubViewController: UIViewController {
                 // SideMenuNavigationController is a subclass of UINavigationController, so do any additional configuration
                 // of it here like setting its viewControllers. If you're using storyboards, you'll want to do something like:
                 // let menu = storyboard!.instantiateViewController(withIdentifier: "RightMenu") as! SideMenuNavigationController
-                self.present(menu, animated: true, completion: nil)
+                self?.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
         

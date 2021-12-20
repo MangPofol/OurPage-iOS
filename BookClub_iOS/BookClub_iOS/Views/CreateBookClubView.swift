@@ -64,7 +64,7 @@ class CreateBookClubView: UIView {
     }
     
     func makeView() {
-        titleLabel.snp.makeConstraints {
+        titleLabel.snp.makeConstraints { [unowned self] in
             $0.top.equalTo(self.safeAreaLayoutGuide).offset(Constants.screenSize.height / 10.0)
             $0.left.right.equalToSuperview().inset(Constants.screenSize.width / 20.0)
         }

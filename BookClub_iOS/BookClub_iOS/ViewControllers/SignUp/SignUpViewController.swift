@@ -84,8 +84,8 @@ class SignUpViewController: UIViewController {
         
         viewModel.inputsConfirmed
             .observe(on: MainScheduler.instance)
-            .bind {
-                self.navigationItem.rightBarButtonItem?.isEnabled = $0
+            .bind { [weak self] in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = $0
             }
             .disposed(by: disposeBag)
         
@@ -141,8 +141,8 @@ class SignUpViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap
-            .bind {
-                self.dismiss(animated: true, completion: nil)
+            .bind { [weak self] in
+                self?.dismiss(animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
     }

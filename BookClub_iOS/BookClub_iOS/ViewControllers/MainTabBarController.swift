@@ -48,19 +48,14 @@ class MainTabBarController: UITabBarController {
             createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: "내 서재"),
             createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53, height: 29).resized(basedOn: .height)), title: "북클럽")
         ]
-        self.setViewControllers(viewControllers, animated: true)
-        self.customizableViewControllers = viewControllers
-        let array = self.customizableViewControllers
-        for controller in array! {
-            controller.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -11.adjustedHeight, right: 0)
-        }
-        
+        self.setViewControllers(viewControllers, animated: false)
     }
     
     fileprivate func createNavController(for rootViewController: UIViewController,
                                          image: UIImage, title: String) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.tabBarItem.image = image
+        navController.tabBarItem.imageInsets = UIEdgeInsets(top: 11.adjustedHeight, left: 0, bottom: -11.adjustedHeight, right: 0)
         rootViewController.navigationItem.title = title
         return navController
     }

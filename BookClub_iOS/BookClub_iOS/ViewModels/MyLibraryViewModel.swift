@@ -42,8 +42,9 @@ class MyLibraryViewModel {
         
         Observable.combineLatest(filterType, sortBy)
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-            .subscribe(onNext: { filterType, sortBy in
+            .subscribe(onNext: { [weak self] filterType, sortBy in
                 // TODO: 맞는 필터 타입에 맞춰 data 재가공
+                guard let self = self else { return }
                 switch filterType {
                 case .search:
                     print("Filtering Mode: \(filterType)")

@@ -39,8 +39,9 @@ class MyLibraryViewController: UIViewController {
         viewModel = MyLibraryViewModel(
             input: (
                 typeTapped: customView.typeControl.rx.controlEvent(.valueChanged)
-                    .map {
-                        switch self.customView.typeControl.index {
+                    .withUnretained(self)
+                    .map { (owner, _) in
+                        switch owner.customView.typeControl.index {
                         case 0:
                             return BookListType.NOW
                         case 1:
@@ -52,12 +53,12 @@ class MyLibraryViewController: UIViewController {
                         }
                     },
                 filterTapped: Observable.merge(
-                    customView.searchButton.rx.tap.map { _ in
-                        !self.customView.searchButton.isOn ? FilterType.none : FilterType.search },
-                    customView.bookclubButton.rx.tap.map { _ in
-                        !self.customView.bookclubButton.isOn ? FilterType.none: FilterType.bookclub },
-                    customView.sortingButton.rx.tap.map { _ in
-                        !self.customView.sortingButton.isOn ? FilterType.none : FilterType.sorting }
+                    customView.searchButton.rx.tap.withUnretained(self).map { (owner, _) in
+                        !owner.customView.searchButton.isOn ? FilterType.none : FilterType.search },
+                    customView.bookclubButton.rx.tap.withUnretained(self).map { (owner, _) in
+                        !owner.customView.bookclubButton.isOn ? FilterType.none: FilterType.bookclub },
+                    customView.sortingButton.rx.tap.withUnretained(self).map { (owner, _) in
+                        !owner.customView.sortingButton.isOn ? FilterType.none : FilterType.sorting }
                 ),
                 searchText: customView.searchTextField
                     .rx.text
@@ -76,12 +77,12 @@ class MyLibraryViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem!
             .rx.tap
-            .bind {
+            .bind { [weak self] in
                 let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
                 menu.leftSide = true
                 menu.presentationStyle = .menuSlideIn
                 menu.menuWidth = Constants.screenSize.width * 0.85
-                self.present(menu, animated: true, completion: nil)
+                self?.present(menu, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
         
@@ -105,9 +106,8 @@ class MyLibraryViewController: UIViewController {
         
         // bind outputs {
         viewModel!.bookListType
-            .bind {
-                self.bookCollectionVC.viewModel.category.onNext($0)
-                print($0)
+            .bind { [weak self] in
+                self?.bookCollectionVC.viewModel.category.onNext($0)
             }
             .disposed(by: disposeBag)
         
@@ -115,7 +115,8 @@ class MyLibraryViewController: UIViewController {
         let filterButtonsTapped = Observable.combineLatest(self.customView.searchButton.isOnRx, self.customView.bookclubButton.isOnRx, self.customView.sortingButton.isOnRx)
         filterButtonsTapped
             .skip(1)
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else { return }
                 let status = $0.0 || $0.1 || $0.2
                 
                 if $0.0 {
@@ -158,9 +159,9 @@ class MyLibraryViewController: UIViewController {
             .disposed(by: disposeBag)
 
         // 필터 방식
-        Observable.combineLatest(self.customView.byNewButton.isOnRx, self.customView.byOldButton.isOnRx, self.customView.byNameButton.isOnRx)
-            .subscribe(onNext: {
-                print($0)
+        Observable.combineLatest(customView.byNewButton.isOnRx, customView.byOldButton.isOnRx, customView.byNameButton.isOnRx)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 if $0.0 {
                     self.viewModel?.sortBy.onNext(SortBy.byNew)
                 } else if $0.1 {
@@ -174,7 +175,7 @@ class MyLibraryViewController: UIViewController {
         
         // 뷰 모델로 부터 소속된 북클럽을 받아와서 북클럽 필터에 표시
         viewModel!.bookclubs
-            .bind(to: self.customView.bookclubSelector
+            .bind(to: customView.bookclubSelector
                     .rx
                     .items(cellIdentifier: BookclubSelectorCell.identifier, cellType: BookclubSelectorCell.self)) { (row, element, cell) in
                 cell.contentView.backgroundColor = .gray1
@@ -192,7 +193,8 @@ class MyLibraryViewController: UIViewController {
         // 스크롤시 상단 버튼 숨기기
         bookCollectionVC.collectionView.rx.didScroll
             .observe(on: MainScheduler.instance)
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else { return }
                 if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.upperView.bounds.height {
                     self.customView.upperView.snp.updateConstraints {
                         $0.top.equalToSuperview().offset(-self.bookCollectionVC.collectionView.contentOffset.y)

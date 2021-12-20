@@ -324,8 +324,8 @@ extension UIImage {
     
     func resize(to size: CGSize, isAlwaysTemplate: Bool = true) -> UIImage {
         let render = UIGraphicsImageRenderer(size: size)
-        let renderImage = render.image { context in
-            self.draw(in: CGRect(origin: .zero, size: size))
+        let renderImage = render.image { [weak self] context in
+            self?.draw(in: CGRect(origin: .zero, size: size))
         }
         
         if isAlwaysTemplate {
@@ -422,15 +422,15 @@ extension UIButton {
         UIView.animate(withDuration: duration,
                        delay: 0,
                        options: .curveLinear,
-                       animations: {
-            self.transform = CGAffineTransform.init(scaleX: scale, y: scale)}) { (done) in
+                       animations: { [weak self] in
+            self?.transform = CGAffineTransform.init(scaleX: scale, y: scale)}) { (done) in
             UIView.animate(withDuration: duration,
                            delay: 0,
                            options: .curveLinear,
-                           animations: {
-                self.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-            }) { _ in
-                self.isUserInteractionEnabled = true
+                           animations: { [weak self] in
+                self?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+            }) { [weak self] _ in
+                self?.isUserInteractionEnabled = true
             }
         }
     }

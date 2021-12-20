@@ -19,7 +19,7 @@ class BookOptionSelectViewModel {
         self.selectedBook = selectedBook
         isAddingBook = addButtonTapped
             .asObservable()
-            .withLatestFrom(self.categorySelected)
+            .withLatestFrom(categorySelected)
             .flatMap { type -> Observable<BookListType?> in
                 let book = BookToCreate(name: selectedBook.bookModel.name, isbn: selectedBook.bookModel.isbn, category: type.rawValue)
                 return BookServices.createBook(bookToCreate: book).map { value -> BookListType? in

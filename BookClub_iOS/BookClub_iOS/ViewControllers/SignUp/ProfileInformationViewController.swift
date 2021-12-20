@@ -22,11 +22,11 @@ class ProfileInformationViewController: UIViewController {
         super.viewDidLoad()
 
         customView.nextButton.rx.tap
-            .do { _ in
-                self.customView.nextButton.animateButton()
+            .do { [weak self] _ in
+                self?.customView.nextButton.animateButton()
             }
-            .bind { _ in
-                self.navigationController?.pushViewController(NicknameInputViewController(), animated: true)
+            .bind { [weak self] _ in
+                self?.navigationController?.pushViewController(NicknameInputViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     }

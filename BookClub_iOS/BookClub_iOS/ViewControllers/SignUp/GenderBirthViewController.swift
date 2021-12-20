@@ -20,7 +20,7 @@ class GenderBirthViewController: UIViewController {
     var months = Array(1...12)
     var days = Array(1...31) {
         didSet {
-            self.customView.dayPickerView.reloadAllComponents()
+            customView.dayPickerView.reloadAllComponents()
         }
     }
     
@@ -57,33 +57,37 @@ class GenderBirthViewController: UIViewController {
         
         // bind inputs {
         self.customView.yearPickerView.rx.itemSelected
-            .bind {
-                self.viewModel.selectedYear.onNext(self.years[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.selectedYear.onNext(owner.years[val.row])
             }
             .disposed(by: disposeBag)
         
         self.customView.monthPickerView.rx.itemSelected
-            .bind {
-                self.viewModel.selectedMonth.onNext(self.months[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.selectedMonth.onNext(owner.months[val.row])
             }
             .disposed(by: disposeBag)
         
         self.customView.dayPickerView.rx.itemSelected
-            .bind {
-                self.viewModel.selectedDay.onNext(self.days[$0.row])
+            .withUnretained(self)
+            .bind { (owner, val) in
+                owner.viewModel.selectedDay.onNext(owner.days[val.row])
             }
             .disposed(by: disposeBag)
         // }
         
         // bind outputs {
         viewModel.newDays
-            .bind {
-                self.days = Array(1...$0)
+            .bind { [weak self] in
+                self?.days = Array(1...$0)
             }
             .disposed(by: disposeBag)
         
         viewModel.isAbleToProgress
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else { return }
                 self.customView.nextInformationLabel.isHidden = !$0
                 if $0 {
                     self.customView.nextButton.isUserInteractionEnabled = true
@@ -99,9 +103,9 @@ class GenderBirthViewController: UIViewController {
         
         viewModel.nextConfirmed
             .filter { $0 }
-            .bind {
+            .bind { [weak self] in
                 if $0 {
-                    self.navigationController?.pushViewController(IntroduceViewController(), animated: true)
+                    self?.navigationController?.pushViewController(IntroduceViewController(), animated: true)
                 }
             }
             .disposed(by: disposeBag)

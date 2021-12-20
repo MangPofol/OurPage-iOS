@@ -36,25 +36,25 @@ class IntroduceViewController: UIViewController {
         
         // bind outputs {
         viewModel.isIntroduceConfirmed
-            .bind {
-                self.customView.nextInformationLabel.isHidden = !$0
-                if $0 {
-                    self.customView.nextButton.isUserInteractionEnabled = true
-                    self.customView.nextButton.backgroundColor = .mainPink
-                    self.customView.nextButton.setTitleColor(.white, for: .normal)
+            .withUnretained(self)
+            .bind { (owner, bool) in
+                owner.customView.nextInformationLabel.isHidden = !bool
+                if bool {
+                    owner.customView.nextButton.isUserInteractionEnabled = true
+                    owner.customView.nextButton.backgroundColor = .mainPink
+                    owner.customView.nextButton.setTitleColor(.white, for: .normal)
                 } else {
-                    self.customView.nextButton.isUserInteractionEnabled = false
-                    self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
-                    self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+                    owner.customView.nextButton.isUserInteractionEnabled = false
+                    owner.customView.nextButton.backgroundColor = .textFieldBackgroundGray
+                    owner.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
                 }
             }
             .disposed(by: disposeBag)
         
         viewModel.isNextConfirmed
-            .bind {
+            .bind { [weak self] in
                 if $0 {
-                    print(SignUpViewModel.creatingUser)
-                    self.navigationController?.pushViewController(GenreViewController(), animated: true)
+                    self?.navigationController?.pushViewController(GenreViewController(), animated: true)
                 }
             }
             .disposed(by: disposeBag)

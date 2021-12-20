@@ -12,7 +12,7 @@ import RxCocoa
 import RxKeyboard
 
 class ReadingStyleViewController: UIViewController {
-
+    
     let customView = ReadingStyleView()
     
     var disposeBag = DisposeBag()
@@ -31,7 +31,8 @@ class ReadingStyleViewController: UIViewController {
         
         // textview placeholder
         self.customView.customStyleTextField.rx.didBeginEditing
-            .subscribe(onNext: { [self] in
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.customView.style1Button.isOn = false
                 self.customView.style2Button.isOn = false
                 self.customView.style3Button.isOn = false
@@ -46,7 +47,8 @@ class ReadingStyleViewController: UIViewController {
             }).disposed(by: disposeBag)
         
         self.customView.customStyleTextField.rx.didEndEditing
-            .subscribe(onNext: { [self] in
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 if(self.customView.customStyleTextField.text == nil || self.customView.customStyleTextField.text == "") {
                     self.customView.customStyleTextField.backgroundColor = UIColor(hexString: "EFF0F3")
                     self.customView.customStyleTextField.text = "+ 직접 입력하기 (최대 30자)"
@@ -57,35 +59,37 @@ class ReadingStyleViewController: UIViewController {
                     self.customView.customStyleTextField.textColor = UIColor(hexString: "C3C5D1")
                 }
             }).disposed(by: disposeBag)
-
+        
         viewModel = ReadingStyleViewModel(
             input: (
                 styleText:
                     Observable.merge(
                         Observable.combineLatest(
-                            self.customView.style1Button.isOnRx
-                                .map { $0 ? self.customView.style1Button.title(for: .normal)! : "" },
-                            self.customView.style2Button.isOnRx
-                                .map { $0 ? self.customView.style2Button.title(for: .normal)! : "" },
-                            self.customView.style3Button.isOnRx
-                                .map { $0 ? self.customView.style3Button.title(for: .normal)! : "" }
-                        ).map {
-                            if $0 != "" || $1 != "" || $2 != "" {
-                                self.customView.customStyleTextField.resignFirstResponder()
-                                self.customView.customStyleTextField.backgroundColor = UIColor(hexString: "EFF0F3")
-                                self.customView.customStyleTextField.textColor = UIColor(hexString: "C3C5D1")
-                            }
-        
-                            if $0 != "" {
-                                return $0
-                            } else if $1 != "" {
-                                return $1
-                            } else if $2 != "" {
-                                return $2
-                            } else {
-                                return ""
-                            }
-                        },
+                            customView.style1Button.isOnRx
+                                .map { [unowned self] in $0 ? self.customView.style1Button.title(for: .normal)! : "" },
+                            customView.style2Button.isOnRx
+                                .map { [unowned self] in $0 ? self.customView.style2Button.title(for: .normal)! : "" },
+                            customView.style3Button.isOnRx
+                                .map { [unowned self] in $0 ? self.customView.style3Button.title(for: .normal)! : "" }
+                        )
+                            .map { [weak self] in
+                                guard let self = self else { return $0 }
+                                if $0 != "" || $1 != "" || $2 != "" {
+                                    self.customView.customStyleTextField.resignFirstResponder()
+                                    self.customView.customStyleTextField.backgroundColor = UIColor(hexString: "EFF0F3")
+                                    self.customView.customStyleTextField.textColor = UIColor(hexString: "C3C5D1")
+                                }
+                                
+                                if $0 != "" {
+                                    return $0
+                                } else if $1 != "" {
+                                    return $1
+                                } else if $2 != "" {
+                                    return $2
+                                } else {
+                                    return ""
+                                }
+                            },
                         self.customView.customStyleTextField.rx.text
                             .filter { $0 != nil }
                             .filter { $0 != "+ 직접 입력하기 (최대 30자)"}
@@ -108,30 +112,31 @@ class ReadingStyleViewController: UIViewController {
                     return new
                 }
             }
-            .bind(to: self.customView.customStyleTextField.rx.text)
+            .bind(to: customView.customStyleTextField.rx.text)
             .disposed(by: disposeBag)
-    
+        
         // bind results {
         viewModel.isStyleSelected
-            .bind {
-                self.customView.nextInformationLabel.isHidden = !$0
-                if $0 {
-                    self.customView.nextButton.isUserInteractionEnabled = true
-                    self.customView.nextButton.backgroundColor = .mainPink
-                    self.customView.nextButton.setTitleColor(.white, for: .normal)
+            .withUnretained(self)
+            .bind { (owner, bool) in
+                owner.customView.nextInformationLabel.isHidden = !bool
+                if bool {
+                    owner.customView.nextButton.isUserInteractionEnabled = true
+                    owner.customView.nextButton.backgroundColor = .mainPink
+                    owner.customView.nextButton.setTitleColor(.white, for: .normal)
                 } else {
-                    self.customView.nextButton.isUserInteractionEnabled = false
-                    self.customView.nextButton.backgroundColor = .textFieldBackgroundGray
-                    self.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
+                    owner.customView.nextButton.isUserInteractionEnabled = false
+                    owner.customView.nextButton.backgroundColor = .textFieldBackgroundGray
+                    owner.customView.nextButton.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
                 }
             }
             .disposed(by: disposeBag)
         
         viewModel.isNextConfirmed
-            .bind {
+            .bind { [weak self] in
                 if $0 {
                     print(SignUpViewModel.creatingUser)
-                    self.navigationController?.pushViewController(GoalViewController(), animated: true)
+                    self?.navigationController?.pushViewController(GoalViewController(), animated: true)
                 }
             }
             .disposed(by: disposeBag)
