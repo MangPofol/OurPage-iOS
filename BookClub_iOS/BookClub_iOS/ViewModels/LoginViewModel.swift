@@ -19,5 +19,21 @@ class LoginViewModel {
             .flatMap {
                 AuthServices.login(id: $0, password: $1)
             }
+            .flatMap { bool -> Observable<CreatedUser?> in
+                if bool {
+                    return UserServices.getCurrentUserInfo()
+                } else {
+                    return Observable.just(nil)
+                }
+                
+            }
+            .map {
+                if $0 == nil {
+                    return false
+                } else {
+                    Constants.CurrentUser.onNext($0)
+                    return true
+                }
+            }
     }
 }
