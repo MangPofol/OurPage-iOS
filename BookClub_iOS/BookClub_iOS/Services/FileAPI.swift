@@ -10,9 +10,14 @@ import Moya
 
 enum FileAPI {
     case upload(files: [Data])
+    case delete(files: [String])
 }
 
-extension FileAPI: TargetType {
+extension FileAPI: TargetType, AccessTokenAuthorizable {
+    var authorizationType: AuthorizationType? {
+        return .bearer
+    }
+    
     var baseURL: URL {
         return URL(string: Constants.APISource)!
     }
@@ -21,13 +26,17 @@ extension FileAPI: TargetType {
         switch self {
         case .upload(_):
             return "/files/upload-multiple-files"
+        case .delete(_):
+            return "/files/delete-multiple-files"
         }
     }
     
     var method: Moya.Method {
         switch self {
         case .upload(_):
-            return .put
+            return .post
+        case .delete(_):
+            return .post
         }
     }
     
@@ -46,12 +55,31 @@ extension FileAPI: TargetType {
             })
         
             return .uploadMultipart(fileMFDataArray)
+        case .delete(let files):
+            let encoder = JSONEncoder()
+
+            encoder.outputFormatting = .withoutEscapingSlashes
+            
+            return .requestCustomJSONEncodable(DeletingImages(images: files), encoder: encoder)
         }
     }
     
     var headers: [String : String]? {
-        ["Content-Type": "multipart / form-data"]
+        switch self {
+        case .upload(_):
+            return ["Content-Type": "multipart / form-data"]
+        case .delete(_):
+            return nil
+        }
+        
     }
+}
+
+struct DeletingImages: Encodable {
+    let images: [String]
     
-    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(images)
+    }
 }

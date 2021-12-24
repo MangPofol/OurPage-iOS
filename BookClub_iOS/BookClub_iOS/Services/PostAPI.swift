@@ -17,7 +17,11 @@ enum PostAPI {
     case undoLikePost(_ bookId: Int)
 }
 
-extension PostAPI: TargetType {
+extension PostAPI: TargetType, AccessTokenAuthorizable {
+    var authorizationType: AuthorizationType? {
+        return .bearer
+    }
+    
     var baseURL: URL {
         URL(string: Constants.APISource + "/posts")!
     }

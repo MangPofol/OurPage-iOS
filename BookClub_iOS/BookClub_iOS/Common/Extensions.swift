@@ -301,7 +301,7 @@ extension UIImage {
     static let settingIcon = UIImage(named: "SettingIcon")!.withRenderingMode(.alwaysTemplate)
     static let uploadIcon = UIImage(named: "UploadIcon")!.withRenderingMode(.alwaysTemplate)
     static let cameraIcon = UIImage(named: "CameraIcon")!.withRenderingMode(.alwaysTemplate)
-    static let deleteButtonImage = UIImage(named: "DeleteButtonImage")!
+    static let deleteButtonImage = UIImage(named: "DeleteButtonIcon")!
     static let mainLogo = UIImage(named: "MainLogo")!
     static let backbuttonImage = UIImage(named: "backbuttonImage")!
     
@@ -318,6 +318,9 @@ extension UIImage {
     static let SettingIconWithBackground = UIImage(named: "SettingIconWithBackground")!
     static let UpArrow = UIImage(named: "UpArrow")!
     static let XIcon = UIImage(named: "XIcon")!
+    static let LinkIcon = UIImage(named: "LinkIcon")!
+    static let ClockIcon = UIImage(named: "ClockIcon")!
+    static let PlaceIcon = UIImage(named: "PlaceIcon")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
@@ -540,4 +543,40 @@ extension UIView {
     func isRotating() -> Bool {
         return layer.animation(forKey: UIView.kRotationAnimationKey) != nil
     }
+    
+    static func iconWithPaddingView(iconImage: UIImage, tintColor: UIColor, paddingDirection: PaddingDirectionType, padding: Double, iconSize: CGSize) -> UIView {
+        var view = UIView()
+        var imageView = UIImageView()
+        
+        switch paddingDirection {
+        case .Left, .Right:
+            view = UIView(frame: CGRect(x: 0, y: 0, width: iconSize.width + padding, height: iconSize.height))
+        case .Up, .Down:
+            view = UIView(frame: CGRect(x: 0, y: 0, width: iconSize.width, height: iconSize.height + padding))
+        }
+        
+        switch paddingDirection {
+        case .Left:
+            imageView = UIImageView(frame: CGRect(x: padding, y: 0, width: iconSize.width, height: iconSize.height))
+        case .Right:
+            imageView = UIImageView(frame: CGRect(x: -padding, y: 0, width: iconSize.width, height: iconSize.height))
+        case .Up:
+            imageView = UIImageView(frame: CGRect(x: 0, y: padding, width: iconSize.width, height: iconSize.height))
+        case .Down:
+            imageView = UIImageView(frame: CGRect(x: 0, y: -padding, width: iconSize.width, height: iconSize.height))
+        }
+        
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = tintColor
+        imageView.image = iconImage
+        view.addSubview(imageView)
+        return view
+    }
+}
+
+enum PaddingDirectionType {
+    case Left
+    case Right
+    case Up
+    case Down
 }

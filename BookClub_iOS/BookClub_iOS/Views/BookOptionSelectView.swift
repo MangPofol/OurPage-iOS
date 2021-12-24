@@ -10,7 +10,8 @@ import UIKit
 class BookOptionSelectView: UIView {
     var titleLabel = UILabel().then {
         $0.text = "책 옵션"
-        $0.font = .defaultFont(size: .big, bold: true)
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
+        $0.textColor = .mainColor
     }
     
     var readingButton
@@ -50,9 +51,9 @@ class BookOptionSelectView: UIView {
     
     var addBookButton = UIButton().then {
         $0.setTitle("책 추가하기", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.titleLabel?.font = .defaultFont(size: .medium, bold: true)
-        $0.backgroundColor = .grayE3
+        $0.setTitleColor(.mainColor, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .bold)
+        $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.makeBorder(color: UIColor.grayE3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(10.0)))
     }
     

@@ -17,7 +17,6 @@ class BookListViewCell: UICollectionViewCell {
     var searchedInfo = BehaviorSubject<SearchedBook?>(value: nil)
     
     var bookImageView = UIImageView().then {
-        $0.image = UIImage(named: "SampleBook")!
         $0.contentMode = .scaleAspectFit
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(10.0)))
         $0.kf.indicatorType = .activity

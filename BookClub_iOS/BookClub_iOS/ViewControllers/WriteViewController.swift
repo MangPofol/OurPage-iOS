@@ -6,10 +6,11 @@
 //
 
 import UIKit
+
 import RxSwift
 import RxCocoa
 import SideMenu
-import YPImagePicker
+import ZLPhotoBrowser
 
 class WriteViewController: UIViewController {
     let disposeBag = DisposeBag()
@@ -41,55 +42,63 @@ class WriteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        customView.uploadedImageCollection.delegate = self
+        customView.uploadedImageCollection.rx.setDelegate(self).disposed(by: disposeBag)
         
         viewModel = WriteViewModel(
             input: (
                 bookSelectionButtonTapped: customView.bookSelectionButton.button.rx.tap.asSignal(),
                 imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal(),
-                writeButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asSignal(),
-                titleText: customView.titleTextField.rx.text.map { $0 ?? "" },
-                contentText: customView.contentTextView.rx.text.map { $0 ?? "" }
+                nextButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asSignal(),
+                titleText: customView.titleTextField.rx.text.orEmpty.asObservable(),
+                contentText: customView.contentTextView.rx.text.orEmpty.asObservable()
             )
         )
         
-        customView.uploadedImageCollection.rx.itemSelected
-            .withUnretained(self)
-            .bind { (owner, val) in
-                let vc = PagesViewController()
-                vc.chooseIdx = val.row
-                vc.pageImages = owner.viewModel.uploadedImages.value
-                vc.modalPresentationStyle = .fullScreen
-                owner.present(vc, animated: true, completion: nil)
+//        customView.uploadedImageCollection.rx.itemSelected
+//            .withUnretained(self)
+//            .bind { (owner, val) in
+//                let vc = PagesViewController()
+//                vc.chooseIdx = val.row
+//                vc.pageImages = owner.viewModel.uploadingImages.value
+//                vc.modalPresentationStyle = .fullScreen
+//                owner.present(vc, animated: true, completion: nil)
+//            }
+//            .disposed(by: disposeBag)
+        
+        viewModel.ableToNext
+            .observe(on: MainScheduler.instance)
+            .bind {
+                if $0 {
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
+                } else {
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
+                    self.navigationItem.rightBarButtonItem?.tintColor = .lightGray
+                }
             }
             .disposed(by: disposeBag)
         
-        viewModel.isWriting
-            .filter { $0 == true }
-            .bind { _ in
-                print("Writing...")
+        viewModel.openPostSetting
+            .compactMap { $0 }
+            .bind { [weak self] in
+                let vc = WriteSettingViewController(postToCreate: $0)
+                
+                self?.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
         
-        viewModel.uploadedImages
-            .debug()
+        viewModel.uploadedImagesURLs
+            .observe(on: MainScheduler.instance)
             .do { [weak self] in
                 self?.customView.imageUploadButton.setTitle("\($0.count)/4", for: .normal)
             }
             .bind(to:
-                    self.customView.uploadedImageCollection
+                    customView.uploadedImageCollection
                     .rx
-                    .items(cellIdentifier: UploadedImageCollectionViewCell.identifier, cellType: UploadedImageCollectionViewCell.self)) { (row, element, cell) in
-                cell.imageView.image = element
-                cell.deleteButton.rx.tap.withUnretained(self).bind { (owner, _) in
-                    var images = owner.viewModel.uploadedImages.value
-                    images.remove(at: row)
-                    var urls = owner.viewModel.uploadedImagesURLs.value
-                    urls.remove(at: row)
-                    owner.viewModel.uploadedImages.accept(images)
-                    owner.viewModel.uploadedImagesURLs.accept(urls)
-                    
-                }.disposed(by: cell.disposeBag)
+                    .items(cellIdentifier: UploadedImageCollectionViewCell.identifier, cellType: UploadedImageCollectionViewCell.self)) { [weak self] (row, element, cell) in
+                cell.imageUrlString = element
+                cell.vcViewModel = self?.viewModel
+                cell.index = row
             }
             .disposed(by: disposeBag)
         
@@ -107,79 +116,40 @@ class WriteViewController: UIViewController {
             .filter { $0 == true }
             .bind { [weak self] _ in
                 guard let self = self else { return }
-                var config = YPImagePickerConfiguration()
-                // [Edit configuration here ...]
-                // Build a picker with y    our configuration
-                config.library.maxNumberOfItems = 4
-                config.library.defaultMultipleSelection = true
-                config.onlySquareImagesFromCamera = false
-                config.library.isSquareByDefault = false
-                config.showsPhotoFilters = false
-                config.startOnScreen = YPPickerScreen.library
-                config.library.skipSelectionsGallery = true
-                config.library.preselectedItems = nil
-    
-                YPImagePickerConfiguration.shared = config
+                let cameraConfig = ZLPhotoConfiguration.default().cameraConfiguration
+                ZLPhotoConfiguration.default().allowRecordVideo = false
+                ZLPhotoConfiguration.default().allowSelectGif = false
+                ZLPhotoConfiguration.default().maxSelectCount = 4 - self.viewModel.uploadedImagesURLs.value.count
+                ZLPhotoConfiguration.default().editImageClipRatios = [.wh1x1]
+                ZLPhotoConfiguration.default().allowEditImage = true
+                ZLPhotoConfiguration.default().editAfterSelectThumbnailImage = true
+                ZLPhotoConfiguration.default().editImageTools = [.clip]
+                ZLPhotoConfiguration.default().allowSelectOriginal = false
+//                    ZLPhotoConfiguration.default().themeColorDeploy = ZLPhotoThemeColorDeploy().
                 
-                // And then use the default configuration like so:
-                let picker = YPImagePicker()
+                // All properties of the camera configuration have default value
+                cameraConfig.sessionPreset = .hd1920x1080
+                cameraConfig.focusMode = .continuousAutoFocus
+                cameraConfig.exposureMode = .continuousAutoExposure
+                cameraConfig.flashMode = .off
+                cameraConfig.videoExportType = .mov
                 
-                picker.didFinishPicking { [unowned picker] items, cancelled in
-                    var photos = [UIImage]()
-                    var datas = [Data]()
-                    for item in items {
-                        switch item {
-                        case .photo(let photo):
-                            photos.append(photo.image)
-                            datas.append(photo.image.jpegData(compressionQuality: 0.1)!)
-                        case .video(let video):
-                            print(video)
-                        }
-                    }
-                    
-                    var uploadedImagesURLs = [String]()
-                    FileServices.uploadFile(with: datas)
-                        .filter { $0 != nil }
-                        .map { $0! }
-                        .bind {
-                            uploadedImagesURLs = $0.components(separatedBy: ",")
-                        }
-                        .disposed(by: self.disposeBag)
-                    
-                    self.viewModel.uploadedImages.accept(self.viewModel.uploadedImages.value + photos)
-                    self.viewModel.uploadedImagesURLs.accept(self.viewModel.uploadedImagesURLs.value + uploadedImagesURLs)
-                    picker.dismiss(animated: true, completion: nil)
+                let ps = ZLPhotoPreviewSheet()
+                
+                ps.selectImageBlock = { [weak self] (images, assets, isOriginal) in
+                    self!.viewModel.uploadingImages.onNext(images)
                 }
-                
-                self.present(picker, animated: true, completion: nil)
+                ps.showPhotoLibrary(sender: self)
             }
             .disposed(by: disposeBag)
     }
     
     // MARK: - Private Funcs
     private func setNavigationBar() {
-        self.setDefaultConfiguration()
-        // navigation bar button
-        self.navigationItem.leftBarButtonItem!
-            .rx.tap
-            .bind { [weak self] in
-                let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
-                menu.leftSide = true
-                menu.presentationStyle = .menuSlideIn
-                menu.menuWidth = CGFloat(Constants.getAdjustedWidth(280.0))
-                menu.presentationStyle.presentingEndAlpha = 0.5
-                
-                self?.present(menu, animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
-        
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .uploadIcon, style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .normal)
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: .medium, bold: true)], for: .selected)
-        
-        
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: 14, boldLevel: .bold)], for: .normal)
+        self.removeBackButtonTitle()
     }
     
     private func setTextViewPlaceholder() {

@@ -31,7 +31,7 @@ class BookSelectViewController: UIViewController {
         super.viewDidLoad()
         viewModel = BookSelectionViewModel(
             input: (
-                searchBarText: customView.searchBar.rx.text.asObservable(),
+                searchBarText: customView.searchBar.rx.text.asObservable().distinctUntilChanged(),
                 readingButtonTapped: customView.readingButton.rx.tap
                     .asObservable()
                     .map { .NOW },
@@ -79,7 +79,7 @@ class BookSelectViewController: UIViewController {
         newBookSelected
             .filter { $0 != nil }
             .bind { [weak self] in
-                if let root = self?.navigationController?.viewControllers.first as? WriteViewController {
+                if let root = self?.navigationController?.viewControllers[1] as? WriteViewController {
                     root.selectedBook = $0
                     self?.navigationController?.popViewController(animated: false)
                 }
@@ -102,6 +102,8 @@ class BookSelectViewController: UIViewController {
         nav.navigationBar.tintColor = .mainColor
         nav.navigationBar.isTranslucent = false
         nav.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: .big, bold: true)]
+        
+        self.removeBackButtonTitle()
         
         // bar underline 삭제
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)

@@ -15,6 +15,7 @@ class BookOptionSelectViewController: UIViewController {
     var selectedBook: Book!
     let disposeBag = DisposeBag()
     
+    var viewModel: BookOptionSelectViewModel!
     var bookSelectVC: BookSelectViewController? = nil
     
     override func viewDidLoad() {
@@ -26,18 +27,26 @@ class BookOptionSelectViewController: UIViewController {
             $0.height.equalTo(Constants.getAdjustedHeight(187.0))
         }
         
-        let viewModel = BookOptionSelectViewModel(addButtonTapped: customView.addBookButton.rx.tap.asSignal(), selectedBook: selectedBook)
-        customView.readingButton.rx.tap.bind {
-            viewModel.categorySelected.onNext(.NOW)
-        }.disposed(by: disposeBag)
+        viewModel = BookOptionSelectViewModel(addButtonTapped: customView.addBookButton.rx.tap.asSignal(), selectedBook: selectedBook)
+        customView.readingButton
+            .rx.tap
+            .withUnretained(self)
+            .bind { (owner, _) in
+                owner.viewModel.categorySelected.onNext(.NOW)
+            }.disposed(by: disposeBag)
         
-        customView.finishedButton.rx.tap.bind {
-            viewModel.categorySelected.onNext(.AFTER)
-        }.disposed(by: disposeBag)
+        customView.finishedButton
+            .rx.tap
+            .withUnretained(self)
+            .bind { (owner, _) in
+                owner.viewModel.categorySelected.onNext(.AFTER)
+            }.disposed(by: disposeBag)
         
-        customView.wantToButton.rx.tap.bind {
-            viewModel.categorySelected.onNext(.BEFORE)
-        }.disposed(by: disposeBag)
+        customView.wantToButton.rx.tap
+            .withUnretained(self)
+            .bind { (owner, _) in
+                owner.viewModel.categorySelected.onNext(.BEFORE)
+            }.disposed(by: disposeBag)
         
         viewModel.isAddingBook
             .withUnretained(self)
@@ -60,7 +69,7 @@ class BookOptionSelectViewController: UIViewController {
                         if owner.bookSelectVC != nil {
                             owner.bookSelectVC?.customView.searchBar.text = ""
                             owner.bookSelectVC?.customView.searchBar.sendActions(for: .valueChanged)
-//                            self.bookSelectVC?.searchMode(false)
+                            //                            self.bookSelectVC?.searchMode(false)
                             
                         }
                     }

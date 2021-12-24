@@ -31,18 +31,20 @@ class WriteView: UIView {
         $0.setTitleColor(.pink_E5949D, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.titleLabel?.font = .defaultFont(size: .small, bold: false)
-        $0.setImage(.cameraIcon, for: .normal)
+        $0.setImage(.cameraIcon.resize(to: CGSize(width: 17.17, height: 15.29).resized(basedOn: .height)), for: .normal)
         $0.imageView?.tintColor = .pink_E5949D
         $0.alignTextBelow(spacing: 0.0)
     }
     
-    let uploadedImageCollectionFlowLayout = UICollectionViewFlowLayout()
+    let uploadedImageCollectionFlowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        $0.minimumLineSpacing = 12.adjustedHeight
+        $0.minimumInteritemSpacing = 12.adjustedHeight
+    }
+    
     lazy var uploadedImageCollection = UICollectionView(frame: .zero, collectionViewLayout: uploadedImageCollectionFlowLayout).then {
         $0.backgroundColor = .white
-        uploadedImageCollectionFlowLayout.scrollDirection = .horizontal
-        let size = CGSize(width: Constants.getAdjustedHeight(40.0), height: Constants.getAdjustedHeight(39.0))
-//        uploadedImageCollectionFlowLayout.minimumLineSpacing = -(size.width / 5.0)
-        uploadedImageCollectionFlowLayout.minimumInteritemSpacing = CGFloat(Constants.getAdjustedWidth(12.0))
+        
         $0.register(UploadedImageCollectionViewCell.self, forCellWithReuseIdentifier: UploadedImageCollectionViewCell.identifier)
     }
     
@@ -102,7 +104,7 @@ class WriteView: UIView {
         
         uploadedImageCollection.snp.makeConstraints {
             $0.bottom.equalTo(imageUploadButton)
-            $0.height.equalTo(Constants.getAdjustedHeight(40.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(41.0))
             $0.left.equalTo(imageUploadButton.snp.right).offset(Constants.getAdjustedWidth(15.0))
             $0.right.equalToSuperview()
         }
@@ -137,16 +139,25 @@ class UploadedImageCollectionViewCell: UICollectionViewCell {
     
     var disposeBag = DisposeBag()
     
+    var vcViewModel: WriteViewModel!
+    var index: Int!
+    
+    var imageUrlString: String? = nil {
+        didSet {
+            if let str = imageUrlString {
+                imageView.kf.setImage(with: URL(string: str))
+            }
+        }
+    }
+    
     var imageView = UIImageView().then {
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedHeight(8.0)))
+        $0.kf.indicatorType = .activity
     }
-    var deleteImage = UIImageView().then {
-        $0.image = .deleteButtonImage
-        $0.backgroundColor = .red
-        $0.contentMode = .scaleToFill
-    }
+    
     var deleteButton = UIButton().then {
         $0.setImage(.deleteButtonImage, for: .normal)
+        $0.imageView?.contentMode = .scaleAspectFit
         $0.backgroundColor = .clear
     }
     
@@ -161,10 +172,16 @@ class UploadedImageCollectionViewCell: UICollectionViewCell {
         }
         
         deleteButton.snp.makeConstraints {
-            $0.right.equalTo(imageView).offset(Constants.getAdjustedWidth(3.0))
-            $0.top.equalTo(imageView).inset(-Constants.getAdjustedWidth(3.0))
-            $0.width.height.equalTo(Constants.getAdjustedWidth(10.0))
+            $0.right.equalTo(imageView).offset(3.adjustedHeight)
+            $0.top.equalTo(imageView).inset(-3.adjustedHeight)
+            $0.width.height.equalTo(Constants.getAdjustedHeight(10.0))
         }
+        
+        deleteButton.rx.tap
+            .bind { [weak self] in
+                self?.vcViewModel.deleteImageAt.onNext(self?.index)
+            }
+            .disposed(by: disposeBag)
     }
     
     required init?(coder: NSCoder) {
@@ -173,5 +190,10 @@ class UploadedImageCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         disposeBag = DisposeBag()
+        deleteButton.rx.tap
+            .bind { [weak self] in
+                self?.vcViewModel.deleteImageAt.onNext(self?.index)
+            }
+            .disposed(by: disposeBag)
     }
 }

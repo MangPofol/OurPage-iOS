@@ -20,7 +20,7 @@ enum BookAPI {
 extension BookAPI: TargetType, AccessTokenAuthorizable {
     var authorizationType: AuthorizationType? {
         switch self {
-        case .getBooksByCurrentUserAndCategory(_):
+        case .getBooksByCurrentUserAndCategory(_), .createBook(_):
             return .bearer
         default:
             return nil
