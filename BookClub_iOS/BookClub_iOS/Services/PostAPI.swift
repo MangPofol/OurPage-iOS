@@ -71,7 +71,7 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
         case .createPost(let post):
             return .requestJSONEncodable(post)
         case .updatePost(let post):
-            return .requestJSONEncodable(PostToUpdate.fromPost(post))
+            return .requestJSONEncodable(post)
         case .deletePost(_):
             return .requestPlain
         case .doLikePost(_):

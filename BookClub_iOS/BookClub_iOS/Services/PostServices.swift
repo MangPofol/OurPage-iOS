@@ -35,13 +35,13 @@ class PostServices: Networkable {
             .catchAndReturn([])
     }
     
-    static func createPost(post: PostToCreate) -> Observable<PostToCreate?> {
+    static func createPost(post: PostToCreate) -> Observable<PostModel?> {
         PostServices.provider
             .rx.request(.createPost(post))
             .asObservable()
             .map {
                 if $0.statusCode == 201 {
-                    let data = try JSONDecoder().decode(PostToCreate.self, from: $0.data)
+                    let data = try JSONDecoder().decode(PostModel.self, from: $0.data)
                     return data
                 } else {
                     return nil

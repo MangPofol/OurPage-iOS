@@ -8,6 +8,7 @@
 import UIKit
 
 import RxSwift
+import RxCocoa
 
 class WriteSettingViewController: UIViewController {
 
@@ -16,8 +17,27 @@ class WriteSettingViewController: UIViewController {
     var disposeBag = DisposeBag()
     var viewModel: WriteSettingViewModel!
     
+    var postToCreate: PostToCreate!
+    
     convenience init(postToCreate: PostToCreate) {
         self.init()
+        self.postToCreate = postToCreate
+    }
+    
+    override func loadView() {
+        self.view = customView
+        self.title = "글 설정"
+        
+        let collectionLayout = CollectionViewLeftAlignFlowLayout()
+        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        collectionLayout.cellSpacing = 11.adjustedWidth
+        
+        customView.scopeCollectionView.setCollectionViewLayout(collectionLayout, animated: false)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         setNavigationBar()
         
         viewModel = WriteSettingViewModel(
@@ -26,36 +46,43 @@ class WriteSettingViewController: UIViewController {
                 timeText: customView.timeTextField.rx.text.orEmpty.asObservable(),
                 linkTitleText: customView.linkTitleTextField.rx.text.orEmpty.asObservable(),
                 linkContentText: customView.linkContentTextField.rx.text.orEmpty.asObservable(),
-                postButtonTapped: self.navigationController!.navigationItem.rightBarButtonItem!.rx.tap
+                postButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap,
+                postToCreate: postToCreate
             )
         )
-        viewModel.postToCreate = postToCreate
-        print(#fileID, #function, #line, postToCreate)
-    }
-    
-    override func loadView() {
-        self.view = customView
-        self.title = "글 설정"
         
-        let collectionLayout = UICollectionViewFlowLayout()
-        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        collectionLayout.minimumInteritemSpacing = 11.adjustedWidth
-        
-        customView.scopeCollectionView.setCollectionViewLayout(collectionLayout, animated: false)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        Observable.just(["내 서재", "북클럽 1", "북클럽 2"])
-            .debug()
+        viewModel.clubs
+            .observe(on: MainScheduler.instance)
             .bind(to: customView.scopeCollectionView.rx.items(cellIdentifier: ScopeCollectionViewCell.identifier, cellType: ScopeCollectionViewCell.self)) { [weak self] (row, element, cell) in
                 if row == 0 {
                     self?.customView.scopeCollectionView.selectItem(at: IndexPath(item: row, section: 0), animated: false, scrollPosition: .top)
                     cell.isSelected = true
                 }
-                cell.configure(name: element)
+                cell.configure(name: element.name)
             }
+            .disposed(by: disposeBag)
+        
+        viewModel.postSuccess
+            .bind { [weak self] in
+                if $0 != nil {
+                    print(#fileID, #function, #line, $0)
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        customView.scopeCollectionView
+            .rx.modelSelected(Club.self)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.selectedClub.onNext($0)
+            })
+            .disposed(by: disposeBag)
+        
+        customView.scopeCollectionView
+            .rx.modelDeselected(Club.self)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.deselectedClub.onNext($0)
+            })
             .disposed(by: disposeBag)
     }
     

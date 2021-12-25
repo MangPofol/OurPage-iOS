@@ -11,10 +11,18 @@ import RxSwift
 import RxCocoa
 
 class WriteSettingViewModel {
-    var postToCreate: PostToCreate!
+    
+    var clubs: Observable<[Club]>
     
     var ableToPost: Observable<Bool>
-    var postSuccess: Observable<PostToCreate?>
+    var postSuccess: Observable<PostModel?>
+    
+    var selectedClub = BehaviorSubject<Club?>(value: nil)
+    var deselectedClub = BehaviorSubject<Club?>(value: nil)
+    
+    var selectedClubs = BehaviorRelay<[Club]>(value: [])
+    
+    var disposeBag = DisposeBag()
     
     init(
         input: (
@@ -22,27 +30,67 @@ class WriteSettingViewModel {
             timeText: Observable<String>,
             linkTitleText: Observable<String>,
             linkContentText: Observable<String>,
-            postButtonTapped: ControlEvent<()>
+            postButtonTapped: ControlEvent<()>?,
+            postToCreate: PostToCreate
         )
     ) {
-        let inputs = Observable.combineLatest(input.placeText, input.timeText, input.linkTitleText, input.linkContentText) {
-            (place: $0, time: $1, linkTitle: $2, linkContent: $3)
+        let myLibrary = Club(id: -1, name: "내 서재", colorSet: "", level: -1, presidentId: -1, description: "", createdDate: "", modifiedDate: "")
+        clubs = ClubServices.getClubByUser()
+            .map {
+                return [myLibrary] + $0
+            }
+        
+        let inputs = Observable.combineLatest(input.placeText, input.timeText, input.linkTitleText, input.linkContentText, selectedClubs) {
+            (place: $0, time: $1, linkTitle: $2, linkContent: $3, clubs: $4)
         }
         
         ableToPost = inputs.map {
             return ($0.linkTitle == "" && $0.linkContent == "") || ($0.linkTitle != "" && $0.linkContent != "")
         }
         
-        var post = postToCreate!
-        postSuccess = input.postButtonTapped.asObservable().withLatestFrom(inputs)
-            .flatMap { inputs -> Observable<PostToCreate?> in
+        var post = input.postToCreate
+        postSuccess = input.postButtonTapped!.asObservable().withLatestFrom(inputs)
+            .flatMap { inputs -> Observable<PostModel?> in
                 post.location = inputs.place
                 post.readTime = inputs.time
                 post.hyperlinkTitle = inputs.linkTitle
                 post.hyperlink = inputs.linkContent
+                post.clubIdListForScope = inputs.clubs.map { $0.id }
+                
+                post.scope = "PRIVATE"
                 
                 return PostServices.createPost(post: post)
             }
             
+        selectedClub
+            .compactMap { $0 }
+            .bind { [weak self] val in
+                guard let self = self else { return }
+                if val.id == -1 {
+                    return
+                }
+                let arr = self.selectedClubs.value
+                
+                if !arr.contains(where: { $0.id == val.id }) {
+                    self.selectedClubs.accept(arr + [val])
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        deselectedClub
+            .compactMap { $0 }
+            .bind { [weak self] val in
+                guard let self = self else { return }
+                if val.id == -1 {
+                    return
+                }
+                var arr = self.selectedClubs.value
+                
+                if let idx = arr.firstIndex(where: { $0.id == val.id }) {
+                    arr.remove(at: idx)
+                    self.selectedClubs.accept(arr)
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }

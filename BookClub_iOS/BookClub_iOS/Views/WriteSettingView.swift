@@ -92,7 +92,6 @@ final class WriteSettingView: UIView {
     private lazy var linkContainerStack = UIStackView(arrangedSubviews: [linkTitleTextField, linkContentTextField]).then {
         $0.axis = .vertical
         $0.spacing = 0
-
         $0.backgroundColor = .white
         $0.setCornerRadius(radius: 10.adjustedHeight)
     }
@@ -118,7 +117,7 @@ final class WriteSettingView: UIView {
     var scopeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
         $0.backgroundColor = .mainPink
         $0.register(ScopeCollectionViewCell.self, forCellWithReuseIdentifier: ScopeCollectionViewCell.identifier)
-        $0.allowsMultipleSelection = false
+        $0.allowsMultipleSelection = true
         $0.snp.contentHuggingVerticalPriority = .infinity
     }
     
