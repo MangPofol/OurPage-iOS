@@ -324,6 +324,7 @@ extension UIImage {
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
+    static let BookLoadingImage = UIImage(named: "BookLoadingImage")!
     
     func resize(to size: CGSize, isAlwaysTemplate: Bool = true) -> UIImage {
         let render = UIGraphicsImageRenderer(size: size)

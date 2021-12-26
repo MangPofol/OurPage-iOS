@@ -19,7 +19,6 @@ class BookListViewCell: UICollectionViewCell {
     var bookImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(10.0)))
-        $0.kf.indicatorType = .activity
     }
     var bookTitleLabel = UILabel().then {
         $0.text = "책 제목"
@@ -65,7 +64,7 @@ class BookListViewCell: UICollectionViewCell {
         searchedInfo.observe(on: MainScheduler.instance)
             .filter { $0 != nil }
             .bind { [weak self] in
-                self?.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail))
+                self?.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail), placeholder: UIImage.BookLoadingImage)
             }
             .disposed(by: disposeBag)
     }

@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         viewModel = LoginViewModel(idText: self.customView.idTextField.rx.text.orEmpty.asObservable(), passwordText: self.customView.passwordTextField.rx.text.orEmpty.asObservable(), loginButtonTapped: self.customView.loginButton.rx.tap)
         
         // bind outputs
@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
         
         viewModel.isLoginConfirmed
             .bind {
+                LoadingHUD.hide()
                 if $0 {
                     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                     if let window = sceneDelegate.window {
