@@ -139,6 +139,7 @@ class MyLibraryViewController: UIViewController {
         
         self.customView.searchButton.isOnRx
             .skip(1)
+            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] in
                 self?.setSearchBar($0)
             })
@@ -146,6 +147,7 @@ class MyLibraryViewController: UIViewController {
         
         self.customView.bookclubButton.isOnRx
             .skip(1)
+            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] in
                 self?.setBookclubSelector($0)
             })
@@ -153,6 +155,7 @@ class MyLibraryViewController: UIViewController {
         
         self.customView.sortingButton.isOnRx
             .skip(1)
+            .distinctUntilChanged()
             .subscribe(onNext: { [weak self] in
                 self?.setSortButtons($0)
             })
@@ -210,7 +213,12 @@ class MyLibraryViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-      
+        bookCollectionVC.viewModel.tappedBook
+            .bind { [weak self] in
+                let vc = BookViewController(book: $0.bookModel)
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
         
     }
     

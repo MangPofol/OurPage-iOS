@@ -21,7 +21,7 @@ class BookCollectionViewController: UICollectionViewController {
         self.collectionView.dataSource = nil
         
         self.collectionView.backgroundColor = .white
-        self.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
+        self.collectionView.register(BookCollectionViewCell.self, forCellWithReuseIdentifier: BookCollectionViewCell.identifier)
         self.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
         
         viewModel = BookCollectionViewModel(bookTapped: self.collectionView.rx.modelSelected(Book.self).map { $0 })
@@ -30,11 +30,13 @@ class BookCollectionViewController: UICollectionViewController {
         
         // bind outputs
         viewModel!.books
+            .observe(on: MainScheduler.instance)
             .bind(to:
-                    collectionView
-                    .rx
-                    .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-                cell.bookModel.onNext(element.bookModel)
+                    collectionView.rx
+                    .items(cellIdentifier: BookCollectionViewCell.identifier, cellType: BookCollectionViewCell.self)) { (row, element, cell) in
+//                cell.bookModel.onNext(element.bookModel)
+                cell.bookModel = BehaviorSubject<BookModel?>(value: element.bookModel)
+                cell.bindOutputs()
             }.disposed(by: disposeBag)
     }
 }

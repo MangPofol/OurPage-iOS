@@ -38,6 +38,7 @@ class BookCollectionViewModel {
             
             return books
         }.bind { [weak self] in
+            print(#fileID, #function, #line, $0)
             self?.fetchedBooks.accept($0)
             self?.books.accept($0)
         }.disposed(by: disposeBag)
@@ -48,7 +49,6 @@ class BookCollectionViewModel {
             self.getBooksBy(category: BookListType.NOW.rawValue)
             
         } else {
-            print(#fileID, #function, #line, "")
             SearchServices.searchBookBy(title: title)
                 .bind { [weak self] in
                     self?.books.accept($0)
@@ -71,7 +71,6 @@ class BookCollectionViewModel {
     
     func filterBySorting(with sortType: SortBy) {
         var books = self.fetchedBooks.value
-        print(sortType)
         switch sortType {
         case .byNew:
             books.sort {
