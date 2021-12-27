@@ -66,10 +66,9 @@ class GoalViewController: UIViewController {
         
         // bind results {
         self.viewModel.isNextConfirmed
-            .bind {
-                let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+            .bind { [weak self] in
                 if $0 {
-                    sceneDelegate.window?.rootViewController = MainTabBarController()
+                    self?.dismiss(animated: true, completion: nil)
                 }
             }
             .disposed(by: disposeBag)

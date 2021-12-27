@@ -97,6 +97,7 @@ extension UIFont {
         case semiBold = "SemiBold"
         case medium = "Medium"
         case regular = "Regular"
+        case light = "Light"
     }
     
     // Make preferred font bold or italic {
@@ -321,10 +322,14 @@ extension UIImage {
     static let LinkIcon = UIImage(named: "LinkIcon")!
     static let ClockIcon = UIImage(named: "ClockIcon")!
     static let PlaceIcon = UIImage(named: "PlaceIcon")!
+    static let PlainCheckBoxIcon = UIImage(named: "PlainCheckBoxIcon")!
+    static let AddIcon = UIImage(named: "AddIcon")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
     static let BookLoadingImage = UIImage(named: "BookLoadingImage")!
+    static let BackgroundLogoImage = UIImage(named: "BackgroundLogoImage")!
+    static let DefaultProfileImage = UIImage(named: "DefaultProfileImage")!
     
     func resize(to size: CGSize, isAlwaysTemplate: Bool = true) -> UIImage {
         let render = UIGraphicsImageRenderer(size: size)

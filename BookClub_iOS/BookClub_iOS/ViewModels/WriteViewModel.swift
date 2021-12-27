@@ -63,7 +63,7 @@ class WriteViewModel {
         uploadingImages
             .filter { $0.count > 0 }
             .flatMap {
-                FileServices.uploadFile(with: $0.map { $0.jpegData(compressionQuality: 0.1)! })
+                FileServices.uploadFiles(with: $0.map { $0.jpegData(compressionQuality: 0.1)! })
             }
             .compactMap { $0 }
             .bind { [weak self] in

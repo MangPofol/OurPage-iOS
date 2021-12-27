@@ -1,5 +1,5 @@
 //
-//  SignUpViewController.swift
+//  IDPWViewController.swift
 //  BookClub_iOS
 //
 //  Created by Lee Nam Jun on 2021/10/29.
@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SignUpViewController: UIViewController {
+class IDPWViewController: UIViewController {
 
     var viewModel: SignUpViewModel!
     var customView = IDPWView()

@@ -9,7 +9,7 @@ import UIKit
 
 final class IntroduceView: UIView {
     var titleLabel = UILabel().then {
-        $0.text = "책 읽는 당신을 30자로 표현해 본다면?"
+        $0.text = "책 읽는 당신을 20자로 표현해 본다면?"
         $0.textColor = .mainColor
         $0.font = .defaultFont(size: .big, bold: true)
     }

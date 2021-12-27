@@ -12,7 +12,7 @@ final class MyProfileView: UIView {
     var profileImageView = UIImageView().then {
         $0.setCornerRadius(radius: 30.adjustedHeight)
         $0.contentMode = .scaleAspectFill
-        $0.image = UIImage(named: "SampleProfile")
+        $0.image = .DefaultProfileImage
     }
     
     var profileImageSettingButton = UIButton().then {

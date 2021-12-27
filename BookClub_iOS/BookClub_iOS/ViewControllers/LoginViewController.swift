@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
         // bind outputs
         customView.signUpButton.rx.tap
             .bind { [weak self] in
-                let firstVC = SignUpViewController()
+                let firstVC = IDPWViewController()
                 let nav = UINavigationController(rootViewController: firstVC)
                 nav.modalPresentationStyle = .fullScreen
                 self?.present(nav, animated: true, completion: nil)

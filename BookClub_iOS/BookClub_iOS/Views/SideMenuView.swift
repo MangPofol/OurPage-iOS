@@ -11,7 +11,7 @@ import UIKit
 final class SideMenuView: UIView {
     
     var profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "SampleProfile")!
+        $0.image = .DefaultProfileImage
     }
     
     var nameLabel = UILabel().then {

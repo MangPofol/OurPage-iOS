@@ -26,7 +26,7 @@ class ProfileInformationViewController: UIViewController {
                 self?.customView.nextButton.animateButton()
             }
             .bind { [weak self] _ in
-                self?.navigationController?.pushViewController(NicknameInputViewController(), animated: true)
+                self?.navigationController?.pushViewController(ProfileMakeViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     }

@@ -29,14 +29,19 @@ final class ProfileInformationView: UIView {
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(8.0))
     }
     
+    var backgroundImageView = UIImageView(image: UIImage.BackgroundLogoImage).then {
+        $0.contentMode = .scaleAspectFit
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
         
+        self.addSubview(backgroundImageView)
         self.addSubview(titleLabel)
         self.addSubview(contentLabel)
         self.addSubview(nextButton)
-        
+       
         makeView()
     }
 
@@ -58,6 +63,12 @@ final class ProfileInformationView: UIView {
             $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(93.0))
             $0.width.equalTo(Constants.getAdjustedWidth(320.0))
             $0.height.equalTo(Constants.getAdjustedHeight(52.0))
+        }
+        backgroundImageView.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(-32.adjustedWidth)
+            $0.right.equalToSuperview().inset(-7.adjustedWidth)
+            $0.top.equalTo(titleLabel).inset(-17.adjustedHeight)
+            $0.height.equalTo(178.39.adjustedHeight)
         }
     }
 }

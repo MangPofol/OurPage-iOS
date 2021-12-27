@@ -58,7 +58,7 @@ class MyProfileViewController: UIViewController {
                 owner.customView.introduceLabel.text = user.introduce
                 owner.customView.profileImageView.kf.setImage(
                     with: URL(string: user.profileImgLocation),
-                    placeholder: UIImage(named: "SampleProfile"))
+                    placeholder: UIImage.DefaultProfileImage)
                 owner.myGenres.onNext(user.genres)
             }
             .disposed(by: disposeBag)

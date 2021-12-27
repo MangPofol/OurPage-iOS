@@ -14,13 +14,29 @@ class FileServices: Networkable {
     typealias Target = FileAPI
     static let provider = makeProvider()
     
-    static func uploadFile(with files: [Data]) -> Observable<[String]> {
+    static func uploadFile(file: Data) -> Observable<String?> {
         FileServices.provider
-            .rx.request(.upload(files: files))
+            .rx.request(.uploadFile(file: file))
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
+                    let url = String(bytes: $0.data, encoding: .utf8)
+                    return url
+                }
+                return nil
+            }
+    }
+    
+    
+    static func uploadFiles(with files: [Data]) -> Observable<[String]> {
+        FileServices.provider
+            .rx.request(.uploadFiles(files: files))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    
                     let urls = try JSONDecoder().decode([String].self, from: $0.data)
                     return urls
                 }

@@ -28,7 +28,8 @@ final class LoginView: UIView {
         $0.addLeftPadding(value: Constants.getAdjustedWidth(13.0))
         $0.autocorrectionType = .no
         $0.autocapitalizationType = .none
-        $0.textContentType = .username
+        $0.textContentType = .emailAddress
+        $0.keyboardType = .emailAddress
     }
     
     var passwordTextField = UITextField().then {

@@ -34,15 +34,6 @@ class BookCollectionViewController: UICollectionViewController {
                     collectionView
                     .rx
                     .items(cellIdentifier: BookListViewCell.identifier, cellType: BookListViewCell.self)) { (row, element, cell) in
-                
-                if element.searchedInfo == nil {
-                    SearchServices.searchBookBy(isbn: element.bookModel.isbn).bind {
-                        cell.searchedInfo.onNext($0.first)
-                    }.disposed(by: cell.disposeBag)
-                } else {
-                    cell.searchedInfo.onNext(element.searchedInfo)
-                }
-                
                 cell.bookModel.onNext(element.bookModel)
             }.disposed(by: disposeBag)
     }

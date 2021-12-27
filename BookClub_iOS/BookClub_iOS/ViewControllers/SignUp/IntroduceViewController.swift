@@ -34,6 +34,19 @@ class IntroduceViewController: UIViewController {
             )
         )
         
+        customView.introduceTextField
+            .rx.text
+            .orEmpty
+            .scan("") { (previous, new) -> String in
+                if new.count > 20 {
+                    return previous ?? String(new.prefix(20))
+                } else {
+                    return new
+                }
+            }
+            .subscribe(customView.introduceTextField.rx.text)
+            .disposed(by: disposeBag)
+        
         // bind outputs {
         viewModel.isIntroduceConfirmed
             .withUnretained(self)

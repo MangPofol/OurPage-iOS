@@ -106,7 +106,7 @@ class BookclubViewController: UIViewController {
             .bind(to: customView.memberProfileCollectionView
                     .rx
                     .items(cellIdentifier: MemberProfileCollectionViewCell.identifier, cellType: MemberProfileCollectionViewCell.self)) { (row, element, cell) in
-                cell.profileImageView.image = UIImage(named: "SampleProfile")
+                cell.profileImageView.image = .DefaultProfileImage
             }
                     .disposed(by: disposeBag)
         

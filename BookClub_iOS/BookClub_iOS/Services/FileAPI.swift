@@ -9,13 +9,19 @@ import Foundation
 import Moya
 
 enum FileAPI {
-    case upload(files: [Data])
+    case uploadFile(file: Data)
+    case uploadFiles(files: [Data])
     case delete(files: [String])
 }
 
 extension FileAPI: TargetType, AccessTokenAuthorizable {
     var authorizationType: AuthorizationType? {
-        return .bearer
+        switch self {
+        case .uploadFile(_):
+            return .none
+        default:
+            return .bearer
+        }
     }
     
     var baseURL: URL {
@@ -24,7 +30,9 @@ extension FileAPI: TargetType, AccessTokenAuthorizable {
     
     var path: String {
         switch self {
-        case .upload(_):
+        case .uploadFile:
+            return "/files/upload"
+        case .uploadFiles(_):
             return "/files/upload-multiple-files"
         case .delete(_):
             return "/files/delete-multiple-files"
@@ -33,7 +41,9 @@ extension FileAPI: TargetType, AccessTokenAuthorizable {
     
     var method: Moya.Method {
         switch self {
-        case .upload(_):
+        case .uploadFile(_):
+            return .put
+        case .uploadFiles(_):
             return .post
         case .delete(_):
             return .post
@@ -46,7 +56,10 @@ extension FileAPI: TargetType, AccessTokenAuthorizable {
     
     var task: Task {
         switch self {
-        case .upload(let files):
+        case .uploadFile(let file):
+            let fileData = MultipartFormData(provider: .data(file), name: "data", fileName: "\(Int(Date().timeIntervalSince1970)) \(file.description)", mimeType: "multipart/form-data")
+            return .uploadMultipart([fileData])
+        case .uploadFiles(let files):
             let fileMFDataArray: [MultipartFormData] = files.enumerated().map({ (index, data) in
                 MultipartFormData(provider: .data(data),
                                   name: "data", //This is the key
@@ -66,7 +79,7 @@ extension FileAPI: TargetType, AccessTokenAuthorizable {
     
     var headers: [String : String]? {
         switch self {
-        case .upload(_):
+        case .uploadFiles(_), .uploadFile(_):
             return ["Content-Type": "multipart / form-data"]
         case .delete(_):
             return nil

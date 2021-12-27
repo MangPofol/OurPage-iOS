@@ -1,5 +1,5 @@
 //
-//  NicknameInputView.swift
+//  ProfileMakeView.swift
 //  BookClub_iOS
 //
 //  Created by Lee Nam Jun on 2021/10/30.
@@ -7,11 +7,30 @@
 
 import UIKit
 
-final class NicknameInputView: UIView {
-    var titleLabel = UILabel().then {
+final class ProfileMakeView: UIView {
+    var backgroundImageView = UIImageView(image: UIImage.BackgroundLogoImage).then {
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    var profileTitleLabel = UILabel().then {
+        $0.text = "프로필 사진을 선택해주세요."
+        $0.textColor = .mainColor
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
+    }
+    
+    var profileImageView = UIImageView(image: .DefaultProfileImage).then {
+        $0.contentMode = .scaleAspectFill
+        $0.setCornerRadius(radius: 54.5.adjustedHeight)
+    }
+    
+    var profileImageAddButton = UIButton().then {
+        $0.setImage(.AddIcon.resize(to: CGSize(width: 27.25, height: 27.25).resized(basedOn: .height), isAlwaysTemplate: false), for: .normal)
+    }
+    
+    var nicknameTitleLabel = UILabel().then {
         $0.text = "당신의 닉네임은?"
         $0.textColor = .mainColor
-        $0.font = .defaultFont(size: .big, bold: true)
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
     }
     
     var nicknameTextField = UITextField().then {
@@ -52,7 +71,13 @@ final class NicknameInputView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-        self.addSubview(titleLabel)
+        
+        self.addSubview(backgroundImageView)
+        self.addSubview(profileTitleLabel)
+        self.addSubview(profileImageView)
+        self.addSubview(profileImageAddButton)
+        
+        self.addSubview(nicknameTitleLabel)
         self.addSubview(nicknameTextField)
         self.addSubview(nicknameConfirmMessageLabel)
         self.addSubview(nextButton)
@@ -66,13 +91,36 @@ final class NicknameInputView: UIView {
     }
     
     private func makeView() {
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(33.0))
+        profileTitleLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(70.adjustedHeight)
+        }
+        
+        backgroundImageView.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(-32.adjustedWidth)
+            $0.right.equalToSuperview().inset(-7.adjustedWidth)
+            $0.top.equalTo(profileTitleLabel).inset(-17.adjustedHeight)
+            $0.height.equalTo(178.39.adjustedHeight)
+        }
+        
+        profileImageView.snp.makeConstraints {
+            $0.top.equalTo(profileTitleLabel.snp.bottom).offset(31.adjustedHeight)
+            $0.width.height.equalTo(109.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+        
+        profileImageAddButton.snp.makeConstraints {
+            $0.bottom.equalTo(profileImageView)
+            $0.right.equalTo(profileImageView)
+        }
+        
+        nicknameTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(profileImageView.snp.bottom).offset(64.adjustedHeight)
             $0.left.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
         }
         
         nicknameTextField.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(Constants.getAdjustedHeight(24.0))
+            $0.top.equalTo(nicknameTitleLabel.snp.bottom).offset(Constants.getAdjustedHeight(24.0))
             $0.left.right.equalToSuperview().inset(Constants.getAdjustedWidth(20.0))
             $0.height.equalTo(Constants.getAdjustedHeight(40.0))
         }

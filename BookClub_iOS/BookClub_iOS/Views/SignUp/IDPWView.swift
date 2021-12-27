@@ -17,7 +17,8 @@ final class IDPWView: UIView {
         $0.addLeftPadding(value: Constants.getAdjustedWidth(13.0))
         $0.autocorrectionType = .no
         $0.autocapitalizationType = .none
-        $0.textContentType = .username
+        $0.textContentType = .emailAddress
+        $0.keyboardType = .emailAddress
     }
     
     var idConfirmMessageLabel = UILabel().then {
@@ -83,7 +84,7 @@ final class IDPWView: UIView {
         }
         
         passwordTextField.snp.makeConstraints {
-            $0.top.equalTo(idConfirmMessageLabel.snp.bottom).offset(Constants.getAdjustedHeight(17.0))
+            $0.top.equalTo(idTextField.snp.bottom).offset(30.adjustedHeight)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.getAdjustedWidth(320.0))
             $0.height.equalTo(Constants.getAdjustedHeight(40.0))

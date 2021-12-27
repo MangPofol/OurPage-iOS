@@ -13,11 +13,11 @@ class BookListViewCell: UICollectionViewCell {
     var disposeBag = DisposeBag()
     
     var bookModel = BehaviorSubject<BookModel?>(value: nil)
-    var thumbnailString = BehaviorSubject<String?>(value: nil)
     var searchedInfo = BehaviorSubject<SearchedBook?>(value: nil)
     
     var bookImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
+        $0.image = .BookLoadingImage
         $0.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(10.0)))
     }
     var bookTitleLabel = UILabel().then {
@@ -52,19 +52,39 @@ class BookListViewCell: UICollectionViewCell {
         }
     }
     
+//    if element.searchedInfo == nil {
+//        SearchServices.searchBookBy(isbn: element.bookModel.isbn).bind {
+//            cell.searchedInfo.onNext($0.first)
+//        }.disposed(by: cell.disposeBag)
+//    } else {
+//        cell.searchedInfo.onNext(element.searchedInfo)
+//    }
+    
     private func bindOutputs() {
         bookModel.observe(on: MainScheduler.instance)
-            .filter { $0 != nil}
-            .bind { [weak self] book in
-                // DB 먼저 검사
-                self?.bookTitleLabel.text = book!.name
+            .compactMap { $0 }
+            .do { [weak self] book in
+                self?.bookTitleLabel.text = book.name
+            }
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .flatMap { book -> Observable<SearchedBook?> in
+                return SearchServices.searchBookBy(isbn: book.isbn).map { $0.first }
+            }
+            .bind { [weak self] in
+                self?.searchedInfo.onNext($0)
             }
             .disposed(by: disposeBag)
         
-        searchedInfo.observe(on: MainScheduler.instance)
-            .filter { $0 != nil }
+        searchedInfo
+            .observe(on: MainScheduler.instance)
+            .do { [weak self] val in
+                if val == nil {
+                    self?.bookImageView.image = .BookLoadingImage
+                }
+            }
+            .compactMap { $0 }
             .bind { [weak self] in
-                self?.bookImageView.kf.setImage(with: URL(string: $0!.thumbnail), placeholder: UIImage.BookLoadingImage)
+                self?.bookImageView.kf.setImage(with: URL(string: $0.thumbnail), placeholder: UIImage.BookLoadingImage)
             }
             .disposed(by: disposeBag)
     }
@@ -72,6 +92,7 @@ class BookListViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
+        bookImageView.image = .BookLoadingImage
         bindOutputs()
     }
 }
