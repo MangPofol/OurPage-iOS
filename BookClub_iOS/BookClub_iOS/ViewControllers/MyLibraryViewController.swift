@@ -21,15 +21,18 @@ class MyLibraryViewController: UIViewController {
     // MARK: - loadView()
     override func loadView() {
         // add and configure collection view
-//        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
+        //        customView.collectionView.register(BookListViewCell.self, forCellWithReuseIdentifier: BookListViewCell.identifier)
         customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
         customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
-//        self.view.backgroundColor = UIColor(hexString: "E5E5E5")
+        //        self.view.backgroundColor = UIColor(hexString: "E5E5E5")
         customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
         bookCollectionVC.view.backgroundColor = .white
         bookCollectionVC.collectionView.backgroundColor = .white
         bookCollectionVC.view.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        // Left navigation button
+        setNavigationBar()
     }
     
     
@@ -70,9 +73,6 @@ class MyLibraryViewController: UIViewController {
         )
         viewModel?.bookCollectionViewModel = bookCollectionVC.viewModel
         
-        // Left navigation button
-        setNavigationBar()
-        
         // bind inputs {
         
         self.navigationItem.leftBarButtonItem!
@@ -87,13 +87,13 @@ class MyLibraryViewController: UIViewController {
             .disposed(by: disposeBag)
         
         // 검색 바 처리/akjdlsfdlsfsdlkfhlsdflsdkfhls
-//        customView.searchBar
-//            .rx.text
-//            .orEmpty
-//            .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
-//            .distinctUntilChanged()
-//            .subscribe(onNext: { print($0) })
-//            .disposed(by: disposeBag)
+        //        customView.searchBar
+        //            .rx.text
+        //            .orEmpty
+        //            .debounce(RxTimeInterval.microseconds(5), scheduler: MainScheduler.instance)
+        //            .distinctUntilChanged()
+        //            .subscribe(onNext: { print($0) })
+        //            .disposed(by: disposeBag)
         
         customView.bookclubSelector
             .rx.itemSelected
@@ -101,7 +101,7 @@ class MyLibraryViewController: UIViewController {
                 print($0)
             })
             .disposed(by: disposeBag)
-
+        
         // }
         
         // bind outputs {
@@ -139,25 +139,25 @@ class MyLibraryViewController: UIViewController {
         
         self.customView.searchButton.isOnRx
             .skip(1)
-            .subscribe(onNext: {
-                setSearchBar($0)
+            .subscribe(onNext: { [weak self] in
+                self?.setSearchBar($0)
             })
             .disposed(by: disposeBag)
         
         self.customView.bookclubButton.isOnRx
             .skip(1)
-            .subscribe(onNext: {
-                setBookclubSelector($0)
+            .subscribe(onNext: { [weak self] in
+                self?.setBookclubSelector($0)
             })
             .disposed(by: disposeBag)
         
         self.customView.sortingButton.isOnRx
             .skip(1)
-            .subscribe(onNext: {
-                setSortButtons($0)
+            .subscribe(onNext: { [weak self] in
+                self?.setSortButtons($0)
             })
             .disposed(by: disposeBag)
-
+        
         // 필터 방식
         Observable.combineLatest(customView.byNewButton.isOnRx, customView.byOldButton.isOnRx, customView.byNameButton.isOnRx)
             .subscribe(onNext: { [weak self] in
@@ -182,7 +182,7 @@ class MyLibraryViewController: UIViewController {
                 cell.titleLabel.text = " \(element)"
                 cell.contentView.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
             }
-            .disposed(by: disposeBag)
+                    .disposed(by: disposeBag)
         
         // cell을 모두 configure 한 후 autolayout 세팅
         customView.makeView()
@@ -207,52 +207,42 @@ class MyLibraryViewController: UIViewController {
                         self.customView.layoutIfNeeded()
                     })
                 }
-//                if self.bookCollectionVC.collectionView.contentOffset.y <= self.customView.typeControl.bounds.height {
-//                    self.customView.typeControl.snp.updateConstraints {
-//                        $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-self.bookCollectionVC.collectionView.contentOffset.y)
-//                    }
-//                } else {
-//                    UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-//                        self.customView.typeControl.snp.updateConstraints {
-//                            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(-upperSize())
-//                        }
-//                        self.customView.layoutIfNeeded()
-//                    })
-//                }
             }
             .disposed(by: disposeBag)
         
-        // private funcs        
-        func setSearchBar(_ isOn: Bool) {
-            self.customView.searchTextField.isHidden = !isOn
-            self.customView.searchTextField.text = nil
-        }
+      
         
-        func setBookclubSelector(_ isOn: Bool) {
-            self.customView.bookclubSelector.reloadData()
-            self.customView.bookclubSelector.isHidden = !isOn
-            self.customView.searchTextField.text = nil
-        }
-        
-        func setSortButtons(_ isOn: Bool) {
-            self.customView.sortButtonStack.isHidden = !isOn
-            self.customView.byNewButton.isOn = false
-            self.customView.byOldButton.isOn = false
-            self.customView.byNameButton.isOn = false
-            self.viewModel!.sortBy.onNext(.none)
-        }
-        
-        func setNavigationBar() {
-            self.title = ""
-            self.setDefaultConfiguration()
-            self.navigationController?.navigationBar.setDefault()
-        }
+    }
+    
+    // private funcs
+    func setSearchBar(_ isOn: Bool) {
+        self.customView.searchTextField.isHidden = !isOn
+        self.customView.searchTextField.text = nil
+    }
+    
+    func setBookclubSelector(_ isOn: Bool) {
+        self.customView.bookclubSelector.reloadData()
+        self.customView.bookclubSelector.isHidden = !isOn
+        self.customView.searchTextField.text = nil
+    }
+    
+    func setSortButtons(_ isOn: Bool) {
+        self.customView.sortButtonStack.isHidden = !isOn
+        self.customView.byNewButton.isOn = false
+        self.customView.byOldButton.isOn = false
+        self.customView.byNameButton.isOn = false
+        self.viewModel!.sortBy.onNext(.none)
+    }
+    
+    func setNavigationBar() {
+        self.navigationController?.navigationBar.setDefault()
+        self.setDefaultConfiguration()
     }
 }
 
 extension MyLibraryViewController: UICollectionViewDelegateFlowLayout {
     // 한 가로줄에 cell이 3개만 들어가도록 크기 조정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return Constants.bookclubSelectorSize()
+        return Constants.bookclubSelectorSize()
     }
 }

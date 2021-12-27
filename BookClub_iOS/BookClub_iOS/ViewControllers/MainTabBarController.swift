@@ -12,9 +12,7 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
         
         setupVCs()
-        removeTabbarItemsText()
-        
-        
+    
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = Constants.navigationbarColor
         appearance.stackedLayoutAppearance.normal.iconColor = .grayC4
@@ -45,9 +43,10 @@ class MainTabBarController: UITabBarController {
         
         viewControllers = [
             createNavController(for: HomeViewController(), image: .PersonIcon.resize(to: CGSize(width: 27, height: 30).resized(basedOn: .height)), title: ""),
-            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: "내 서재"),
-            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53, height: 29).resized(basedOn: .height)), title: "북클럽")
+            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: ""),
+            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53, height: 29).resized(basedOn: .height)), title: "")
         ]
+        removeTabbarItemsText()
         self.setViewControllers(viewControllers, animated: false)
     }
     
@@ -55,7 +54,8 @@ class MainTabBarController: UITabBarController {
                                          image: UIImage, title: String) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.tabBarItem.image = image
-        navController.tabBarItem.imageInsets = UIEdgeInsets(top: 11.adjustedHeight, left: 0, bottom: -11.adjustedHeight, right: 0)
+        let bottomInset = tabBar.bounds.height - 11.adjustedHeight - image.size.height
+        navController.tabBarItem.imageInsets = UIEdgeInsets(top: 11.adjustedHeight, left: 0, bottom: -bottomInset, right: 0)
         rootViewController.navigationItem.title = title
         return navController
     }
