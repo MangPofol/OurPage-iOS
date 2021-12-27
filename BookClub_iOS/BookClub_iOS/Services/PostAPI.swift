@@ -15,6 +15,7 @@ enum PostAPI {
     case deletePost(_ bookId: Int)
     case doLikePost(_ bookId: Int)
     case undoLikePost(_ bookId: Int)
+    case getTotalCount
 }
 
 extension PostAPI: TargetType, AccessTokenAuthorizable {
@@ -33,13 +34,15 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
         case .createPost(_):
             return ""
         case .updatePost(let post):
-            return "/\(post.id)"
+            return "/\(post.postId)"
         case .deletePost(let bookId):
             return "/\(bookId)"
         case .doLikePost(let bookId):
             return "/\(bookId)"
         case .undoLikePost(let bookId):
             return "/\(bookId)"
+        case .getTotalCount:
+            return "/total-count"
         }
     }
     
@@ -57,6 +60,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return .post
         case .undoLikePost(_):
             return .post
+        case .getTotalCount:
+            return .get
         }
     }
     
@@ -77,6 +82,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
         case .doLikePost(_):
             return .requestPlain
         case .undoLikePost(_):
+            return .requestPlain
+        case .getTotalCount:
             return .requestPlain
         }
     }

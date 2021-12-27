@@ -15,11 +15,13 @@ class HomeViewModel {
     var openMyProfileView: Observable<Bool>
     var openModifyGoalView : Observable<Bool>
     var openWriteView: Observable<Bool>
+    var totalCount: Observable<Int?>
     
     init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>, goalButtonTapped: ControlEvent<()>, writeButtonTapped: ControlEvent<()>) {
         checkListToggle = checkListButtonTapped.map { true }
         openMyProfileView = myProfileButtonTapped.map { true }
         openModifyGoalView = goalButtonTapped.map { true }
         openWriteView = writeButtonTapped.map { true }
+        totalCount = PostServices.getTotalCount()
     }
 }

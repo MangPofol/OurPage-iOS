@@ -30,10 +30,9 @@ import Foundation
 //}
 
 struct PostModel: Codable {
-    var id: Int
+    var postId: Int
     var scope: String
     var isIncomplete: Bool
-    var imgLocation: String?
     var title: String
     var content: String
     var createdDate: String
@@ -43,17 +42,16 @@ struct PostModel: Codable {
     var hyperlinkTitle: String
     var hyperlink: String
     var postImgLocations: [String]
-    var postScopeClub: [Int]
+    var clubIdListForScope: [Int]
     var likedList: [Liked]
-    var commentDto: [Comment]
+    var commentsDto: [Comment]
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(id, forKey: .id)
+        try container.encode(postId, forKey: .postId)
         try container.encode(scope, forKey: .scope)
         try container.encode(isIncomplete, forKey: .isIncomplete)
-        try container.encode(imgLocation, forKey: .imgLocation)
         try container.encode(title, forKey: .title)
         try container.encode(content, forKey: .content)
         try container.encode(createdDate, forKey: .createdDate)
@@ -63,9 +61,9 @@ struct PostModel: Codable {
         try container.encode(hyperlinkTitle, forKey: .hyperlinkTitle)
         try container.encode(hyperlink, forKey: .hyperlink)
         try container.encode(postImgLocations, forKey: .postImgLocations)
-        try container.encode(postScopeClub, forKey: .postScopeClub)
+        try container.encode(clubIdListForScope, forKey: .clubIdListForScope)
         try container.encode(likedList, forKey: .likedList)
-        try container.encode(commentDto, forKey: .commentDto)
+        try container.encode(commentsDto, forKey: .commentsDto)
     }
 }
 

@@ -21,6 +21,7 @@ class SearchServices {
         
         return SearchServices.provider
             .rx.request(.searchBookByisbn(isbn))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
@@ -37,6 +38,7 @@ class SearchServices {
     static func getThumbnailBy(isbn: String) -> Observable<String?> {
         SearchServices.provider
             .rx.request(.searchBookByisbn(isbn))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
@@ -53,6 +55,7 @@ class SearchServices {
     static func searchBookBy(title: String) -> Observable<[Book]> {
         return SearchServices.provider
             .rx.request(.searchBookByTitle(title))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {

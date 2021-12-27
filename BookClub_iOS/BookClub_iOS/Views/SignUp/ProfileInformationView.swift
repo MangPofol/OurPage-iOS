@@ -31,6 +31,7 @@ final class ProfileInformationView: UIView {
     
     var backgroundImageView = UIImageView(image: UIImage.BackgroundLogoImage).then {
         $0.contentMode = .scaleAspectFit
+        $0.alpha = 0.36
     }
     
     override init(frame: CGRect) {

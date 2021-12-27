@@ -10,6 +10,7 @@ import UIKit
 final class ProfileMakeView: UIView {
     var backgroundImageView = UIImageView(image: UIImage.BackgroundLogoImage).then {
         $0.contentMode = .scaleAspectFit
+        $0.alpha = 0.36
     }
     
     var profileTitleLabel = UILabel().then {

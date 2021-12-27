@@ -19,14 +19,25 @@ class PostServices: Networkable {
         var data: [PostModel]
     }
     
+    struct TotalCountResponse: Codable {
+        var data: Int
+    }
+    
     static func getPostsByBookId(bookId: Int) -> Observable<[PostModel]> {
         PostServices.provider
             .rx.request(.getPostsByBookId(bookId))
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let data = try JSONDecoder().decode(PostsResponse.self, from: $0.data)
-                    return data.data
+                    do {
+                        let data = try JSONDecoder().decode(PostsResponse.self, from: $0.data)
+                        return data.data
+                    } catch {
+                        print(#fileID, #function, #line, error)
+                        return []
+                    }
+                    
+                    
                 } else {
                     print("Failed with Status Code: \($0.statusCode)")
                     return []
@@ -38,6 +49,7 @@ class PostServices: Networkable {
     static func createPost(post: PostToCreate) -> Observable<PostModel?> {
         PostServices.provider
             .rx.request(.createPost(post))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .asObservable()
             .map {
                 if $0.statusCode == 201 {
@@ -48,6 +60,20 @@ class PostServices: Networkable {
                 }
             }
             .catchAndReturn(nil)
+    }
+    
+    static func getTotalCount() -> Observable<Int?> {
+        PostServices.provider
+            .rx.request(.getTotalCount)
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    let data = try JSONDecoder().decode(TotalCountResponse.self, from: $0.data)
+                    return data.data
+                }
+                return nil
+            }
     }
     
     static func updatePost(post: PostModel) {

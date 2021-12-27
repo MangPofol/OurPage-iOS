@@ -32,6 +32,7 @@ class WriteViewController: UIViewController {
         if selectedBook != nil {
             customView.bookSelectionButton.button.setTitle(selectedBook!.bookModel.name, for: .normal)
             if viewModel != nil {
+                print(#fileID, #function, #line, self.selectedBook)
                 viewModel.selectedBook.onNext(self.selectedBook)
             }
         } else {

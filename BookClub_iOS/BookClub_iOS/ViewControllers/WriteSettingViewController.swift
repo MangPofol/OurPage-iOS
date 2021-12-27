@@ -63,9 +63,9 @@ class WriteSettingViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.postSuccess
+            .observe(on: MainScheduler.instance)
             .bind { [weak self] in
                 if $0 != nil {
-                    print(#fileID, #function, #line, $0)
                     self?.dismiss(animated: true, completion: nil)
                 }
             }

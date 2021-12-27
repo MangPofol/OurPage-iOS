@@ -105,6 +105,18 @@ class HomeViewController: UIViewController {
                 owner.navigationController?.pushViewController(WriteViewController(), animated: true)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.totalCount
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .bind { (owenr, count) in
+                if count == nil {
+                    owenr.customView.totalPageLabel.text = "total \(0) pages"
+                } else {
+                    owenr.customView.totalPageLabel.text = "total \(count!) pages"
+                }
+            }
+            .disposed(by: disposeBag)
     // }
     }
 

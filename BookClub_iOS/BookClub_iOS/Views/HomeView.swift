@@ -9,7 +9,7 @@ import UIKit
 
 final class HomeView: UIView {
     var backgroundImageView = UIImageView().then {
-        $0.image = .HomeBackgroundImage
+        $0.image = .BackgroundLogoImage
         $0.contentMode = .scaleAspectFill
     }
     

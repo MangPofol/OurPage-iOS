@@ -324,12 +324,15 @@ extension UIImage {
     static let PlaceIcon = UIImage(named: "PlaceIcon")!
     static let PlainCheckBoxIcon = UIImage(named: "PlainCheckBoxIcon")!
     static let AddIcon = UIImage(named: "AddIcon")!
+    static let CheckedCheckBoxIcon = UIImage(named: "CheckedCheckBoxIcon")!
+    static let MemoIcon = UIImage(named: "MemoIcon")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
     static let BookLoadingImage = UIImage(named: "BookLoadingImage")!
     static let BackgroundLogoImage = UIImage(named: "BackgroundLogoImage")!
     static let DefaultProfileImage = UIImage(named: "DefaultProfileImage")!
+    static let DefaultBookImage = UIImage(named: "DefaultBookImage")!
     
     func resize(to size: CGSize, isAlwaysTemplate: Bool = true) -> UIImage {
         let render = UIGraphicsImageRenderer(size: size)
