@@ -43,8 +43,7 @@ class MainTabBarController: UITabBarController {
         
         viewControllers = [
             createNavController(for: HomeViewController(), image: .PersonIcon.resize(to: CGSize(width: 27, height: 30).resized(basedOn: .height)), title: ""),
-            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: ""),
-            createNavController(for: BookclubViewController(), image: .BookclubIcon.resize(to: CGSize(width: 27.53, height: 29).resized(basedOn: .height)), title: "")
+            createNavController(for: MyLibraryViewController(), image: .MyLibraryIcon.resize(to: CGSize(width: 26.98, height: 29).resized(basedOn: .height)), title: "")
         ]
         removeTabbarItemsText()
         self.setViewControllers(viewControllers, animated: false)

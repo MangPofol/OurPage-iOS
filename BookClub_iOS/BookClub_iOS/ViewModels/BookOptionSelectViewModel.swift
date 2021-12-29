@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 class BookOptionSelectViewModel {
-    var isAddingBook: Observable<BookListType?>
+    var isAddingBook: Observable<(BookListType, BookModel)?>
     var categorySelected = BehaviorSubject<BookListType>(value: .NOW)
     
     var selectedBook: Book
@@ -20,11 +20,11 @@ class BookOptionSelectViewModel {
         isAddingBook = addButtonTapped
             .asObservable()
             .withLatestFrom(categorySelected)
-            .flatMap { type -> Observable<BookListType?> in
+            .flatMap { type -> Observable<(BookListType, BookModel)?> in
                 let book = BookToCreate(name: selectedBook.bookModel.name, isbn: selectedBook.bookModel.isbn, category: type.rawValue)
-                return BookServices.createBook(bookToCreate: book).map { value -> BookListType? in
+                return BookServices.createBook(bookToCreate: book).map { value -> (BookListType, BookModel)? in
                     if value != nil {
-                        return type
+                        return (type, value!)
                     } else {
                         return nil
                     }

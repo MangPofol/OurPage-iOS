@@ -49,19 +49,22 @@ class BookOptionSelectViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         viewModel.isAddingBook
+            .compactMap { $0 }
             .withUnretained(self)
-            .bind { (owner, type) in
-                switch type {
+            .bind { (owner, value) in
+                var book = owner.selectedBook
+                book?.bookModel = value.1
+                switch value.0 {
                 case .NOW:
                     owner.dismiss(animated: true) {
                         if owner.bookSelectVC != nil {
-                            owner.bookSelectVC?.newBookSelected.onNext(owner.selectedBook)
+                            owner.bookSelectVC?.newBookSelected.onNext(book)
                         }
                     }
                 case .AFTER:
                     owner.dismiss(animated: true) {
                         if owner.bookSelectVC != nil {
-                            owner.bookSelectVC?.newBookSelected.onNext(owner.selectedBook)
+                            owner.bookSelectVC?.newBookSelected.onNext(book)
                         }
                     }
                 case .BEFORE:
@@ -73,10 +76,7 @@ class BookOptionSelectViewController: UIViewController {
                             
                         }
                     }
-                case nil:
-                    print("Error")
                 }
-                
             }
             .disposed(by: disposeBag)
         

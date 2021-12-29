@@ -39,13 +39,13 @@ class BookServices: Networkable {
     }
     
     // 새 책 생성
-    static func createBook(bookToCreate: BookToCreate) -> Observable<BookToCreate?> {
+    static func createBook(bookToCreate: BookToCreate) -> Observable<BookModel?> {
         BookServices.provider
             .rx.request(.createBook(bookToCreate))
             .asObservable()
             .map {
                 if $0.statusCode == 201 {
-                    let data = try JSONDecoder().decode(BookToCreate.self, from: $0.data)
+                    let data = try JSONDecoder().decode(BookModel.self, from: $0.data)
                     return data
                 } else {
                     return nil
