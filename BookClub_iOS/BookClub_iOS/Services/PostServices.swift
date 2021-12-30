@@ -53,13 +53,19 @@ class PostServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 201 {
-                    let data = try JSONDecoder().decode(PostModel.self, from: $0.data)
-                    return data
+                    do {
+                        let data = try JSONDecoder().decode(PostModel.self, from: $0.data)
+                        return data
+                    } catch {
+                        print(error)
+                        return nil
+                    }
+                    
+                    
                 } else {
                     return nil
                 }
             }
-            .catchAndReturn(nil)
     }
     
     static func getTotalCount() -> Observable<Int?> {

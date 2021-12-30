@@ -32,6 +32,7 @@ final class BookView: UIView {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.separatorStyle = .none
         $0.register(MemoTableViewCell.self, forCellReuseIdentifier: MemoTableViewCell.identifier)
+        $0.rowHeight = 40.adjustedHeight
     }
     
     lazy var memoContainerView = UIView().then {
@@ -170,9 +171,10 @@ final class MemoTableViewCell: UITableViewCell {
     
     private func makeView() {
         innerView.snp.makeConstraints {
-            $0.left.top.right.equalToSuperview()
+            $0.left.right.equalToSuperview()
+            $0.top.equalToSuperview()
+//            $0.height.equalTo(30.adjustedHeight)
             $0.bottom.equalToSuperview().inset(10.adjustedHeight)
-            $0.height.equalTo(30.adjustedHeight)
         }
         iconImageView.snp.makeConstraints {
             $0.width.equalTo(9.7.adjustedHeight)

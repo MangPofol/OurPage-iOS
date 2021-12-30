@@ -57,8 +57,9 @@ class BookViewController: UIViewController {
         
         customView.memoTableView
             .rx.modelSelected(PostModel.self)
+            .withLatestFrom(viewModel.book) { ($0, $1) }
             .bind { [weak self] in
-                let vc = PostViewController(post_: $0)
+                let vc = PostViewController(post_: $0.0, book_: $0.1)
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)

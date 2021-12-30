@@ -500,6 +500,13 @@ extension UIViewController {
         backBarButtonItem.tintColor = .mainColor
         self.navigationItem.backBarButtonItem = backBarButtonItem
     }
+    
+    func popToRoot(animated: Bool, completion: @escaping () -> Void) {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(completion)
+            navigationController?.popToRootViewController(animated: animated)
+            CATransaction.commit()
+        }
 }
 
 extension UITextField {

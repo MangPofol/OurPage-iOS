@@ -18,10 +18,12 @@ class WriteSettingViewController: UIViewController {
     var viewModel: WriteSettingViewModel!
     
     var postToCreate: PostToCreate!
+    var bookModel: BookModel!
     
-    convenience init(postToCreate: PostToCreate) {
+    convenience init(postToCreate: PostToCreate, bookModel: BookModel) {
         self.init()
         self.postToCreate = postToCreate
+        self.bookModel = bookModel
     }
     
     override func loadView() {
@@ -64,9 +66,11 @@ class WriteSettingViewController: UIViewController {
         
         viewModel.postSuccess
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] in
-                if $0 != nil {
-                    self?.dismiss(animated: true, completion: nil)
+            .bind { [weak self] post in
+                if post != nil {
+                    let vc = PostViewController(post_: post, book_: self?.bookModel)
+                    self?.navigationController?.viewControllers.insert(vc, at: 1)
+                    self?.navigationController?.popToViewController(vc, animated: true)
                 }
             }
             .disposed(by: disposeBag)

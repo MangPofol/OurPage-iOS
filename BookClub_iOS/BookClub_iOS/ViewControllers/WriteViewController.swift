@@ -81,10 +81,11 @@ class WriteViewController: UIViewController {
         
         viewModel.openPostSetting
             .compactMap { $0 }
-            .bind { [weak self] in
-                let vc = WriteSettingViewController(postToCreate: $0)
+            .withUnretained(self)
+            .bind { (owner, post) in
+                let vc = WriteSettingViewController(postToCreate: post, bookModel: owner.selectedBook!.bookModel)
                 
-                self?.navigationController?.pushViewController(vc, animated: true)
+                owner.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
         
