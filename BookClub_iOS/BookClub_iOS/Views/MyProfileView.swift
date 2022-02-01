@@ -15,9 +15,13 @@ final class MyProfileView: UIView {
         $0.image = .DefaultProfileImage
     }
     
-    var profileImageSettingButton = UIButton().then {
-        $0.setImage(.SettingIconWithBackground.resize(to: CGSize(width: 15.adjustedHeight, height: 15.adjustedHeight), isAlwaysTemplate: false), for: .normal)
+    var profileImageSettingButton = UIView().then {
+        let imageView = UIImageView(image: .SettingIconWithBackground.resize(to: CGSize(width: 15.adjustedHeight, height: 15.adjustedHeight), isAlwaysTemplate: false))
         $0.backgroundColor = .clear
+        $0.addSubview(imageView)
+        imageView.snp.makeConstraints {
+            $0.right.bottom.equalToSuperview()
+        }
     }
     
     var nicknameLabel = UILabel().then {
@@ -61,6 +65,7 @@ final class MyProfileView: UIView {
         $0.backgroundColor = .white
         $0.register(MyGenreCollectionViewCell.self, forCellWithReuseIdentifier: MyGenreCollectionViewCell.identifier)
         $0.allowsSelection = false
+        $0.showsHorizontalScrollIndicator = false
     }
     
     var tasteSettingButton = UIButton().then {
@@ -179,6 +184,7 @@ final class MyProfileView: UIView {
         }
         profileImageSettingButton.snp.makeConstraints {
             $0.right.bottom.equalTo(profileImageView)
+            $0.width.height.equalTo(25.adjustedHeight)
         }
         nicknameLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()

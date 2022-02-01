@@ -11,7 +11,7 @@ final class IDPWView: UIView {
     
     var idTextField = UITextField().then {
         $0.backgroundColor = .textFieldBackgroundGray
-        $0.placeholder = "이메일"
+        $0.placeholder = "실제 사용중인 이메일 주소를 입력해 주세요."
         $0.font = .defaultFont(size: 16.0, boldLevel: .bold)
         $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
         $0.addLeftPadding(value: Constants.getAdjustedWidth(13.0))

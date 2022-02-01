@@ -18,7 +18,7 @@ class WriteView: UIView {
         $0.backgroundColor = .mainColor
         $0.button.setTitle("기록할 책을 선택해주세요", for: .normal)
         $0.button.setTitleColor(.white, for: .normal)
-        $0.button.titleLabel?.font = .defaultFont(size: 12, boldLevel: .bold)
+        $0.button.titleLabel?.font = .defaultFont(size: 14, boldLevel: .bold)
         $0.imageView.image = .rightArrowImage
         $0.imageView.tintColor = .white
         $0.setCornerRadius(radius: 10.adjustedHeight)
@@ -87,7 +87,7 @@ class WriteView: UIView {
         bookSelectionButton.snp.makeConstraints {
             $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(20.0))
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(Constants.getAdjustedHeight(30.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(35))
             $0.width.equalTo(Constants.getAdjustedWidth(334.0))
         }
         

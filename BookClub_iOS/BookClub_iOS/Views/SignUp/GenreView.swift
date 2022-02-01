@@ -99,9 +99,11 @@ class GenreCollectionViewCell: UICollectionViewCell {
     func setSelected(_ on: Bool) {
         if on {
             self.backgroundColor = UIColor(hexString: "303860")
+            self.drawBorder(color: UIColor.mainColor.cgColor)
             self.titleLabel.textColor = .white
         } else {
             self.backgroundColor = .white
+            self.drawBorder(color: UIColor(hexString: "C3C5D1").cgColor)
             self.titleLabel.textColor = UIColor(hexString: "C3C5D1")
         }
     }

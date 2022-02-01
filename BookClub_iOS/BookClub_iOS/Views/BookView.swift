@@ -10,7 +10,7 @@ import RxSwift
 
 final class BookView: UIView {
     var backgroundImageView = UIImageView(image: .BackgroundLogoImage).then {
-        $0.contentMode = .scaleAspectFit
+        $0.contentMode = .scaleAspectFill
     }
     
     var bookImageView = UIImageView(image: .DefaultBookImage).then {
@@ -57,7 +57,7 @@ final class BookView: UIView {
     private func makeView() {
         backgroundImageView.snp.makeConstraints {
             $0.left.equalToSuperview().inset(-32.adjustedWidth)
-            $0.right.equalToSuperview().inset(-7.adjustedWidth)
+            $0.right.equalToSuperview().offset(7.adjustedWidth)
             $0.top.equalToSuperview().inset(56.61.adjustedHeight)
             $0.height.equalTo(178.39.adjustedHeight)
         }
@@ -199,7 +199,7 @@ final class MemoTableViewCell: UITableViewCell {
             .withUnretained(self)
             .bind { (owner, post) in
                 owner.titleLabel.text = post.title
-                owner.createdDateLabel.text = post.createdDate
+                owner.createdDateLabel.text = post.createdDate.toDate().toString()
             }
             .disposed(by: disposeBag)
     }

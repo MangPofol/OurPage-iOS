@@ -16,7 +16,7 @@ class BookSelectView: UIView {
     var searchBar = UITextField().then {
         $0.backgroundColor = .white
         $0.autocorrectionType = .no
-        $0.font = .defaultFont(size: 12, boldLevel: .bold)
+        $0.font = .defaultFont(size: 14, boldLevel: .bold)
         $0.placeholder = "새 책 등록하기"
         
         $0.makeBorder(color: UIColor.mainColor.cgColor, width: CGFloat(Constants.getAdjustedWidth(1.0)), cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
@@ -130,7 +130,7 @@ class BookSelectView: UIView {
             $0.top.equalToSuperview().inset(Constants.getAdjustedHeight(20.0))
             $0.centerX.equalToSuperview()
             $0.width.equalTo(Constants.getAdjustedWidth(335.0))
-            $0.height.equalTo(Constants.getAdjustedHeight(26.0))
+            $0.height.equalTo(Constants.getAdjustedHeight(35))
         }
         
         buttonContainer.snp.makeConstraints {

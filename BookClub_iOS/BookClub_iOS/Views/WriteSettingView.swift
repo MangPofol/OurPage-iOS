@@ -10,13 +10,13 @@ import UIKit
 final class WriteSettingView: UIView {
     var placeTitleLabel = UILabel().then {
         $0.text = "어디서 책을 읽었나요?"
-        $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.textColor = .mainColor
     }
     
     var placeTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
         $0.placeholder = "내용을 입력해주세요"
-        $0.font = .defaultFont(size: 10, boldLevel: .regular)
+        $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
 
@@ -39,13 +39,13 @@ final class WriteSettingView: UIView {
     
     var timeTitleLabel = UILabel().then {
         $0.text = "책 읽은 시간대는?"
-        $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.textColor = .mainColor
     }
     
     var timeTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
         $0.placeholder = "점심시간 / 13:34"
-        $0.font = .defaultFont(size: 10, boldLevel: .regular)
+        $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
 
@@ -68,7 +68,7 @@ final class WriteSettingView: UIView {
     
     var linkTitleLabel = UILabel().then {
         $0.text = "함께 첨부하고 싶은 링크가 있다면?"
-        $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.textColor = .mainColor
     }
     
@@ -84,7 +84,7 @@ final class WriteSettingView: UIView {
     
     var linkContentTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
         $0.placeholder = "https://링크"
-        $0.font = .defaultFont(size: 10, boldLevel: .regular)
+        $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
     }
@@ -109,7 +109,7 @@ final class WriteSettingView: UIView {
     
     var scopeTitleLabel = UILabel().then {
         $0.text = "공개설정"
-        $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
+        $0.font = .defaultFont(size: 14, boldLevel: .semiBold)
         $0.textColor = .white
         $0.backgroundColor = .mainPink
     }

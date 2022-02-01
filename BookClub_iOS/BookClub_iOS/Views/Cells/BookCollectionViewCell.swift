@@ -22,6 +22,7 @@ class BookCollectionViewCell: UICollectionViewCell {
     }
     var bookTitleLabel = UILabel().then {
         $0.text = "책 제목"
+        $0.textColor = .mainColor
         $0.textAlignment = .center
         $0.font = .defaultFont(size: .small)
         $0.adjustsFontForContentSizeCategory = true

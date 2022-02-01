@@ -12,8 +12,12 @@ class ToggleButton: UIButton {
     
     var normalColor: UIColor
     var onColor: UIColor
+    
     var normalTextColor: UIColor = .black
     var onTextColor: UIColor = .white
+    
+    var onBorderColor: UIColor?
+    var normalBorderColor: UIColor?
     
     var isOnRx = BehaviorSubject<Bool>(value: false)
     let disposeBag = DisposeBag()
@@ -26,6 +30,12 @@ class ToggleButton: UIButton {
             self.backgroundColor = isOn ? onColor : normalColor
             self.setTitleColor( isOn ? onTextColor : normalTextColor, for: .normal)
             self.tintColor = isOn ? onTextColor : normalTextColor
+            
+            if onBorderColor != nil && normalBorderColor != nil {
+                let color = isOn ? onBorderColor : normalBorderColor
+                self.drawBorder(color: color!.cgColor)
+            }
+            
             if let imgView = self.imageView {
                 imgView.backgroundColor = isOn ? onColor : normalColor
             }
@@ -38,9 +48,11 @@ class ToggleButton: UIButton {
         }
     }
     
-    required init(normalColor: UIColor, onColor: UIColor) {
+    required init(normalColor: UIColor, onColor: UIColor, onBorderColor: UIColor? = nil, normalBorderColor: UIColor? = nil) {
         self.normalColor = normalColor
         self.onColor = onColor
+        self.onBorderColor = onBorderColor
+        self.normalBorderColor = normalBorderColor
         super.init(frame: .zero)
         addTarget(self, action: #selector(tap), for: .touchUpInside)
     }

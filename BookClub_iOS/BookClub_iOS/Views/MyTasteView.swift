@@ -11,7 +11,7 @@ final class MyTasteView: UIView {
     var genreModifyTitleLabel = UILabel().then {
         $0.textColor = .mainColor
         $0.text = "좋아하는 장르를 수정해주세요."
-        $0.font = .defaultFont(size: 14, boldLevel: .bold)
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
     }
     
     var genreCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
@@ -24,7 +24,7 @@ final class MyTasteView: UIView {
     var styleModifyTitleLabel = UILabel().then {
         $0.textColor = .mainColor
         $0.text = "책 읽는 스타일을 수정해주세요."
-        $0.font = .defaultFont(size: 14, boldLevel: .bold)
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
     }
     
     lazy var style1Button = ToggleButton(normalColor: UIColor(hexString: "EFF0F3"), onColor: .mainColor).then {

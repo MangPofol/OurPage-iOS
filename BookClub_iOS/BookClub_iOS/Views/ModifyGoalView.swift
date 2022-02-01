@@ -11,7 +11,7 @@ final class ModifyGoalView: UIView {
     var goalModifyTitleLabel = UILabel().then {
         $0.textColor = .mainColor
         $0.text = "독서 목표를 수정해주세요."
-        $0.font = .defaultFont(size: 14, boldLevel: .bold)
+        $0.font = .defaultFont(size: 18, boldLevel: .bold)
     }
     
     var periodPickerView = UIPickerView().then {

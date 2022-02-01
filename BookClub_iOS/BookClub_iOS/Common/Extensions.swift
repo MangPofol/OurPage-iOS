@@ -44,6 +44,11 @@ extension String {
         return String(self[fromIndex..<toIndex])
     }
     
+    func toDate() -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        return formatter.date(from: self)!
+    }
 }
 
 extension Date {
@@ -184,6 +189,11 @@ extension UIView {
         self.clipsToBounds = cornerRadius > 0
     }
     
+    func drawBorder(color: CGColor, width: CGFloat = CGFloat(1.0)) {
+        self.layer.borderColor = color
+        self.layer.borderWidth = width
+    }
+    
     // 특정 위치만 radius 주기
     func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
@@ -313,7 +323,7 @@ extension UIImage {
     static let BookclubIcon = UIImage(named: "BookclubIcon")!
     static let RightArrowBoldIcon = UIImage(named: "RightArrowBoldIcon")!
     static let RightArrowWithLeftPadding = UIImage(named: "RightArrowWithLeftPadding")!
-    static let RightArrowButtonImage = UIImage(named: "RightArrowButtonImage")!
+    static let RightArrowButtonImage = UIImage(named: "RightArrow")!
     static let DownArrow = UIImage(named: "DownArrow")!
     static let WriteIcon = UIImage(named: "WriteViewIcon")!.withRenderingMode(.alwaysTemplate)
     static let SettingIconWithBackground = UIImage(named: "SettingIconWithBackground")!
@@ -326,6 +336,8 @@ extension UIImage {
     static let AddIcon = UIImage(named: "AddIcon")!
     static let CheckedCheckBoxIcon = UIImage(named: "CheckedCheckBoxIcon")!
     static let MemoIcon = UIImage(named: "MemoIcon")!
+    static let PaddedRightArrow = UIImage(named: "PaddedRightArrow")!
+    static let PaddedUpArrow = UIImage(named: "PaddedUpArrow")!
     
     // Images
     static let HomeBackgroundImage = UIImage(named: "HomeBackgroundImage")!
@@ -345,6 +357,21 @@ extension UIImage {
         } else {
             return renderImage
         }
+    }
+    
+    func withInsets(_ insets: UIEdgeInsets) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: size.width + insets.left + insets.right,
+                   height: size.height + insets.top + insets.bottom),
+            false,
+            self.scale)
+        
+        let origin = CGPoint(x: insets.left, y: insets.top)
+        self.draw(at: origin)
+        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return imageWithInsets
     }
 }
 
@@ -454,7 +481,7 @@ extension UINavigationBar {
         appearance.backgroundColor = .white
         appearance.titleTextAttributes = [.foregroundColor: UIColor.mainColor, .font: UIFont.defaultFont(size: 18, boldLevel: .extraBold)]
         appearance.shadowColor = nil
-        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)))
+        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)).withInsets(UIEdgeInsets(top: 0, left: 20.adjustedHeight, bottom: 0, right: 0)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)).withInsets(UIEdgeInsets(top: 0, left: 20.adjustedHeight, bottom: 0, right: 0)))
         
         self.isTranslucent = false
         self.tintColor = .mainColor

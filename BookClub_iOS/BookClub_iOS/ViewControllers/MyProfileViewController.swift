@@ -32,6 +32,7 @@ class MyProfileViewController: UIViewController {
         collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         collectionLayout.minimumInteritemSpacing = 7
         collectionLayout.minimumLineSpacing = 10
+        collectionLayout.scrollDirection = .horizontal
         
         customView.genreCollectionView.setCollectionViewLayout(collectionLayout, animated: false)
         

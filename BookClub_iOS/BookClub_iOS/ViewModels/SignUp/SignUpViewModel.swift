@@ -73,8 +73,15 @@ class SignUpViewModel {
             .distinctUntilChanged()
         
         nextConfirmed = input.nextButtonTapped.withLatestFrom(inputsConfirmed)
-            .map { _ in
-                return true
+            .flatMap { _ -> Observable<Bool> in
+                let creatingUser = SignUpViewModel.creatingUser
+                return AuthServices.createUser(user: creatingUser)
+            }
+            .flatMap { bool -> Observable<Bool> in
+                if bool {
+                    return AuthServices.login(id: SignUpViewModel.creatingUser.email, password: SignUpViewModel.creatingUser.password)
+                }
+                return Observable.just(false)
             }
     }
 }

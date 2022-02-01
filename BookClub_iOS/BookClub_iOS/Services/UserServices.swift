@@ -53,6 +53,29 @@ class UserServices: Networkable {
                 return $0.statusCode == 204
             }
     }
+    
+    static func validateEmail() -> Observable<Bool> {
+        UserServices.provider
+            .rx.request(.validateEmail)
+            .asObservable()
+            .filterSuccessfulStatusCodes()
+            .map {
+                return $0.statusCode == 204
+            }
+            .catchAndReturn(false)
+    }
+    
+    static func validateEmailSendCode(emailCode: String) -> Observable<Bool> {
+        UserServices.provider
+            .rx.request(.validateEmailSendCode(emailCode: emailCode))
+            .asObservable()
+            .map {
+                if $0.statusCode == 204 {
+                    return true
+                }
+                return false
+            }
+    }
 }
 
 struct CreatedResult: Codable {

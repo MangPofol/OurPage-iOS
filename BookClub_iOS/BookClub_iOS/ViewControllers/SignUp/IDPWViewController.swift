@@ -96,7 +96,7 @@ class IDPWViewController: UIViewController {
                 
                 print(SignUpViewModel.creatingUser)
                 if $0 {
-                    self.navigationController?.pushViewController(ProfileInformationViewController(), animated: true)
+                    self.navigationController?.pushViewController(EmailAuthViewController(), animated: true)
                 } else {
                     print(#fileID, #function, #line, "FailToNext")
                 }

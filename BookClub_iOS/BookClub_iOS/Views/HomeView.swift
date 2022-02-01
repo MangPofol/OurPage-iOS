@@ -56,7 +56,7 @@ final class HomeView: UIView {
     }
     
     var myProfileButton = UIButton().then {
-        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 5.48, height: 9.51).resized(basedOn: .height)), for: .normal)
+        $0.setImage(.PaddedRightArrow.withRenderingMode(.alwaysOriginal).resize(to: CGSize(width: 25, height: 25).resized(basedOn: .height)), for: .normal)
         $0.backgroundColor = .clear
         $0.tintColor = .mainColor
         
@@ -64,25 +64,19 @@ final class HomeView: UIView {
         $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 375.adjustedWidth - 40.adjustedWidth, bottom: 0, right: 0)
     }
     
-    var goalButton = UIButton().then {
-        $0.setTitle("독서 목표를 입력해주세요.", for: .normal)
-        $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .semiBold)
-        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15.3.adjustedWidth, bottom: 0, right: 0)
-        $0.setTitleColor(.mainColor, for: .normal)
-        $0.contentHorizontalAlignment = .left
+    var goalButton = WriteRecordButton().then {
+        $0.titleLabel.text = "독서 목표를 입력해주세요."
+        $0.titleLabel.textColor = .mainColor
         
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: 8.adjustedHeight)
         
-        $0.setImage(.RightArrowBoldIcon.resize(to: CGSize(width: 5.48, height: 9.51).resized(basedOn: .height)), for: .normal)
+        $0.writeButton.setImage(.PaddedRightArrow.resize(to: CGSize(width: 25, height: 25).resized(basedOn: .height)), for: .normal)
+        $0.writeButton.tintColor = .mainColor
         
-        $0.imageView?.snp.remakeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.right.equalToSuperview().inset(17.adjustedWidth)
+        $0.writeButton.snp.updateConstraints {
+            $0.right.equalToSuperview().inset(7.adjustedWidth)
         }
-        $0.imageView?.contentMode = .scaleAspectFit
-        $0.tintColor = .mainColor
-        $0.imageView?.contentMode = .center
     }
     
     var checkListHeader = CheckListButton()
@@ -233,8 +227,7 @@ final class CheckListButton: UIView {
     
     var openButton = UIButton().then {
         $0.backgroundColor = .clear
-        $0.setImage(.DownArrow, for: .normal)
-        $0.imageEdgeInsets = UIEdgeInsets(top: 9.14.adjustedHeight, left: 7.59.adjustedHeight, bottom: 10.38.adjustedHeight, right: 7.89.adjustedHeight)
+        $0.setImage(.PaddedUpArrow.resize(to: CGSize(width: 25, height: 25).resized(basedOn: .height)), for: .normal)
         $0.tintColor = .mainColor
         $0.imageView?.contentMode = .scaleAspectFit
     }

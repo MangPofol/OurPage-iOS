@@ -26,14 +26,14 @@ import Foundation
 
 struct CreatingUser: Codable {
     var email: String = ""
-    var nickname: String = ""
+    var nickname: String? = nil
     var password: String = ""
-    var sex: String = ""
-    var birthdate: String = ""
-    var introduce: String = ""
-    var style: String = ""
-    var goal: String = ""
-    var profileImgLocation: String = ""
+    var sex: String? = nil
+    var birthdate: String? = nil
+    var introduce: String? = nil
+    var style: String? = nil
+    var goal: String? = nil
+    var profileImgLocation: String? = nil
     var genres: [String] = []
     
     func encode(to encoder: Encoder) throws {

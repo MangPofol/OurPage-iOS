@@ -121,7 +121,7 @@ class ProfileMakeViewController: UIViewController {
                             $0.top.equalToSuperview()
                         }
                         self?.customView.nextInformationLabel.snp.updateConstraints {
-                            $0.bottom.equalToSuperview()
+                            $0.bottom.equalToSuperview().inset(height)
                         }
                     }
                 }

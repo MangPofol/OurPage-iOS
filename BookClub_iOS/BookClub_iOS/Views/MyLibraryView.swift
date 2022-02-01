@@ -70,7 +70,8 @@ class MyLibraryView: UIView {
     lazy var searchTextField = UITextField().then {
         $0.isHidden = true
         $0.placeholder = "책 제목을 입력하세요."
-        $0.font = .defaultFont(size: .small)
+        $0.textColor = .mainColor
+        $0.font = .defaultFont(size: 12)
         $0.leftViewMode = .always
         $0.backgroundColor = .white
         $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1, cornerRadius: 8.adjustedHeight)
@@ -200,7 +201,7 @@ class MyLibraryView: UIView {
             $0.top.equalTo(upperView.snp.bottom).offset(14.adjustedHeight)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(typeControl)
-            $0.height.equalTo(25.adjustedHeight)
+            $0.height.equalTo(29.adjustedHeight)
         }
         bookclubSelector.snp.makeConstraints {
             $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)

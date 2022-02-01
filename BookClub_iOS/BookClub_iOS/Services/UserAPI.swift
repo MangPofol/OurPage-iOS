@@ -16,13 +16,15 @@ enum UserAPI {
     case validateDuplicate(email: EmailStruct)
     case getCurrentUserInfo
     case updateUser(user: UpdatingUser, id: String)
+    case validateEmail
+    case validateEmailSendCode(emailCode: String)
 }
 
 extension UserAPI: TargetType, AccessTokenAuthorizable {
     
     var authorizationType: AuthorizationType? {
         switch self {
-        case .getCurrentUserInfo, .updateUser(_):
+        case .getCurrentUserInfo, .updateUser(_, _), .validateEmail, .validateEmailSendCode(_):
             return .bearer
         default:
             return nil
@@ -41,6 +43,10 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
             return "/users/current"
         case .updateUser(_, let id):
             return "/users/\(id)"
+        case .validateEmail:
+            return "/users/validate-email"
+        case .validateEmailSendCode(_):
+            return "/users/validate-email-send-code"
         }
     }
     
@@ -52,6 +58,8 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
             return .get
         case .updateUser(_, _):
             return .put
+        case .validateEmail, .validateEmailSendCode(_):
+            return .post
         }
     }
     
@@ -67,6 +75,10 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
             return .requestPlain
         case .updateUser(let user, _):
             return .requestJSONEncodable(user)
+        case .validateEmail:
+            return .requestPlain
+        case .validateEmailSendCode(let emailCode):
+            return .requestParameters(parameters: ["emailCode": emailCode], encoding: URLEncoding.default)
         }
     }
     

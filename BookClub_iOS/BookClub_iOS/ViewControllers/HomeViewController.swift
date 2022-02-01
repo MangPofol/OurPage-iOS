@@ -9,6 +9,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import RxGesture
 
 class HomeViewController: UIViewController {
 
@@ -36,8 +37,8 @@ class HomeViewController: UIViewController {
         viewModel = HomeViewModel(
             checkListButtonTapped: customView.checkListHeader.openButton.rx.tap,
             myProfileButtonTapped: customView.myProfileButton.rx.tap,
-            goalButtonTapped: customView.goalButton.rx.tap,
-            writeButtonTapped: customView.writeButton.writeButton.rx.tap
+            goalButtonTapped: customView.goalButton.rx.tapGesture().when(.recognized),
+            writeButtonTapped: customView.writeButton.rx.tapGesture().when(.recognized)
         )
         
     // bind outputs {
@@ -48,7 +49,7 @@ class HomeViewController: UIViewController {
             .bind { (owner, user) in
                 owner.customView.userNameLabel.text = "\(user.nickname)님"
                 if user.goal != "" {
-                    owner.customView.goalButton.setTitle(user.goal, for: .normal)
+                    owner.customView.goalButton.titleLabel.text = user.goal
                 }
                 
             }
