@@ -21,7 +21,7 @@ import Foundation
 //        "Romance",
 //        "IT"
 //    ]
-//
+//th
 //}
 
 struct CreatingUser: Codable {
@@ -58,9 +58,9 @@ struct UpdatingUser: Codable {
     var sex: String = ""
     var birthdate: String = ""
     var introduce: String = ""
-    var style: String = ""
-    var goal: String = ""
-    var profileImgLocation: String = ""
+    var style: String? = nil
+    var goal: String? = nil
+    var profileImgLocation: String? = nil
     var genres: [String] = []
     
     func encode(to encoder: Encoder) throws {
@@ -93,13 +93,13 @@ struct LoginUser: Codable {
 struct CreatedUser: Codable {
     var userId: Int = -1
     var email: String = ""
-    var nickname: String = ""
-    var sex: String = ""
-    var birthdate: String = ""
-    var introduce: String = ""
-    var style: String = ""
-    var goal: String = ""
-    var profileImgLocation: String = ""
+    var nickname: String?
+    var sex: String?
+    var birthdate: String?
+    var introduce: String?
+    var style: String?
+    var goal: String?
+    var profileImgLocation: String?
     var genres: [String] = []
     var isDormant: Bool = false
     

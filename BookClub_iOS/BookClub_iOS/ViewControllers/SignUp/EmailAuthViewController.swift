@@ -9,6 +9,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import RxKeyboard
 
 class EmailAuthViewController: UIViewController {
 
@@ -76,6 +77,15 @@ class EmailAuthViewController: UIViewController {
                     self.customView.authAlertLabel.isHidden = false
                 case .success:
                     self.navigationController?.pushViewController(ProfileInformationViewController(), animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        RxKeyboard.instance.visibleHeight
+            .drive { [weak self] height in
+                guard let self = self else { return }
+                self.customView.nextButton.snp.updateConstraints {
+                    $0.bottom.equalToSuperview().inset(Constants.getAdjustedHeight(89.0) + height)
                 }
             }
             .disposed(by: disposeBag)

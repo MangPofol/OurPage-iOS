@@ -19,6 +19,10 @@ class AuthServices: Networkable {
             .rx.request(.createUser(user))
             .asObservable()
             .map {
+                guard let result = try? JSONDecoder().decode(CreatingResult.self, from: $0.data) else {
+                    return false
+                }
+                SignUpViewModel.createdUserId = String(result.data.userId)
                 return $0.statusCode == 201
             }
     }
@@ -43,4 +47,8 @@ class AuthServices: Networkable {
 
 struct LoginResult: Codable {
     var token: String
+}
+
+struct CreatingResult: Codable {
+    var data: CreatedUser
 }

@@ -27,14 +27,12 @@ class GoalViewModel {
         isNextConfirmed = nextButtonTapped.withLatestFrom(goalSentence)
                 .do(onNext: {
                     SignUpViewModel.creatingUser.goal = $0
-//                    let original = SignUpViewModel.creatingUser.password.data(using: .utf8)!
-//                    let sha256 = SHA256.hash(data: original)
-//                    SignUpViewModel.creatingUser.password = sha256.compactMap {
-//                        String(format: "%02x", $0)
-//                    }.joined()
                 })
-                .flatMap { _ in
-                    AuthServices.createUser(user: SignUpViewModel.creatingUser)
+                .flatMap { _ -> Observable<Bool> in
+                    let user = SignUpViewModel.creatingUser
+                    let updatingUser = UpdatingUser(email: user.email, nickname: user.nickname!, sex: user.sex!, birthdate: user.birthdate!, introduce: user.introduce!, style: user.style, goal: user.goal, profileImgLocation: user.profileImgLocation, genres: user.genres)
+                    
+                    return UserServices.updateUser(user: updatingUser, id: SignUpViewModel.createdUserId)
                 }
     }
 }

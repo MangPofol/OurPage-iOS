@@ -12,6 +12,7 @@ import RxCocoa
 class SignUpViewModel {
     
     static var creatingUser = CreatingUser()
+    static var createdUserId = ""
     
     var inputsConfirmed = Observable<Bool>.just(false)
     var idConfirmed: Observable<Bool>

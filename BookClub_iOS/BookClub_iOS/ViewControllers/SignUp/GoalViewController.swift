@@ -66,6 +66,7 @@ class GoalViewController: UIViewController {
         
         // bind results {
         self.viewModel.isNextConfirmed
+            .observe(on: MainScheduler.instance)
             .bind { [weak self] in
                 if $0 {
                     self?.dismiss(animated: true, completion: nil)
