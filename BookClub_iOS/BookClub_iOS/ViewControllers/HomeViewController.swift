@@ -47,7 +47,7 @@ class HomeViewController: UIViewController {
             .compactMap { $0 }
             .withUnretained(self)
             .bind { (owner, user) in
-                owner.customView.userNameLabel.text = "\(user.nickname)님"
+                owner.customView.userNameLabel.text = "\(user.nickname!)님"
                 if user.goal != "" {
                     owner.customView.goalButton.titleLabel.text = user.goal
                 }

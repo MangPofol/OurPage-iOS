@@ -15,6 +15,8 @@ class LoginViewModel {
     
     init(idText: Observable<String>, passwordText: Observable<String>, loginButtonTapped: ControlEvent<()>) {
         let idAndPassword = Observable.combineLatest(idText, passwordText)
+        
+        
         isLoginConfirmed = loginButtonTapped.withLatestFrom(idAndPassword)
             .do { _ in LoadingHUD.show() }
             .flatMap {
