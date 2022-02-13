@@ -10,13 +10,13 @@ import UIKit
 final class MyProfileView: UIView {
     
     var profileImageView = UIImageView().then {
-        $0.setCornerRadius(radius: 30.adjustedHeight)
+        $0.setCornerRadius(radius: 44.adjustedHeight)
         $0.contentMode = .scaleAspectFill
         $0.image = .DefaultProfileImage
     }
     
     var profileImageSettingButton = UIView().then {
-        let imageView = UIImageView(image: .SettingIconWithBackground.resize(to: CGSize(width: 15.adjustedHeight, height: 15.adjustedHeight), isAlwaysTemplate: false))
+        let imageView = UIImageView(image: .SettingIconWithBackground.resize(to: CGSize(width: 22.adjustedHeight, height: 22.adjustedHeight), isAlwaysTemplate: false))
         $0.backgroundColor = .clear
         $0.addSubview(imageView)
         imageView.snp.makeConstraints {
@@ -31,17 +31,24 @@ final class MyProfileView: UIView {
     }
     
     var idLabel = UILabel().then {
-        $0.font = .defaultFont(size: 12, boldLevel: .regular)
+        $0.font = .defaultFont(size: 13, boldLevel: .regular)
         $0.text = "myidisawsome"
         $0.textColor = .mainColor
     }
     
+    var recordIconImageView = UIImageView()
+    var recordTextField = UITextField()
+    
+    var readBookIconImageView = UIImageView()
+    var readBookTextField = UITextField()
+    
+    
     var introduceLabel = UILabel().then {
         $0.font = .defaultFont(size: 12, boldLevel: .semiBold)
         $0.text = "저는 책을 좋아하는 사람입니다."
-        $0.textColor = .mainColor
+        $0.textColor = .white
         
-        $0.backgroundColor = UIColor(hexString: "EFF0F3")
+        $0.backgroundColor = .clear
         $0.textAlignment = .center
         
         $0.setCornerRadius(radius: 10.adjustedHeight)
@@ -86,15 +93,14 @@ final class MyProfileView: UIView {
         
         genreTitleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(10.adjustedHeight)
-            $0.left.equalToSuperview().inset(20.adjustedWidth)
+            $0.left.equalToSuperview().inset(15.adjustedHeight)
         }
         
         genreCollectionView.snp.makeConstraints {
-            $0.top.equalTo(genreTitleLabel.snp.bottom).offset(10.adjustedHeight)
-            $0.left.equalToSuperview().inset(20.adjustedWidth)
+            $0.top.equalTo(genreTitleLabel.snp.bottom).offset(5.adjustedHeight)
+            $0.left.equalToSuperview().inset(15.adjustedHeight)
             $0.width.equalTo(239.adjustedWidth)
-            $0.height.equalTo(22.adjustedHeight)
-            $0.bottom.equalToSuperview().inset(10.adjustedHeight)
+            $0.height.equalTo(25.adjustedHeight)
         }
         
         tasteSettingButton.snp.makeConstraints {
@@ -113,16 +119,7 @@ final class MyProfileView: UIView {
         $0.setCornerRadius(radius: 10.adjustedHeight)
     }
     
-    lazy var tasteStackView = UIStackView(arrangedSubviews: [tasteTitleLabel, genreContainerView, readingStyleButton]).then {
-        $0.axis = .vertical
-        $0.spacing = 10.adjustedHeight
-        
-        $0.backgroundColor = UIColor(hexString: "EFF0F3")
-        $0.setCornerRadius(radius: 10.adjustedHeight)
-        
-        $0.layoutMargins = UIEdgeInsets(top: 14.adjustedHeight, left: 22.adjustedWidth, bottom: 14.adjustedHeight, right: 22.adjustedWidth)
-        $0.isLayoutMarginsRelativeArrangement = true
-    }
+    lazy var tasteStackView = UIView()
 // }
     
 // {
@@ -160,6 +157,15 @@ final class MyProfileView: UIView {
         $0.isLayoutMarginsRelativeArrangement = true
     }
 // }
+    
+    var dotLineView = UIImageView(image: UIImage(named: "DotLine")).then {
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    var logoImageView = UIImageView(image: UIImage(named: "MainLogo"))
+    
+    var introduceBackgroundImageView = UIImageView(image: UIImage(named: "IntroduceBackground"))
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -167,9 +173,20 @@ final class MyProfileView: UIView {
         
         self.addSubview(profileImageView)
         self.addSubview(profileImageSettingButton)
+        self.addSubview(dotLineView)
+        
         self.addSubview(nicknameLabel)
         self.addSubview(idLabel)
+        
+        self.addSubview(recordIconImageView)
+        self.addSubview(recordTextField)
+        self.addSubview(readBookIconImageView)
+        self.addSubview(readBookTextField)
+        
+        self.addSubview(introduceBackgroundImageView)
         self.addSubview(introduceLabel)
+        self.addSubview(logoImageView)
+        
         self.addSubview(tasteStackView)
         self.addSubview(routineStackView)
         
@@ -179,31 +196,113 @@ final class MyProfileView: UIView {
     private func makeView() {
         profileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(58.adjustedHeight)
-            $0.centerX.equalToSuperview()
-            $0.width.height.equalTo(60.adjustedHeight)
+            $0.left.equalToSuperview().inset(41.adjustedHeight)
+            $0.width.height.equalTo(88.adjustedHeight)
         }
         profileImageSettingButton.snp.makeConstraints {
             $0.right.bottom.equalTo(profileImageView)
-            $0.width.height.equalTo(25.adjustedHeight)
+            $0.width.height.equalTo(22.adjustedHeight)
         }
+        dotLineView.snp.makeConstraints {
+            $0.top.bottom.equalTo(profileImageView)
+            $0.left.equalTo(profileImageView.snp.right).offset(26.adjustedHeight)
+        }
+        
         nicknameLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(profileImageView.snp.bottom).offset(7.adjustedHeight)
+            $0.left.equalTo(dotLineView.snp.right).offset(23.adjustedHeight)
+            $0.top.equalTo(dotLineView)
         }
         idLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.left.equalTo(nicknameLabel)
             $0.top.equalTo(nicknameLabel.snp.bottom)
         }
+        
+        recordIconImageView.then {
+            $0.image = UIImage(named: "WriteViewIcon")?.withRenderingMode(.alwaysTemplate)
+            $0.tintColor = UIColor(hexString: "7B8099")
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.bottom.equalTo(readBookIconImageView.snp.top).offset(-7.5.adjustedHeight)
+            $0.left.equalTo(idLabel)
+            $0.width.height.equalTo(10.4.adjustedHeight)
+        }
+        
+        recordTextField.then {
+            $0.font = .defaultFont(size: 12, boldLevel: .regular)
+            $0.textColor = UIColor(hexString: "7B8099")
+            $0.text = "총 기록 838 pages"
+        }.snp.makeConstraints {
+            $0.centerY.equalTo(recordIconImageView)
+            $0.left.equalTo(recordIconImageView.snp.right).offset(7.6)
+        }
+        
+        readBookIconImageView.then {
+            $0.image = UIImage(named: "MyLibraryIcon")?.withRenderingMode(.alwaysTemplate)
+            $0.tintColor = UIColor(hexString: "7B8099")
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.bottom.equalTo(dotLineView)
+            $0.left.equalTo(idLabel)
+            $0.width.height.equalTo(10.4.adjustedHeight)
+        }
+        
+        readBookTextField.then {
+            $0.font = .defaultFont(size: 12, boldLevel: .regular)
+            $0.textColor = UIColor(hexString: "7B8099")
+            $0.text = "읽은 책 26 books"
+        }.snp.makeConstraints {
+            $0.centerY.equalTo(readBookIconImageView)
+            $0.left.equalTo(readBookIconImageView.snp.right).offset(7.6)
+        }
+        
+        logoImageView.then {
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.right.equalTo(tasteStackView).inset(8.45)
+            $0.width.equalTo(62.45.adjustedHeight)
+            $0.height.equalTo(23.83.adjustedHeight)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(65.9.adjustedHeight)
+        }
+        introduceBackgroundImageView.then {
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.edges.equalTo(introduceLabel)
+        }
+        
         introduceLabel.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20.adjustedWidth)
-            $0.top.equalTo(idLabel.snp.bottom).offset(38.adjustedHeight)
+            $0.left.equalToSuperview().inset(20.adjustedWidth)
+            $0.right.equalTo(logoImageView.snp.left)
+            $0.centerY.equalTo(logoImageView)
             $0.height.equalTo(32.adjustedHeight)
         }
-        tasteStackView.snp.makeConstraints {
+        
+        tasteStackView.then {
+            $0.addSubview(tasteTitleLabel)
+            $0.addSubview(genreContainerView)
+            $0.addSubview(readingStyleButton)
+            
+            $0.backgroundColor = UIColor(hexString: "EFF0F3")
+            $0.setCornerRadius(radius: 10.adjustedHeight)
+        }.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(20.adjustedWidth)
             $0.top.equalTo(introduceLabel.snp.bottom).offset(15.adjustedHeight)
             $0.height.equalTo(168.adjustedHeight)
         }
+        tasteTitleLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(20.0.adjustedHeight)
+            $0.top.equalToSuperview().inset(14.0.adjustedHeight)
+        }
+        genreContainerView.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
+            $0.top.equalTo(tasteTitleLabel.snp.bottom).offset(10.0.adjustedHeight)
+            $0.height.equalTo(68.0)
+        }
+        readingStyleButton.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
+            $0.top.equalTo(genreContainerView.snp.bottom).offset(10.0.adjustedHeight)
+            $0.height.equalTo(29.0.adjustedHeight)
+        }
+        
         routineStackView.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(20.adjustedWidth)
             $0.top.equalTo(tasteStackView.snp.bottom).offset(15.adjustedHeight)
@@ -233,7 +332,7 @@ class MyGenreCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .mainColor
         self.contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(5)
+            $0.top.bottom.equalToSuperview()
             $0.left.right.equalToSuperview().inset(15)
         }
     }
@@ -245,7 +344,7 @@ class MyGenreCollectionViewCell: UICollectionViewCell {
         let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
 
         var frame = layoutAttributes.frame
-        frame.size.height = 22.0.adjustedHeight
+        frame.size.height = 25.0.adjustedHeight
         frame.size.width = ceil(size.width)
 
         layoutAttributes.frame = frame

@@ -15,7 +15,7 @@ class MyProfileViewController: UIViewController {
 
     let customView = MyProfileView()
     
-    var myGenres = BehaviorSubject<[String]>(value: [])
+    private var viewModel: MyProfileViewModel!
     
     var disposeBag = DisposeBag()
     
@@ -27,28 +27,44 @@ class MyProfileViewController: UIViewController {
         self.navigationController?.navigationBar.setBarShadow()
         self.removeBackButtonTitle()
         self.title = "내 정보"
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.viewModel = MyProfileViewModel()
         
         let collectionLayout = UICollectionViewFlowLayout()
-        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        collectionLayout.minimumInteritemSpacing = 7
-        collectionLayout.minimumLineSpacing = 10
+        collectionLayout.estimatedItemSize = CGSize(width: 60.adjustedHeight, height: 25.adjustedHeight)
+        collectionLayout.minimumInteritemSpacing = 3.adjustedHeight
+        collectionLayout.minimumLineSpacing = 3.adjustedHeight
         collectionLayout.scrollDirection = .horizontal
+        collectionLayout.sectionInset = .zero
         
         customView.genreCollectionView.setCollectionViewLayout(collectionLayout, animated: false)
         
-        myGenres
-            .bind(to: customView.genreCollectionView.rx.items) { (collectionView: UICollectionView, row: Int, element: String) -> UICollectionViewCell in
+        self.viewModel.myGenre
+            .drive(customView.genreCollectionView.rx.items) { (collectionView: UICollectionView, row: Int, element: String) -> UICollectionViewCell in
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyGenreCollectionViewCell.identifier, for: IndexPath(row: row, section: 0)) as! MyGenreCollectionViewCell
                 cell.configure(name: element)
                 
                 return cell
             }
             .disposed(by: disposeBag)
-    
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        
+        self.viewModel.bookCount
+            .drive { [weak self] in
+                guard let self = self else { return }
+                self.customView.readBookTextField.text  = "읽은 책 \($0) books"
+            }
+            .disposed(by: disposeBag)
+        
+        self.viewModel.recordCount
+            .drive { [weak self] in
+                guard let self = self else { return }
+                self.customView.recordTextField.text = "총 기록 \($0) pages"
+            }
+            .disposed(by: disposeBag)
         
         Constants.CurrentUser
             .compactMap { $0 }
@@ -60,7 +76,6 @@ class MyProfileViewController: UIViewController {
                 owner.customView.profileImageView.kf.setImage(
                     with: URL(string: user.profileImgLocation ?? ""),
                     placeholder: UIImage.DefaultProfileImage)
-                owner.myGenres.onNext(user.genres)
             }
             .disposed(by: disposeBag)
         
