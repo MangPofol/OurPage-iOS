@@ -71,11 +71,13 @@ final class HomeView: UIView {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.setCornerRadius(radius: 8.adjustedHeight)
         
-        $0.writeButton.setImage(.PaddedRightArrow.resize(to: CGSize(width: 25, height: 25).resized(basedOn: .height)), for: .normal)
+        $0.writeButton.image = UIImage(named: "RightArrow")?.withRenderingMode(.alwaysTemplate)
         $0.writeButton.tintColor = .mainColor
         
         $0.writeButton.snp.updateConstraints {
-            $0.right.equalToSuperview().inset(7.adjustedWidth)
+            $0.right.equalToSuperview().inset(16.5.adjustedHeight)
+            $0.width.equalTo(5.48.adjustedHeight)
+            $0.height.equalTo(9.51.adjustedHeight)
         }
     }
     
@@ -179,9 +181,10 @@ final class WriteRecordButton: UIView {
         $0.textColor = .white
     }
     
-    var writeButton = UIButton().then {
-        $0.setImage(.WriteIcon.resize(to: CGSize(width: 12.53.adjustedWidth, height: 12.41.adjustedHeight)), for: .normal)
+    var writeButton = UIImageView().then {
+        $0.image = .WriteIcon
         $0.tintColor = .white
+        $0.contentMode = .scaleAspectFit
     }
     
     override init(frame: CGRect) {
@@ -193,12 +196,14 @@ final class WriteRecordButton: UIView {
         self.addSubview(writeButton)
         
         titleLabel.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(14.adjustedWidth)
+            $0.left.equalToSuperview().inset(14.adjustedHeight)
             $0.centerY.equalToSuperview()
         }
         writeButton.snp.makeConstraints {
-            $0.right.equalToSuperview().inset(14.46.adjustedWidth)
-            $0.top.bottom.equalToSuperview()
+            $0.right.equalToSuperview().inset(14.46.adjustedHeight)
+            $0.centerY.equalToSuperview()
+            $0.width.equalTo(12.53.adjustedHeight)
+            $0.height.equalTo(12.53.adjustedHeight)
         }
     }
     
