@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import SideMenu
 import ZLPhotoBrowser
+import FFPopup
 
 class WriteViewController: UIViewController {
     let disposeBag = DisposeBag()
@@ -118,6 +119,12 @@ class WriteViewController: UIViewController {
             .filter { $0 == true }
             .bind { [weak self] _ in
                 guard let self = self else { return }
+                
+                if self.viewModel.uploadedImagesURLs.value.count >= 4 {
+                    self.showImageLimitAlert()
+                    return
+                }
+                
                 let cameraConfig = ZLPhotoConfiguration.default().cameraConfiguration
                 ZLPhotoConfiguration.default().allowRecordVideo = false
                 ZLPhotoConfiguration.default().allowSelectGif = false
@@ -170,6 +177,20 @@ class WriteViewController: UIViewController {
                     self?.customView.contentTextView.textColor = .grayB0
                             
                         }}).disposed(by: disposeBag)
+    }
+    
+    private func showImageLimitAlert() {
+        let view = AlertView(title: "알림", content: "이미지는 최대 4장까지 첨부할 수 있습니다", action: "확인")
+        let layout = FFPopupLayout(horizontal: .center, vertical: .center)
+        let popup = FFPopup(contentView: view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        
+        view.actionButton.rx.tap
+            .bind { _ in
+                popup.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        popup.show(layout: layout)
     }
 }
 

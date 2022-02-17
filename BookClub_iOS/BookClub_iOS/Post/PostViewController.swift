@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxGesture
 import SafariServices
+import FFPopup
 
 class PostViewController: UIViewController {
 
@@ -21,6 +22,8 @@ class PostViewController: UIViewController {
     
     private var post_: PostModel?
     private var book_: BookModel?
+    
+    private var popup: FFPopup!
     
     convenience init(post_: PostModel?, book_: BookModel?) {
         self.init()
@@ -44,19 +47,20 @@ class PostViewController: UIViewController {
         customView.imageCollectionView.setCollectionViewLayout(flowLayout, animated: false)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        print("@@@@@", customView.linkView.frame)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewModel = PostViewModel(
             post_: post_,
             book_: book_,
-            linkTapped: customView.linkView.rx.tapGesture().when(.recognized) // TODO: LinkView tap 작동안됨
+            linkTapped: customView.linkView.rx.tapGesture().when(.recognized)
         )
+        
+        customView.deleteButton.rx.tap
+            .bind { [weak self] in
+                self?.showDeleteAlert()
+            }
+            .disposed(by: disposeBag)
         
         viewModel.post
             .compactMap { $0 }
@@ -113,6 +117,16 @@ class PostViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        viewModel.isPostDeleted
+            .bind { [weak self] in
+                if $0 {
+                    LoadingHUD.hide()
+                    self?.popup.dismiss(animated: true)
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
+        
         customView.imageCollectionView
             .rx.itemSelected
             .bind { [weak self] in
@@ -132,4 +146,24 @@ class PostViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    private func showDeleteAlert() {
+        let view = DeleteAlertView(title: "메모를 삭제하시겠습니까?", content: "메모는 추후 복구가 불가능합니다.", action: "삭제")
+        let layout = FFPopupLayout(horizontal: .center, vertical: .center)
+        popup = FFPopup(contentView: view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        
+        view.actionButton.rx.tap
+            .bind { [weak self] _ in
+                LoadingHUD.show()
+                self?.viewModel.deletePost.accept(true)
+            }
+            .disposed(by: disposeBag)
+        
+        view.cancelButton.rx.tap
+            .bind { [weak self] _ in
+                self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        popup.show(layout: layout)
+    }
 }

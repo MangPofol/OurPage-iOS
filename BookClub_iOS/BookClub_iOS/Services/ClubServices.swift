@@ -8,7 +8,6 @@
 import Foundation
 
 import Moya
-import RxMoya
 import RxSwift
 
 class ClubServices: Networkable {

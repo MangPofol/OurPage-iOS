@@ -627,7 +627,7 @@ enum PaddingDirectionType {
 extension DateFormatter {
     static let serverFormat: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
         formatter.calendar = Calendar(identifier: .iso8601)
         formatter.locale = Locale(identifier: "ko_kr")
         return formatter

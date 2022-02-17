@@ -8,7 +8,6 @@
 import Foundation
 import RxSwift
 import Moya
-import RxMoya
 
 class SearchServices {
     static let provider = MoyaProvider<SearchAPI>()

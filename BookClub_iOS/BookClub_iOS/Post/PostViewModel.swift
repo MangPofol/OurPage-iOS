@@ -15,11 +15,18 @@ class PostViewModel {
     var post = BehaviorSubject<PostModel?>(value: nil)
     var book = BehaviorSubject<BookModel?>(value: nil)
     var urlToOpen = PublishRelay<URL?>()
+    var isPostDeleted = PublishRelay<Bool>()
     
     var disposeBag = DisposeBag()
+
+    var deletePost = PublishRelay<Bool>()
     
-    init(post_: PostModel?, book_: BookModel?, linkTapped: Observable<UITapGestureRecognizer>) {
+    init(post_: PostModel?, book_: BookModel?,
+         linkTapped: Observable<UITapGestureRecognizer>) {
         guard let post = post_, let book = book_ else { return }
+        
+        self.book.onNext(book)
+        self.post.onNext(post)
         
         linkTapped
             .debug()
@@ -35,7 +42,12 @@ class PostViewModel {
             .bind(to: self.urlToOpen)
             .disposed(by: disposeBag)
         
-        self.book.onNext(book)
-        self.post.onNext(post)
+        deletePost
+            .delay(.seconds(2), scheduler: MainScheduler.instance)
+            .flatMap { _ in
+                PostServices.deletePost(postId: post_!.postId)
+            }
+            .bind(to: self.isPostDeleted)
+            .disposed(by: disposeBag)
     }
 }

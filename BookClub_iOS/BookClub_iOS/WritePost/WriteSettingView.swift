@@ -132,6 +132,7 @@ final class WriteSettingView: UIView {
 
         $0.layoutMargins = UIEdgeInsets(top: 10.adjustedHeight, left: 16.adjustedHeight, bottom: 13.adjustedHeight, right: 17.adjustedHeight)
         $0.isLayoutMarginsRelativeArrangement = true
+        $0.isHidden = true
     }
     
     private lazy var contentsStackView = UIStackView(arrangedSubviews: [placeStackView, timeStackView, linkStackView]).then {

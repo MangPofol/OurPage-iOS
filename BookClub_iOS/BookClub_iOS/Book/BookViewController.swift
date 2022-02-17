@@ -27,6 +27,11 @@ class BookViewController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: 18, boldLevel: .extraBold)]
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.viewModel.refreshPosts()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -49,6 +54,7 @@ class BookViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.posts
+            .debug()
             .bind(to: customView.memoTableView.rx.items(cellIdentifier: MemoTableViewCell.identifier, cellType: MemoTableViewCell.self)) { (row, element, cell) in
                 cell.post = BehaviorSubject<PostModel?>(value: element)
                 cell.bindOutputs()

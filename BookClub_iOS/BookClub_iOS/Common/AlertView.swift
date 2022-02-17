@@ -1,5 +1,5 @@
 //
-//  DeleteAlertView.swift
+//  AlertView.swift
 //  BookClub_iOS
 //
 //  Created by Lee Nam Jun on 2022/02/17.
@@ -7,13 +7,12 @@
 
 import UIKit
 
-final class DeleteAlertView: UIView {
+final class AlertView: UIView {
     var titleLabel = UILabel()
     var contentLabel = UILabel()
     
     private var lineView = UIView()
     
-    var cancelButton = CMButton()
     var actionButton = CMButton()
     
     convenience init(title: String, content: String, action: String, frame: CGRect = .zero) {
@@ -22,7 +21,6 @@ final class DeleteAlertView: UIView {
         self.addSubview(titleLabel)
         self.addSubview(contentLabel)
         self.addSubview(lineView)
-        self.addSubview(cancelButton)
         self.addSubview(actionButton)
         
         self.backgroundColor = .white
@@ -58,31 +56,18 @@ final class DeleteAlertView: UIView {
         }.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.left.right.equalToSuperview().inset(14.adjustedHeight)
-            $0.bottom.equalTo(cancelButton.snp.top)
-        }
-        
-        self.cancelButton.then {
-            $0.defaultBackgroundColor = .white
-            $0.setTitle("취소", for: .normal)
-            $0.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
-            $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .regular)
-        }.snp.makeConstraints {
-            $0.width.equalTo(121.adjustedHeight)
-            $0.height.equalTo(34.adjustedHeight)
-            $0.bottom.equalToSuperview()
-            $0.left.equalToSuperview().inset(14.adjustedHeight)
+            $0.bottom.equalTo(actionButton.snp.top)
         }
         
         self.actionButton.then {
             $0.defaultBackgroundColor = .white
             $0.setTitle(action, for: .normal)
-            $0.setTitleColor(.mainPink, for: .normal)
+            $0.setTitleColor(UIColor(hexString: "C3C5D1"), for: .normal)
             $0.titleLabel?.font = .defaultFont(size: 14, boldLevel: .regular)
         }.snp.makeConstraints {
-            $0.width.equalTo(121.adjustedHeight)
             $0.height.equalTo(34.adjustedHeight)
             $0.bottom.equalToSuperview()
-            $0.right.equalToSuperview().inset(14.adjustedHeight)
+            $0.left.right.equalToSuperview().inset(14.adjustedHeight)
         }
     }
 }

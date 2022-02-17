@@ -12,7 +12,7 @@ enum PostAPI {
     case getPostsByBookId(_ bookId: Int)
     case createPost(_ post: PostToCreate)
     case updatePost(_ post: PostModel)
-    case deletePost(_ bookId: Int)
+    case deletePost(_ postId: Int)
     case doLikePost(_ bookId: Int)
     case undoLikePost(_ bookId: Int)
     case getTotalCount
@@ -35,8 +35,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return ""
         case .updatePost(let post):
             return "/\(post.postId)"
-        case .deletePost(let bookId):
-            return "/\(bookId)"
+        case .deletePost(let postId):
+            return "/\(postId)"
         case .doLikePost(let bookId):
             return "/\(bookId)"
         case .undoLikePost(let bookId):

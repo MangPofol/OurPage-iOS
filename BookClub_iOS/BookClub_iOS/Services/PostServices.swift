@@ -7,7 +7,6 @@
 
 import Foundation
 import Moya
-import RxMoya
 import RxSwift
 
 class PostServices: Networkable {
@@ -31,7 +30,12 @@ class PostServices: Networkable {
                 if $0.statusCode == 200 {
                     do {
                         let decoder = JSONDecoder()
-                        decoder.dateDecodingStrategy = .formatted(.serverFormat)
+                        let dateFormat = DateFormatter().then {
+                            $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                            $0.calendar = Calendar(identifier: .iso8601)
+                            $0.locale = Locale(identifier: "ko_kr")
+                        }
+                        decoder.dateDecodingStrategy = .formatted(dateFormat)
                         let data = try decoder.decode(PostsResponse.self, from: $0.data)
                         return data.data
                     } catch {
@@ -90,8 +94,13 @@ class PostServices: Networkable {
         
     }
     
-    static func deletePost(bookId: Int) {
-        
+    static func deletePost(postId: Int) -> Observable<Bool> {
+        PostServices.provider
+            .rx.request(.deletePost(postId))
+            .asObservable()
+            .map {
+                return $0.statusCode == 204
+            }
     }
     
     static func doLikePost(bookId: Int) {
