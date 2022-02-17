@@ -35,8 +35,8 @@ struct PostModel: Codable {
     var isIncomplete: Bool
     var title: String
     var content: String
-    var createdDate: String
-    var modifiedDate: String
+    var createdDate: Date
+    var modifiedDate: Date
     var location: String
     var readTime: String
     var hyperlinkTitle: String

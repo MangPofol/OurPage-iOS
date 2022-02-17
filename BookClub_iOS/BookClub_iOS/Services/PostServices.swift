@@ -30,7 +30,9 @@ class PostServices: Networkable {
             .map {
                 if $0.statusCode == 200 {
                     do {
-                        let data = try JSONDecoder().decode(PostsResponse.self, from: $0.data)
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(.serverFormat)
+                        let data = try decoder.decode(PostsResponse.self, from: $0.data)
                         return data.data
                     } catch {
                         print(#fileID, #function, #line, error)
@@ -54,7 +56,9 @@ class PostServices: Networkable {
             .map {
                 if $0.statusCode == 201 {
                     do {
-                        let data = try JSONDecoder().decode(PostModel.self, from: $0.data)
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(.serverFormat)
+                        let data = try decoder.decode(PostModel.self, from: $0.data)
                         return data
                     } catch {
                         print(error)

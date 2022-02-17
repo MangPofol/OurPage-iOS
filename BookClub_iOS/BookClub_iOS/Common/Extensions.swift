@@ -59,9 +59,9 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    func toString() -> String {
+    func toString(with format: String = "yyyy.MM.dd") -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
+        formatter.dateFormat = format
         return formatter.string(from: self)
     }
     
@@ -622,4 +622,14 @@ enum PaddingDirectionType {
     case Right
     case Up
     case Down
+}
+
+extension DateFormatter {
+    static let serverFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.locale = Locale(identifier: "ko_kr")
+        return formatter
+    }()
 }

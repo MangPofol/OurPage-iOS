@@ -8,6 +8,8 @@
 import UIKit
 
 import RxSwift
+import RxGesture
+import SafariServices
 
 class PostViewController: UIViewController {
 
@@ -17,25 +19,44 @@ class PostViewController: UIViewController {
     
     var disposeBag = DisposeBag()
     
+    private var post_: PostModel?
+    private var book_: BookModel?
+    
     convenience init(post_: PostModel?, book_: BookModel?) {
         self.init()
-        viewModel = PostViewModel(post_: post_, book_: book_)
+        self.post_ = post_
+        self.book_ = book_
     }
     
     override func loadView() {
-        self.view = customView
+        self.view = UIView()
+        self.view.addSubview(customView)
+        customView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        customView.makeView()
         self.navigationController?.navigationBar.removeBarShadow()
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = .zero
-        flowLayout.minimumInteritemSpacing = 1.5
-        flowLayout.minimumLineSpacing = 1.5
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.itemSize = CGSize(width: 335.adjustedHeight, height: 335.adjustedHeight)
         customView.imageCollectionView.setCollectionViewLayout(flowLayout, animated: false)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("@@@@@", customView.linkView.frame)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        viewModel = PostViewModel(
+            post_: post_,
+            book_: book_,
+            linkTapped: customView.linkView.rx.tapGesture().when(.recognized) // TODO: LinkView tap 작동안됨
+        )
         
         viewModel.post
             .compactMap { $0 }
@@ -43,6 +64,12 @@ class PostViewController: UIViewController {
             .bind { (owner, post) in
                 owner.customView.postTitleLabel.text = post.title
                 owner.customView.postContentTextView.text = post.content
+                owner.customView.dateLabel.text = post.modifiedDate.toString(with: "yyyy/MM/dd HH:mm")
+                owner.customView.placeView.label.text = post.location
+                owner.customView.timeView.label.text = post.readTime
+                let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue]
+                let underlineAttributedString = NSAttributedString(string: post.hyperlinkTitle, attributes: underlineAttribute)
+                owner.customView.linkView.label.attributedText = underlineAttributedString
             }
             .disposed(by: disposeBag)
         
@@ -51,6 +78,7 @@ class PostViewController: UIViewController {
                 $0?.postImgLocations
             }
             .do { [weak self] in
+                self?.customView.imagePageControl.numberOfPages = $0.count
                 if $0.count == 0 {
                     self?.customView.imageCollectionView.snp.updateConstraints {
                         $0.height.equalTo(0.adjustedHeight)
@@ -75,6 +103,15 @@ class PostViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        viewModel.urlToOpen
+            .debug()
+            .compactMap { $0 }
+            .bind { [weak self] in
+                guard let self = self else { return }
+                let safariView = SFSafariViewController(url: $0)
+                self.present(safariView, animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
         
         customView.imageCollectionView
             .rx.itemSelected
@@ -85,21 +122,14 @@ class PostViewController: UIViewController {
                 self.present(vc, animated: true, completion: nil)
             }
             .disposed(by: disposeBag)
-            
         
-        customView.imageCollectionView.rx.setDelegate(self).disposed(by: disposeBag)
+        customView.imageCollectionView.rx.willEndDragging
+            .bind { [weak self] in
+                guard let self = self else { return }
+                let page = Int($0.1.pointee.x / 335.adjustedHeight)
+                self.customView.imagePageControl.currentPage = page
+            }
+            .disposed(by: disposeBag)
     }
     
-}
-
-extension PostViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        print(#fileID, #function, #line, "")
-        let width = 335.adjustedWidth
-        if indexPath.item == 0 {
-            return CGSize(width: width, height: width * (2 / 3))
-        } else {
-            return CGSize(width: (width / 3) - 1.5, height: (width / 3) - 1.5)
-        }
-    }
 }

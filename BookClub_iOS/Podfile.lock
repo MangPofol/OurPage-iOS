@@ -1,0 +1,90 @@
+PODS:
+  - Alamofire (5.5.0)
+  - BetterSegmentedControl (2.0.1)
+  - CryptoSwift (1.4.3)
+  - FFPopup (1.1.5)
+  - Gifu (3.3.1)
+  - Kingfisher (7.1.2)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
+  - Pageboy (3.6.2)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxGesture (4.0.3):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxKeyboard (2.0.0):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
+  - SideMenu (6.5.0)
+  - SnapKit (5.0.1)
+  - Then (2.7.0)
+  - ZLPhotoBrowser (4.2.2):
+    - ZLPhotoBrowser/Core (= 4.2.2)
+  - ZLPhotoBrowser/Core (4.2.2)
+
+DEPENDENCIES:
+  - BetterSegmentedControl
+  - CryptoSwift
+  - FFPopup
+  - Gifu
+  - Kingfisher
+  - Moya
+  - Pageboy
+  - RxCocoa
+  - RxGesture
+  - RxKeyboard
+  - RxSwift
+  - SideMenu
+  - SnapKit
+  - Then
+  - ZLPhotoBrowser
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - BetterSegmentedControl
+    - CryptoSwift
+    - FFPopup
+    - Gifu
+    - Kingfisher
+    - Moya
+    - Pageboy
+    - RxCocoa
+    - RxGesture
+    - RxKeyboard
+    - RxRelay
+    - RxSwift
+    - SideMenu
+    - SnapKit
+    - Then
+    - ZLPhotoBrowser
+
+SPEC CHECKSUMS:
+  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
+  BetterSegmentedControl: 09607b27861d49cbce48b7673b74f9150a3d371a
+  CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
+  FFPopup: a208dcee8db3e54ec4a88fcd6481f6f5d85b7a83
+  Gifu: 416d4e38c4c2fed012f019e0a1d3ffcb58e5b842
+  Kingfisher: 44ed6a8504763f27bab46163adfac83f5deb240c
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  Pageboy: cf121b9dd48c63f3f281b2a9ec93d02e0f23879b
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxGesture: abadd243fc36db74df43dfc893829ddde94f1a3d
+  RxKeyboard: 4f5863f43b4ff0cbb2a20b94688d6b80c8a43c14
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Then: acfe0be7e98221c6204e12f8161459606d5d822d
+  ZLPhotoBrowser: a7aa41a674e67a86c1728a3d9d73a471d5650a82
+
+PODFILE CHECKSUM: a197e3b38685e8c737114890ecefb4477ff9baaa
+
+COCOAPODS: 1.11.2

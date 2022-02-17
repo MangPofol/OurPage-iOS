@@ -8,20 +8,40 @@
 import UIKit
 
 final class PostView: UIView {
-    var bookTitleLabel = UILabel().then {
+    var bookTitleLabel = PaddedLabel(padding: UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)).then {
         $0.font = .defaultFont(size: 14, boldLevel: .bold)
-        $0.textColor = .mainColor
+        $0.textColor = .white
+        $0.backgroundColor = .mainColor
+        $0.setCornerRadius(radius: 10.adjustedHeight)
     }
     
-    private var titleUnderLineView = UIView().then {
-        $0.backgroundColor = .mainColor
+    var dateLabel = UILabel().then {
+        $0.font = .defaultFont(size: 12, boldLevel: .light)
+        $0.textColor = .mainColor
+        $0.text = "2022/02/15 12:13"
+    }
+    
+    var modifyButton = UIButton().then {
+        $0.makeBorder(color: UIColor.mainColor.cgColor, width: 1, cornerRadius: 10.5.adjustedHeight)
+        $0.setTitle("수정하기", for: .normal)
+        $0.setTitleColor(.mainColor, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 10, boldLevel: .regular)
+    }
+    
+    var deleteButton = UIButton().then {
+        $0.makeBorder(color: UIColor.mainPink.cgColor, width: 1, cornerRadius: 10.5.adjustedHeight)
+        $0.setTitle("삭제", for: .normal)
+        $0.setTitleColor(.mainPink, for: .normal)
+        $0.titleLabel?.font = .defaultFont(size: 10, boldLevel: .regular)
     }
     
     lazy var upperView = UIView().then {
         $0.backgroundColor = .white
         $0.addSubview(bookTitleLabel)
-        $0.addSubview(titleUnderLineView)
-        $0.setShadow(opacity: 0.5, color: .lightGray)
+        $0.addSubview(dateLabel)
+        $0.addSubview(modifyButton)
+        $0.addSubview(deleteButton)
+        $0.setShadow(opacity: 0.25, color: .lightGray)
     }
     
     var postTitleLabel = UILabel().then {
@@ -35,12 +55,23 @@ final class PostView: UIView {
         $0.font = .defaultFont(size: 14, boldLevel: .light)
         $0.textColor = UIColor(hexString: "646A88")
         $0.isScrollEnabled = false
+        $0.textContainerInset = .zero
+        $0.textContainer.lineFragmentPadding = 0.0
     }
     
     var imageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
         $0.backgroundColor = .white
         $0.register(PostImageCell.self, forCellWithReuseIdentifier: PostImageCell.identifier)
-        $0.isScrollEnabled = false
+        $0.isScrollEnabled = true
+        $0.isPagingEnabled = true
+        $0.showsHorizontalScrollIndicator = false
+    }
+    
+    var imagePageControl = UIPageControl().then {
+        $0.pageIndicatorTintColor = UIColor(hexString: "FFFFFF").withAlphaComponent(0.5)
+        $0.currentPageIndicatorTintColor  = UIColor(hexString: "FFFFFF")
+        $0.currentPage = 0
+        $0.hidesForSinglePage = true
     }
     
     var placeView = WriteSettingItemView().then {
@@ -53,22 +84,10 @@ final class PostView: UIView {
     
     var linkView = WriteSettingItemView().then {
         $0.iconView.image = .LinkIcon.withRenderingMode(.alwaysTemplate)
+        $0.isUserInteractionEnabled = true
     }
     
-    private lazy var settingStackView = UIStackView(arrangedSubviews: [placeView, timeView, linkView]).then {
-        $0.axis = .vertical
-        $0.spacing = 16.adjustedHeight
-        $0.alignment = .trailing
-    }
-    
-    private lazy var contentsView = UIScrollView().then {
-        $0.backgroundColor = .white
-        
-        $0.addSubview(postTitleLabel)
-        $0.addSubview(postContentTextView)
-        $0.addSubview(imageCollectionView)
-        $0.addSubview(settingStackView)
-    }
+    private var contentsView = UIScrollView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -77,53 +96,92 @@ final class PostView: UIView {
     
         self.addSubview(contentsView)
         self.addSubview(upperView)
-    
-        makeView()
     }
     
-    private func makeView() {
+    func makeView() {
+        // upperView {
         upperView.snp.makeConstraints {
             $0.left.right.top.equalToSuperview()
-            $0.height.equalTo(63.adjustedHeight)
-        }
-        titleUnderLineView.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20.adjustedWidth)
-            $0.height.equalTo(2)
-            $0.bottom.equalToSuperview().inset(22.adjustedHeight)
-        }
-        bookTitleLabel.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(30.adjustedWidth)
-            $0.bottom.equalTo(titleUnderLineView.snp.top).offset(-5.5.adjustedHeight)
         }
         
-        contentsView.snp.makeConstraints { [unowned self] in
+        dateLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(26.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(12.adjustedHeight)
+        }
+        
+        deleteButton.snp.makeConstraints {
+            $0.right.equalToSuperview().inset(30.adjustedHeight)
+            $0.centerY.equalTo(dateLabel)
+            $0.width.equalTo(37.adjustedHeight)
+            $0.height.equalTo(21.adjustedHeight)
+        }
+        
+        modifyButton.snp.makeConstraints {
+            $0.right.equalTo(deleteButton.snp.left).offset(-6.adjustedHeight)
+            $0.centerY.equalTo(dateLabel)
+            $0.width.equalTo(55.adjustedHeight)
+            $0.height.equalTo(21.adjustedHeight)
+        }
+
+        bookTitleLabel.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(20.adjustedHeight)
+            $0.height.equalTo(35.adjustedHeight)
+            $0.top.equalToSuperview().inset(20.adjustedHeight)
+            $0.bottom.equalTo(dateLabel.snp.top).offset(-13.adjustedHeight)
+        }
+        // }
+        
+        contentsView.then {
+            $0.backgroundColor = .white
+            
+            $0.addSubview(postTitleLabel)
+            $0.addSubview(postContentTextView)
+            $0.addSubview(imageCollectionView)
+            $0.addSubview(imagePageControl)
+            $0.addSubview(placeView)
+            $0.addSubview(timeView)
+            $0.addSubview(linkView)
+        }.snp.makeConstraints { [unowned self] in
             $0.top.equalTo(upperView.snp.bottom)
             $0.left.right.equalToSuperview()
             $0.bottom.equalTo(self.safeAreaLayoutGuide)
         }
         postTitleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(17.adjustedHeight)
-            $0.left.equalToSuperview().inset(24.adjustedWidth)
+            $0.left.equalToSuperview().inset(24.adjustedHeight)
         }
         
         postContentTextView.snp.makeConstraints {
-            $0.top.equalTo(postTitleLabel.snp.bottom).offset(24.5.adjustedHeight)
-            $0.left.right.equalToSuperview().inset(24.adjustedWidth)
+            $0.top.equalTo(postTitleLabel.snp.bottom).offset(22.adjustedHeight)
+            $0.left.right.equalToSuperview().inset(24.adjustedHeight)
         }
         
         imageCollectionView.snp.makeConstraints {
             $0.top.equalTo(postContentTextView.snp.bottom).offset(50.adjustedHeight)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(335.adjustedWidth)
+            $0.width.equalTo(335.adjustedHeight)
             $0.height.equalTo(335.adjustedHeight)
         }
         
-        settingStackView.snp.makeConstraints {
-            $0.top.equalTo(imageCollectionView.snp.bottom).offset(14.adjustedHeight)
-            $0.width.equalTo(335.adjustedWidth)
-//            $0.right.equalToSuperview().inset(5.adjustedWidth)
+        imagePageControl.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.bottom.equalTo(imageCollectionView).offset(-15.7.adjustedHeight)
+        }
+        
+        placeView.snp.makeConstraints {
+            $0.top.equalTo(imageCollectionView.snp.bottom).offset(16.adjustedHeight)
+            $0.right.equalTo(self).inset(23.adjustedHeight)
+        }
+        
+        timeView.snp.makeConstraints {
+            $0.top.equalTo(placeView.snp.bottom).offset(16.adjustedHeight)
+            $0.right.equalTo(self).inset(23.adjustedHeight)
+        }
+        
+        linkView.snp.makeConstraints {
+            $0.top.equalTo(timeView.snp.bottom).offset(16.adjustedHeight)
+            $0.right.equalTo(self).inset(23.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(43.adjustedHeight)
         }
     }
     
@@ -161,12 +219,12 @@ final class WriteSettingItemView: UIView {
         $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.text = "-"
         $0.textAlignment = .right
-        $0.textColor = UIColor(hexString: "C3C5D1")
+        $0.textColor = .mainColor
     }
     
     var iconView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
-        $0.tintColor = UIColor(hexString: "C3C5D1")
+        $0.tintColor = .mainColor
     }
     
     override init(frame: CGRect) {
@@ -177,12 +235,13 @@ final class WriteSettingItemView: UIView {
         
         iconView.snp.makeConstraints {
             $0.width.height.equalTo(13.adjustedHeight)
-            $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().inset(5.adjustedWidth)
+            $0.top.bottom.equalToSuperview()
+            $0.right.equalToSuperview()
         }
         label.snp.makeConstraints {
+            $0.left.equalToSuperview()
             $0.right.equalTo(iconView.snp.left).offset(-9.adjustedWidth)
-            $0.centerY.equalToSuperview()
+            $0.centerY.equalTo(iconView)
         }
     }
     

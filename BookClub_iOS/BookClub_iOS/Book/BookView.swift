@@ -199,7 +199,7 @@ final class MemoTableViewCell: UITableViewCell {
             .withUnretained(self)
             .bind { (owner, post) in
                 owner.titleLabel.text = post.title
-                owner.createdDateLabel.text = post.createdDate.toDate().toString()
+                owner.createdDateLabel.text = post.createdDate.toString()
             }
             .disposed(by: disposeBag)
     }
