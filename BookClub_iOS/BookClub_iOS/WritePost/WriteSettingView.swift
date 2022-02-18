@@ -15,7 +15,7 @@ final class WriteSettingView: UIView {
     }
     
     var placeTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
-        $0.placeholder = "내용을 입력해주세요"
+        $0.placeholder = "ex. 집 앞 카페에서"
         $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
@@ -44,7 +44,7 @@ final class WriteSettingView: UIView {
     }
     
     var timeTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
-        $0.placeholder = "점심시간 / 13:34"
+        $0.placeholder = "ex. 점심시간에 30분"
         $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
@@ -74,7 +74,7 @@ final class WriteSettingView: UIView {
     
     var linkTitleTextField = TextFieldWithPadding(padding: UIEdgeInsets(top: 6.adjustedHeight, left: 27.adjustedHeight, bottom: 6.adjustedHeight, right: 0), frame: .zero).then {
         $0.placeholder = "링크 제목"
-        $0.font = .defaultFont(size: 10, boldLevel: .regular)
+        $0.font = .defaultFont(size: 12, boldLevel: .regular)
         $0.textColor = .mainColor
         $0.backgroundColor = .white
 

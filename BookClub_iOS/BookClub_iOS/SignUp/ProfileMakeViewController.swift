@@ -65,12 +65,13 @@ class ProfileMakeViewController: UIViewController {
                 ZLPhotoConfiguration.default().allowRecordVideo = false
                 ZLPhotoConfiguration.default().allowSelectGif = false
                 ZLPhotoConfiguration.default().maxSelectCount = 1
-                ZLPhotoConfiguration.default().editImageClipRatios = [.wh1x1]
                 ZLPhotoConfiguration.default().allowEditImage = true
                 ZLPhotoConfiguration.default().editAfterSelectThumbnailImage = true
-                ZLPhotoConfiguration.default().editImageTools = [.clip]
                 ZLPhotoConfiguration.default().allowSelectOriginal = false
-//                    ZLPhotoConfiguration.default().themeColorDeploy = ZLPhotoThemeColorDeploy().
+                let editConfiguration = ZLEditImageConfiguration()
+                editConfiguration.clipRatios = [.wh1x1]
+                editConfiguration.tools  = [.clip]
+                ZLPhotoConfiguration.default().editImageConfiguration = editConfiguration
                 
                 // All properties of the camera configuration have default value
                 cameraConfig.sessionPreset = .hd1920x1080

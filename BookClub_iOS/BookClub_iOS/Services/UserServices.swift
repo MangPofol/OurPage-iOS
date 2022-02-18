@@ -43,7 +43,7 @@ class UserServices: Networkable {
             }
     }
     
-    static func updateUser(user: UpdatingUser, id: String) -> Observable<Bool> {
+    static func updateUser(user: UpdatingUser, id: Int) -> Observable<Bool> {
         UserServices.provider
             .rx.request(.updateUser(user: user, id: id))
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))

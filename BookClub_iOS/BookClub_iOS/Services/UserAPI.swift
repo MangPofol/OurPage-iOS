@@ -15,7 +15,7 @@ struct EmailStruct: Codable {
 enum UserAPI {
     case validateDuplicate(email: EmailStruct)
     case getCurrentUserInfo
-    case updateUser(user: UpdatingUser, id: String)
+    case updateUser(user: UpdatingUser, id: Int)
     case validateEmail
     case validateEmailSendCode(emailCode: String)
 }

@@ -22,7 +22,8 @@ class ButtonWithImage: UIView {
         self.addSubview(imageView)
         
         self.button.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(12)
+            $0.left.equalToSuperview().inset(12)
+            $0.right.equalToSuperview().inset(24)
             $0.centerY.equalToSuperview()
         }
         self.imageView.snp.makeConstraints {

@@ -22,9 +22,19 @@ final class BookView: UIScrollView {
     
     var lineView = UIView()
     var readingButton = BookActionButton(iconImage: UIImage(named: "ReadingIcon"), title: "읽는중")
-    var dotLine1 = UIImageView()
+    var dotLine1 = UIImageView().then {
+        $0.image = UIImage(named: "DotLine")?.withRenderingMode(.alwaysTemplate)
+        $0.contentMode = .scaleToFill
+        $0.tintColor = UIColor(hexString: "EFF0F3")
+        $0.snp.contentCompressionResistanceHorizontalPriority = .infinity
+    }
     var finishButton = BookActionButton(iconImage: UIImage(named: "FinishIcon"), title: "완독")
-    var dotLine2 = UIImageView()
+    var dotLine2 = UIImageView().then {
+        $0.image = UIImage(named: "DotLine")?.withRenderingMode(.alwaysTemplate)
+        $0.contentMode = .scaleToFill
+        $0.tintColor = UIColor(hexString: "EFF0F3")
+        $0.snp.contentCompressionResistanceHorizontalPriority = .infinity
+    }
     var deleteButton = BookActionButton(iconImage: UIImage(named: "DeleteIcon"), title: "책 삭제")
     var writeButton = BookActionButton(iconImage: UIImage(named: "WriteViewIcon"), title: "기록 쓰러가기")
     
@@ -41,6 +51,8 @@ final class BookView: UIScrollView {
         $0.rowHeight = 85.adjustedHeight
         $0.isScrollEnabled = false
     }
+    
+    lazy var actionButtonStackView = UIStackView(arrangedSubviews: [readingButton, dotLine1, finishButton, dotLine2, deleteButton])
     
     lazy var memoContainerView = UIView().then {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
@@ -63,11 +75,8 @@ final class BookView: UIScrollView {
             $0.addSubview(bookTitleLabel)
             $0.addSubview(lineView)
             
-            $0.addSubview(readingButton)
-            $0.addSubview(dotLine1)
-            $0.addSubview(finishButton)
-            $0.addSubview(dotLine2)
-            $0.addSubview(deleteButton)
+            $0.addSubview(actionButtonStackView)
+            
             $0.addSubview(writeButton)
             $0.addSubview(memoContainerView)
             $0.addSubview(memoTableView)
@@ -108,62 +117,48 @@ final class BookView: UIScrollView {
             $0.left.right.equalToSuperview().inset(20.adjustedHeight)
         }
         
-        readingButton.snp.makeConstraints {
-            $0.width.equalTo(74.33.adjustedHeight)
-            $0.height.equalTo(45.02.adjustedHeight)
+        self.actionButtonStackView.then {
+            $0.spacing = 3.14.adjustedHeight
+            $0.axis = .horizontal
+            $0.distribution = .fillProportionally
+        }.snp.makeConstraints {
             $0.top.equalTo(lineView.snp.bottom).offset(12.56.adjustedHeight)
             $0.left.equalTo(lineView)
+            $0.height.equalTo(45.02.adjustedHeight)
+            $0.width.equalTo(235.adjustedHeight)
         }
-        readingButton.iconImageView.snp.updateConstraints {
+        
+        readingButton.snp.makeConstraints {
+            $0.width.equalTo(74.33-0.5.adjustedHeight)
+        }
+        readingButton.then {
+            $0.snp.contentCompressionResistanceHorizontalPriority = .infinity
+        }
+        .iconImageView.snp.updateConstraints {
             $0.width.equalTo(14.66.adjustedHeight)
             $0.height.equalTo(8.38.adjustedHeight)
             $0.top.equalToSuperview().inset(5.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
-        
-        dotLine1.then {
-            $0.image = UIImage(named: "DotLine")?.withRenderingMode(.alwaysTemplate)
-            $0.contentMode = .scaleAspectFill
-            $0.tintColor = UIColor(hexString: "EFF0F3")
-        }.snp.makeConstraints {
-            $0.width.equalTo(0.52)
-            $0.left.equalTo(readingButton.snp.right).offset(3.14.adjustedHeight)
-            $0.height.equalTo(43.97.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).offset(15.7.adjustedHeight)
-        }
-        
+
         finishButton.snp.makeConstraints {
-            $0.width.equalTo(74.33.adjustedHeight)
-            $0.height.equalTo(45.02.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).offset(12.56.adjustedHeight)
-            $0.left.equalTo(dotLine1.snp.right).offset(3.14.adjustedHeight)
+            $0.width.equalTo(74.33-0.5.adjustedHeight)
         }
-        finishButton.iconImageView.snp.updateConstraints {
+        finishButton.then {
+            $0.snp.contentCompressionResistanceHorizontalPriority = .infinity
+        }.iconImageView.snp.updateConstraints {
             $0.width.equalTo(10.48.adjustedHeight)
             $0.height.equalTo(10.48.adjustedHeight)
             $0.top.equalToSuperview().inset(5.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
-        
-        dotLine2.then {
-            $0.image = UIImage(named: "DotLine")?.withRenderingMode(.alwaysTemplate)
-            $0.contentMode = .scaleAspectFill
-            $0.tintColor = UIColor(hexString: "EFF0F3")
-        }.snp.makeConstraints {
-            $0.width.equalTo(0.52)
-            $0.left.equalTo(finishButton.snp.right).offset(3.14.adjustedHeight)
-            $0.height.equalTo(43.97.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).offset(15.7.adjustedHeight)
-        }
-        
+
         deleteButton.then {
             $0.defaultColor = .mainPink
             $0.isOn = true
+            $0.snp.contentCompressionResistanceHorizontalPriority = .infinity
         }.snp.makeConstraints {
-            $0.width.equalTo(74.33.adjustedHeight)
-            $0.height.equalTo(45.02.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).offset(12.56.adjustedHeight)
-            $0.left.equalTo(dotLine2.snp.right).offset(3.14.adjustedHeight)
+            $0.width.equalTo(73.28.adjustedHeight)
         }
         deleteButton.iconImageView.snp.updateConstraints {
             $0.width.equalTo(11.66.adjustedHeight)
@@ -180,7 +175,7 @@ final class BookView: UIScrollView {
         }.snp.makeConstraints {
             $0.height.equalTo(45.02.adjustedHeight)
             $0.top.equalTo(lineView.snp.bottom).offset(12.56.adjustedHeight)
-            $0.left.equalTo(deleteButton.snp.right).offset(9.42.adjustedHeight)
+            $0.left.equalTo(actionButtonStackView.snp.right).offset(9.42.adjustedHeight)
             $0.right.equalToSuperview().inset(20.adjustedHeight)
         }
         writeButton.iconImageView.snp.updateConstraints {
@@ -191,7 +186,7 @@ final class BookView: UIScrollView {
         }
         
         memoContainerView.snp.makeConstraints { [unowned self] in
-            $0.top.equalTo(deleteButton.snp.bottom).offset(12.76.adjustedHeight)
+            $0.top.equalTo(actionButtonStackView.snp.bottom).offset(12.76.adjustedHeight)
             $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview()
         }

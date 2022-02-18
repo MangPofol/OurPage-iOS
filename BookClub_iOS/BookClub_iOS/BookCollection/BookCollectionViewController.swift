@@ -17,9 +17,7 @@ class BookCollectionViewController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#fileID, #function, #line, "!!!!")
         if let viewModel = viewModel {
-            print(#fileID, #function, #line, "@@@@")
             viewModel.reloadBooks()
         }
     }

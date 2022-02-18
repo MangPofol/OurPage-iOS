@@ -32,7 +32,7 @@ class GoalViewModel {
                     let user = SignUpViewModel.creatingUser
                     let updatingUser = UpdatingUser(email: user.email, nickname: user.nickname!, sex: user.sex!, birthdate: user.birthdate!, introduce: user.introduce!, style: user.style, goal: user.goal, profileImgLocation: user.profileImgLocation, genres: user.genres)
                     
-                    return UserServices.updateUser(user: updatingUser, id: SignUpViewModel.createdUserId)
+                    return UserServices.updateUser(user: updatingUser, id: Int(SignUpViewModel.createdUserId)!)
                 }
     }
 }

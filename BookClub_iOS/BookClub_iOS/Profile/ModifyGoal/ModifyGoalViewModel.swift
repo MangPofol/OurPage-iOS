@@ -30,7 +30,7 @@ class ModifyGoalViewModel {
                     if let currentUser = try? Constants.CurrentUser.value() {
                         let updatingUser = UpdatingUser(email: currentUser.email, nickname: currentUser.nickname!, sex: currentUser.sex!, birthdate: currentUser.birthdate!, introduce: currentUser.introduce!, style: currentUser.style ?? "", goal: val, profileImgLocation: currentUser.profileImgLocation ?? "", genres: currentUser.genres)
                         
-                        return UserServices.updateUser(user: updatingUser, id: String(currentUser.userId))
+                        return UserServices.updateUser(user: updatingUser, id: currentUser.userId)
                     } else {
                         return Observable.just(false)
                     }
