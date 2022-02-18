@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-final class BookView: UIView {
+final class BookView: UIScrollView {
     var backgroundImageView = UIImageView(image: UIImage(named: "BackgroundImageLight")).then {
         $0.contentMode = .scaleAspectFill
     }
@@ -34,42 +34,49 @@ final class BookView: UIView {
         $0.textColor = .mainColor
     }
     
-    var memoTableView = UITableView().then {
+    var memoTableView = SelfSizedTableView().then {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.separatorStyle = .none
         $0.register(MemoTableViewCell.self, forCellReuseIdentifier: MemoTableViewCell.identifier)
         $0.rowHeight = 85.adjustedHeight
+        $0.isScrollEnabled = false
     }
     
     lazy var memoContainerView = UIView().then {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
-        $0.setCornerRadius(radius: 8.adjustedHeight)
         $0.addSubview(memoTitleLabel)
-        $0.addSubview(memoTableView)
     }
+    
+    private var containerView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-        
-        self.addSubview(backgroundImageView)
-        self.addSubview(bookImageView)
-        self.addSubview(bookTitleLabel)
-        self.addSubview(lineView)
-        
-        self.addSubview(readingButton)
-        self.addSubview(dotLine1)
-        self.addSubview(finishButton)
-        self.addSubview(dotLine2)
-        self.addSubview(deleteButton)
-        self.addSubview(writeButton)
-        
-        self.addSubview(memoContainerView)
-        
-        makeView()
     }
     
-    private func makeView() {
+    func makeView() {
+        self.addSubview(containerView)
+        
+        self.containerView.then {
+            $0.addSubview(backgroundImageView)
+            $0.addSubview(bookImageView)
+            $0.addSubview(bookTitleLabel)
+            $0.addSubview(lineView)
+            
+            $0.addSubview(readingButton)
+            $0.addSubview(dotLine1)
+            $0.addSubview(finishButton)
+            $0.addSubview(dotLine2)
+            $0.addSubview(deleteButton)
+            $0.addSubview(writeButton)
+            $0.addSubview(memoContainerView)
+            $0.addSubview(memoTableView)
+        }.snp.makeConstraints {
+            $0.edges.equalTo(contentLayoutGuide)
+            $0.width.equalTo(frameLayoutGuide)
+            $0.height.greaterThanOrEqualTo(frameLayoutGuide)
+        }
+        
         backgroundImageView.snp.makeConstraints {
             $0.left.equalToSuperview().inset(-32.adjustedHeight)
             $0.right.equalToSuperview().offset(7.adjustedHeight)
@@ -122,7 +129,7 @@ final class BookView: UIView {
             $0.width.equalTo(0.52)
             $0.left.equalTo(readingButton.snp.right).offset(3.14.adjustedHeight)
             $0.height.equalTo(43.97.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).inset(15.7.adjustedHeight)
+            $0.top.equalTo(lineView.snp.bottom).offset(15.7.adjustedHeight)
         }
         
         finishButton.snp.makeConstraints {
@@ -146,7 +153,7 @@ final class BookView: UIView {
             $0.width.equalTo(0.52)
             $0.left.equalTo(finishButton.snp.right).offset(3.14.adjustedHeight)
             $0.height.equalTo(43.97.adjustedHeight)
-            $0.top.equalTo(lineView.snp.bottom).inset(15.7.adjustedHeight)
+            $0.top.equalTo(lineView.snp.bottom).offset(15.7.adjustedHeight)
         }
         
         deleteButton.then {
@@ -186,7 +193,7 @@ final class BookView: UIView {
         memoContainerView.snp.makeConstraints { [unowned self] in
             $0.top.equalTo(deleteButton.snp.bottom).offset(12.76.adjustedHeight)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalTo(self.safeAreaLayoutGuide)
+            $0.bottom.equalToSuperview()
         }
         
         memoTitleLabel.snp.makeConstraints {

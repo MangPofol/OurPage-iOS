@@ -18,7 +18,12 @@ class WriteViewController: UIViewController {
     let customView = WriteView()
     var viewModel: WriteViewModel!
     
-    var selectedBook: Book?
+    var selectedBook: BookModel?
+    
+    convenience init(selectedBook: BookModel) {
+        self.init()
+        self.selectedBook = selectedBook
+    }
     
     override func loadView() {
         self.view = customView
@@ -31,9 +36,8 @@ class WriteViewController: UIViewController {
         super.viewWillAppear(true)
         
         if selectedBook != nil {
-            customView.bookSelectionButton.button.setTitle(selectedBook!.bookModel.name, for: .normal)
+            customView.bookSelectionButton.button.setTitle(selectedBook!.name, for: .normal)
             if viewModel != nil {
-                print(#fileID, #function, #line, self.selectedBook)
                 viewModel.selectedBook.onNext(self.selectedBook)
             }
         } else {
@@ -84,7 +88,7 @@ class WriteViewController: UIViewController {
             .compactMap { $0 }
             .withUnretained(self)
             .bind { (owner, post) in
-                let vc = WriteSettingViewController(postToCreate: post, bookModel: owner.selectedBook!.bookModel)
+                let vc = WriteSettingViewController(postToCreate: post, bookModel: owner.selectedBook!)
                 
                 owner.navigationController?.pushViewController(vc, animated: true)
             }

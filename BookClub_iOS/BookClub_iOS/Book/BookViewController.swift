@@ -32,9 +32,17 @@ class BookViewController: UIViewController {
     }
     
     override func loadView() {
-        self.view = customView
+        self.view = UIView()
+        self.view.addSubview(customView)
+        customView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalToSuperview()
+        }
+        
         self.removeBackButtonTitle()
         self.navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.defaultFont(size: 18, boldLevel: .extraBold)]
+        
+        customView.makeView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +102,14 @@ class BookViewController: UIViewController {
                 LoadingHUD.hide()
                 guard let self = self, $0 == true else { return }
                 self.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.writingPost
+            .bind { [weak self] in
+                LoadingHUD.hide()
+                guard let self = self else { return }
+                self.navigationController?.pushViewController(WriteViewController(selectedBook: $0), animated: true)
             }
             .disposed(by: disposeBag)
         

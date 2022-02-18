@@ -16,7 +16,7 @@ class WriteViewModel {
     
     // Inputs
     var uploadingImages = BehaviorSubject<[UIImage]>(value: [])
-    var selectedBook = BehaviorSubject<Book?>(value: nil)
+    var selectedBook = BehaviorSubject<BookModel?>(value: nil)
     var uploadedImagesURLs = BehaviorRelay<[String]>(value: [])
     var deleteImageAt = BehaviorSubject<Int?>(value: nil)
     
@@ -52,7 +52,7 @@ class WriteViewModel {
         openPostSetting = input.nextButtonTapped.asObservable().withLatestFrom(postSource)
             .map { source -> PostToCreate? in
                 if source.book != nil {
-                    let post = PostToCreate(bookId: source.book!.bookModel.id, scope: "", isIncomplete: false, location: "", readTime: "", hyperlinkTitle: "", hyperlink: "", title: source.title, content: source.content, postImgLocations: source.images, clubIdListForScope: [])
+                    let post = PostToCreate(bookId: source.book!.id, scope: "", isIncomplete: false, location: "", readTime: "", hyperlinkTitle: "", hyperlink: "", title: source.title, content: source.content, postImgLocations: source.images, clubIdListForScope: [])
                     print(#fileID, #function, #line, post)
                     return post
                 } else {

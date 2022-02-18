@@ -21,6 +21,8 @@ class BookViewModel {
     var deleteButtonTapped = PublishRelay<Bool>()
     var bookDeleted = PublishRelay<Bool>()
 
+    var writingPost = PublishRelay<BookModel>()
+    
     var disposeBag = DisposeBag()
     
     init(
@@ -78,6 +80,14 @@ class BookViewModel {
                 
                 self.book.accept(newBook)
             }
+            .disposed(by: disposeBag)
+        
+        input.writeButtonTapped
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
+            .map { _ in
+                book
+            }
+            .bind(to: self.writingPost)
             .disposed(by: disposeBag)
         
         deleteButtonTapped

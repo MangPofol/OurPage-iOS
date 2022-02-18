@@ -82,7 +82,7 @@ class BookSelectViewController: UIViewController {
             .filter { $0 != nil }
             .bind { [weak self] in
                 if let root = self?.navigationController?.viewControllers[1] as? WriteViewController {
-                    root.selectedBook = $0
+                    root.selectedBook = $0?.bookModel
                     self?.navigationController?.popViewController(animated: false)
                 }
             }
@@ -114,7 +114,7 @@ class BookSelectViewController: UIViewController {
     
     private func backToWriteView(selectedBook: Book) {
         if let root = self.navigationController?.viewControllers.first as? WriteViewController {
-            root.selectedBook = selectedBook
+            root.selectedBook = selectedBook.bookModel
         }
         self.navigationController?.popViewController(animated: false)
     }
