@@ -54,13 +54,23 @@ class BookServices: Networkable {
     }
     
     // 책 업데이트
-    static func updateBook(id: String, bookToCreate: BookToCreate) {
-        
+    static func updateBook(id: Int, category: String) -> Observable<Bool> {
+        BookServices.provider
+            .rx.request(.updateBook(id, category))
+            .asObservable()
+            .map {
+                return $0.statusCode == 204
+            }
     }
     
     // 책 삭제
-    static func deleteBook(id: String) {
-        
+    static func deleteBook(id: Int) -> Observable<Bool> {
+        BookServices.provider
+            .rx.request(.deleteBook(id))
+            .asObservable()
+            .map {
+                return $0.statusCode == 204
+            }
     }
     
     // 책 좋아요

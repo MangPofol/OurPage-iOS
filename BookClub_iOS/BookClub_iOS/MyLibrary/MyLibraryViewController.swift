@@ -25,8 +25,11 @@ class MyLibraryViewController: UIViewController {
         customView.bookclubSelector.register(BookclubSelectorCell.self, forCellWithReuseIdentifier: BookclubSelectorCell.identifier)
         customView.bookclubSelector.rx.setDelegate(self).disposed(by: disposeBag)
         self.view = customView
-        //        self.view.backgroundColor = UIColor(hexString: "E5E5E5")
+        
+        self.addChild(bookCollectionVC)
         customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
+        bookCollectionVC.didMove(toParent: self)
+        
         bookCollectionVC.view.backgroundColor = .white
         bookCollectionVC.collectionView.backgroundColor = .white
         bookCollectionVC.view.snp.makeConstraints { $0.edges.equalToSuperview() }
@@ -107,7 +110,7 @@ class MyLibraryViewController: UIViewController {
         // bind outputs {
         viewModel!.bookListType
             .bind { [weak self] in
-                self?.bookCollectionVC.viewModel.category.onNext($0)
+                self?.bookCollectionVC.viewModel.category.accept($0)
             }
             .disposed(by: disposeBag)
         

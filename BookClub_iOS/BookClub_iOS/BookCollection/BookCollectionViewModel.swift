@@ -13,7 +13,7 @@ class BookCollectionViewModel {
     var books = BehaviorRelay<[Book]>(value: [])
     var fetchedBooks = BehaviorRelay<[Book]>(value: [])
     var bookInformation = Observable<[SearchedBook]>.just([])
-    var category = BehaviorSubject<BookListType>(value: BookListType.NOW)
+    var category = BehaviorRelay<BookListType>(value: BookListType.NOW)
     var tappedBook: Observable<Book>
     
     let disposeBag = DisposeBag()
@@ -26,8 +26,11 @@ class BookCollectionViewModel {
         }.disposed(by: disposeBag)
     }
     
+    func reloadBooks() {
+        getBooksBy(category: self.category.value.rawValue)
+    }
+    
     func getBooksBy(category: String) {
-        
         BookServices.getBooksBy(category: category).map { values -> [Book] in
             var books = [Book]()
             
@@ -38,7 +41,6 @@ class BookCollectionViewModel {
             
             return books
         }.bind { [weak self] in
-            print(#fileID, #function, #line, $0)
             self?.fetchedBooks.accept($0)
             self?.books.accept($0)
         }.disposed(by: disposeBag)

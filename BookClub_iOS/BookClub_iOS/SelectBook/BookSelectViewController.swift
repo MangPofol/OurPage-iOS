@@ -23,7 +23,9 @@ class BookSelectViewController: UIViewController {
     override func loadView() {
         self.view = customView
         setNavigationBar()
+        self.addChild(bookCollectionVC)
         customView.bookCollectionContainer.addSubview(bookCollectionVC.view)
+        bookCollectionVC.didMove(toParent: self)
         bookCollectionVC.view.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
@@ -55,7 +57,7 @@ class BookSelectViewController: UIViewController {
         // 읽는 중, 완독, 읽고싶은 선택
         viewModel!.bookTypeFilter
             .bind { [weak self] in
-                self?.bookCollectionVC.viewModel.category.onNext($0)
+                self?.bookCollectionVC.viewModel.category.accept($0)
             }
             .disposed(by: disposeBag)
         

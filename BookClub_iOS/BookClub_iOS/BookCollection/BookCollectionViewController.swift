@@ -15,6 +15,15 @@ class BookCollectionViewController: UICollectionViewController {
     let disposeBag = DisposeBag()
     var viewModel: BookCollectionViewModel!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print(#fileID, #function, #line, "!!!!")
+        if let viewModel = viewModel {
+            print(#fileID, #function, #line, "@@@@")
+            viewModel.reloadBooks()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.delegate = nil

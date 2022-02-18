@@ -6,19 +6,29 @@
 //
 
 import UIKit
+
 import RxSwift
+import FFPopup
 
 class BookViewController: UIViewController {
 
     let customView = BookView()
     
     var viewModel: BookViewModel!
+    private var popup: FFPopup!
     
     var disposeBag = DisposeBag()
     
     convenience init(book: BookModel?) {
         self.init()
-        viewModel = BookViewModel(book_: book)
+        viewModel = BookViewModel(
+            book_: book,
+            input: (
+                readingButtonTapped: self.customView.readingButton.rx.tapGesture().when(.recognized).map { [unowned self] _ in self.customView.readingButton.isOn },
+                finishButtonTapped: self.customView.finishButton.rx.tapGesture().when(.recognized).map { [unowned self] _ in self.customView.finishButton.isOn },
+                writeButtonTapped: self.customView.writeButton.rx.tapGesture().when(.recognized)
+            )
+        )
     }
     
     override func loadView() {
@@ -35,12 +45,30 @@ class BookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Action Button 누르면 로딩
+        Observable.merge(
+            self.customView.readingButton.rx.tapGesture().when(.recognized).asObservable(),
+            self.customView.finishButton.rx.tapGesture().when(.recognized).asObservable(),
+            self.customView.writeButton.rx.tapGesture().when(.recognized).asObservable()
+        ).bind { _ in
+            LoadingHUD.show()
+        }
+        .disposed(by: disposeBag)
+        
+        self.customView.deleteButton.rx.tapGesture().when(.recognized)
+            .bind { [weak self] _ in
+                self?.showDeleteAlert()
+            }
+            .disposed(by: disposeBag)
+        
         viewModel.book
             .compactMap { $0 }
             .withUnretained(self)
             .bind { (owner, book) in
-                owner.title = book.name
-                owner.customView.endButton.isSelected = (book.category != "BEFORE")
+                LoadingHUD.hide()
+                owner.customView.bookTitleLabel.text = book.name
+                owner.customView.readingButton.isOn = (book.category == "NOW")
+                owner.customView.finishButton.isOn = (book.category == "AFTER")
             }
             .disposed(by: disposeBag)
         
@@ -56,8 +84,16 @@ class BookViewController: UIViewController {
         viewModel.posts
             .debug()
             .bind(to: customView.memoTableView.rx.items(cellIdentifier: MemoTableViewCell.identifier, cellType: MemoTableViewCell.self)) { (row, element, cell) in
-                cell.post = BehaviorSubject<PostModel?>(value: element)
-                cell.bindOutputs()
+                cell.post = element
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.bookDeleted
+            .bind { [weak self] in
+                self?.popup.dismiss(animated: true)
+                LoadingHUD.hide()
+                guard let self = self, $0 == true else { return }
+                self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
         
@@ -69,5 +105,26 @@ class BookViewController: UIViewController {
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func showDeleteAlert() {
+        let view = DeleteAlertView(title: "책을 삭제하시겠습니까?", content: "전체 메모 리스트도 함께 삭제됩니다.", action: "삭제")
+        let layout = FFPopupLayout(horizontal: .center, vertical: .center)
+        popup = FFPopup(contentView: view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        
+        view.actionButton.rx.tap
+            .bind { [weak self] _ in
+                LoadingHUD.show()
+                self?.viewModel.deleteButtonTapped.accept(true)
+            }
+            .disposed(by: disposeBag)
+        
+        view.cancelButton.rx.tap
+            .bind { [weak self] _ in
+                self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        popup.show(layout: layout)
     }
 }

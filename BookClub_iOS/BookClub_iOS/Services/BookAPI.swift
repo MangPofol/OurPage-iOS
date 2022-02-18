@@ -11,8 +11,8 @@ import Moya
 enum BookAPI {
     case getBooksByCurrentUserAndCategory(_ category: String)
     case createBook(_ bookToCreate: BookToCreate)
-    case updateBook(_ id: String, _ bookToCreate: BookToCreate)
-    case deleteBook(_ id: String)
+    case updateBook(_ id: Int, _ category: String)
+    case deleteBook(_ id: Int)
     case doLikeBook(_ id: String)
     case undoLikeBook(_ id: String)
 }
@@ -20,7 +20,7 @@ enum BookAPI {
 extension BookAPI: TargetType, AccessTokenAuthorizable {
     var authorizationType: AuthorizationType? {
         switch self {
-        case .getBooksByCurrentUserAndCategory(_), .createBook(_):
+        case .getBooksByCurrentUserAndCategory(_), .createBook(_), .updateBook(_, _), .deleteBook(_):
             return .bearer
         default:
             return nil
@@ -75,8 +75,8 @@ extension BookAPI: TargetType, AccessTokenAuthorizable {
             return .requestParameters(parameters: ["category": category], encoding: URLEncoding.default)
         case .createBook(let bookToCreate):
             return .requestJSONEncodable(bookToCreate)
-        case .updateBook(_, let bookToCreate):
-            return .requestJSONEncodable(bookToCreate)
+        case .updateBook(_, let category):
+            return .requestJSONEncodable(CategoryUpdate(category: category))
         case .deleteBook(_):
             return .requestPlain
         case .doLikeBook(_):
@@ -89,4 +89,8 @@ extension BookAPI: TargetType, AccessTokenAuthorizable {
     var headers: [String : String]? {
         return ["Content-type": "application/json"]
     }
+}
+
+struct CategoryUpdate: Codable {
+    var category: String
 }
