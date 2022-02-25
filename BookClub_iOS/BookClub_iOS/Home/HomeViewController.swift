@@ -42,6 +42,22 @@ class HomeViewController: UIViewController {
         )
         
     // bind outputs {
+        self.navigationItem.leftBarButtonItem!.rx.tap
+            .bind { [weak self] in
+                let transition = CATransition()
+                transition.duration = 0.3
+                transition.type = CATransitionType.moveIn
+                transition.subtype = CATransitionSubtype.fromLeft
+                self?.view.window!.layer.add(transition, forKey: kCATransition)
+                
+                let vc = UINavigationController(rootViewController: SettingViewController())
+                vc.modalPresentationStyle = .fullScreen
+        
+                self?.present(vc, animated: false, completion: nil)
+                
+            }
+            .disposed(by: disposeBag)
+        
         Constants.CurrentUser
             .debug()
             .compactMap { $0 }

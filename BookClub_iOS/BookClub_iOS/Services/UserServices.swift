@@ -75,6 +75,30 @@ class UserServices: Networkable {
                 return false
             }
     }
+    
+    static func changePassword(newPassword: String) -> Observable<Bool> {
+        UserServices.provider
+            .rx.request(.changePassword(newPassword: newPassword))
+            .asObservable()
+            .map {
+                if $0.statusCode == 204 {
+                    return true
+                }
+                return false
+            }
+    }
+    
+    static func changeUserDormant(id: Int) -> Observable<Bool> {
+        UserServices.provider
+            .rx.request(.changeUserDormant(id: id))
+            .asObservable()
+            .map {
+                if $0.statusCode == 204 {
+                    return true
+                }
+                return false
+            }
+    }
 }
 
 struct CreatedResult: Codable {

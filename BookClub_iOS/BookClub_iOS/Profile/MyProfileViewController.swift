@@ -20,7 +20,8 @@ class MyProfileViewController: UIViewController {
     private var viewModel: MyProfileViewModel!
     private var popup: FFPopup!
     
-    var disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
+    private var alertDisposeBag = DisposeBag()
     
     override func loadView() {
         self.view = customView
@@ -86,6 +87,14 @@ class MyProfileViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        self.viewModel.introduceUpdated
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] in
+                self?.customView.introduceLabel.text = $0
+                LoadingHUD.hide()
+            }
+            .disposed(by: disposeBag)
+        
         Constants.CurrentUser
             .compactMap { $0 }
             .withUnretained(self)
@@ -102,6 +111,13 @@ class MyProfileViewController: UIViewController {
         customView.profileImageSettingButton.rx.tapGesture().when(.recognized)
             .bind { [weak self] _ in
                 self?.showPhotoAlert()
+            }
+            .disposed(by: disposeBag)
+        
+        customView.introduceLabel.rx.tapGesture().when(.recognized)
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                self.showIntroduceUpdateAlert(introduce: self.customView.introduceLabel.text ?? "")
             }
             .disposed(by: disposeBag)
         
@@ -169,6 +185,31 @@ class MyProfileViewController: UIViewController {
         popup.show(layout: layout)
     }
     
+    private func showIntroduceUpdateAlert(introduce: String) {
+        self.alertDisposeBag = DisposeBag()
+        let view = IntroduceUpdateAlertView(introduce: introduce)
+        let layout = FFPopupLayout(horizontal: .center, vertical: .aboveCenter)
+        
+        popup = FFPopup(contentView: view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        popup.show(layout: layout)
+        
+        view.cancelButton.rx.tap
+            .bind { [weak self] in
+                self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: alertDisposeBag)
+        
+        view.finishButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel.updatingIntroduce.accept(view.introduceTextView.text)
+                self?.popup.dismiss(animated: false)
+                LoadingHUD.show()
+            }
+            .disposed(by: alertDisposeBag)
+        
+        view.introduceTextView.rx.setDelegate(self).disposed(by: alertDisposeBag)
+    }
+    
     private func configurePhoto() {
         ZLPhotoConfiguration.default().allowRecordVideo = false
         ZLPhotoConfiguration.default().allowSelectGif = false
@@ -189,5 +230,19 @@ class MyProfileViewController: UIViewController {
         cameraConfig.exposureMode = .continuousAutoExposure
         cameraConfig.flashMode = .off
         cameraConfig.videoExportType = .mov
+    }
+}
+
+extension MyProfileViewController: UITextViewDelegate {
+    private func textLimit(existingText: String?, newText: String, limit: Int) -> Bool {
+        let text = existingText ?? ""
+        let isAtLimit = text.count + newText.count <= limit
+        return isAtLimit
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return self.textLimit(existingText: textView.text,
+                              newText: text,
+                              limit: 20)
     }
 }

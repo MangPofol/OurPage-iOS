@@ -12,19 +12,25 @@ struct EmailStruct: Codable {
     var email: String
 }
 
+struct NewPasswordStruct: Codable {
+    var password: String
+}
+
 enum UserAPI {
     case validateDuplicate(email: EmailStruct)
     case getCurrentUserInfo
     case updateUser(user: UpdatingUser, id: Int)
     case validateEmail
     case validateEmailSendCode(emailCode: String)
+    case changePassword(newPassword: String)
+    case changeUserDormant(id: Int)
 }
 
 extension UserAPI: TargetType, AccessTokenAuthorizable {
     
     var authorizationType: AuthorizationType? {
         switch self {
-        case .getCurrentUserInfo, .updateUser(_, _), .validateEmail, .validateEmailSendCode(_):
+        case .getCurrentUserInfo, .updateUser(_, _), .validateEmail, .validateEmailSendCode(_), .changePassword(_), .changeUserDormant(_):
             return .bearer
         default:
             return nil
@@ -47,6 +53,10 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
             return "/users/validate-email"
         case .validateEmailSendCode(_):
             return "/users/validate-email-send-code"
+        case .changePassword(_):
+            return "/users/change-pw"
+        case .changeUserDormant(let id):
+            return "/users/\(id)/change-dormant"
         }
     }
     
@@ -59,6 +69,10 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
         case .updateUser(_, _):
             return .put
         case .validateEmail, .validateEmailSendCode(_):
+            return .post
+        case .changePassword(_):
+            return .post
+        case .changeUserDormant(_):
             return .post
         }
     }
@@ -79,6 +93,10 @@ extension UserAPI: TargetType, AccessTokenAuthorizable {
             return .requestPlain
         case .validateEmailSendCode(let emailCode):
             return .requestParameters(parameters: ["emailCode": emailCode], encoding: URLEncoding.default)
+        case .changePassword(let newPassword):
+            return .requestJSONEncodable(NewPasswordStruct(password: newPassword))
+        case .changeUserDormant(_):
+            return .requestPlain
         }
     }
     

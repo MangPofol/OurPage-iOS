@@ -18,9 +18,11 @@ class MyProfileViewModel {
     var bookCount: Driver<Int>
     var uploadedImageUrl = PublishRelay<String>()
     var profileImageUpdated = PublishRelay<Bool>()
+    var introduceUpdated = PublishRelay<String>()
     
     // inputs
     var updatingProfileImage = PublishRelay<UIImage?>()
+    var updatingIntroduce = PublishRelay<String>()
     
     private let disposeBag = DisposeBag()
     
@@ -37,7 +39,7 @@ class MyProfileViewModel {
             .compactMap { $0.count }
             .asDriver(onErrorJustReturn: 0)
         
-        updatingProfileImage
+        self.updatingProfileImage
             .compactMap { $0 }
             .flatMap {
                 FileServices.uploadFile(file: $0.jpegData(compressionQuality: 1)!)
@@ -55,6 +57,29 @@ class MyProfileViewModel {
                 UserServices.updateUser(user: $0.0, id: $0.1)
             }
             .bind(to: profileImageUpdated)
+            .disposed(by: disposeBag)
+        
+        self.updatingIntroduce
+            .flatMap { introduce -> Observable<(UpdatingUser, Int)> in
+                return UserServices.getCurrentUserInfo()
+                    .compactMap { $0 }
+                    .map { user in
+                        let newUser = UpdatingUser(email: user.email, nickname: user.nickname ?? "", sex: user.sex!, birthdate: user.birthdate!, introduce: introduce, style: user.style, goal: user.goal, profileImgLocation: user.profileImgLocation, genres: user.genres)
+                        return (newUser, user.userId)
+                    }
+            }
+            .flatMap { value in
+                UserServices.updateUser(user: value.0, id: value.1)
+                    .map {
+                        if $0 {
+                            return value.0.introduce
+                        } else {
+                            return ""
+                        }
+                    }
+            }
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
+            .bind(to: introduceUpdated)
             .disposed(by: disposeBag)
     }
 }
