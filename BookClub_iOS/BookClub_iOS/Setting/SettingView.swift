@@ -72,7 +72,9 @@ final class SettingView: UIView {
             $0.top.equalTo(ruleButton.snp.bottom).offset(1.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.adjustedHeight)
         }
-        self.versionButton.snp.makeConstraints {
+        self.versionButton.then {
+            $0.imageView.image = nil
+        }.snp.makeConstraints {
             $0.top.equalTo(licenseButton.snp.bottom).offset(1.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.adjustedHeight)
         }

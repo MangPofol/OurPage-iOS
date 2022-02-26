@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import FFPopup
+import Carte
 
 final class SettingViewController: UIViewController {
     private let customView = SettingView()
@@ -83,6 +84,15 @@ final class SettingViewController: UIViewController {
                 self.navigationController?.pushViewController(RuleViewController(), animated: true)
             }
             .disposed(by: disposeBag)
+        
+        self.customView.licenseButton.rx.tapGesture().when(.recognized)
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                let vc = CarteViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
         // }
     }
     
@@ -105,7 +115,7 @@ final class SettingViewController: UIViewController {
                 let options: UIView.AnimationOptions = .transitionCrossDissolve
                 let duration: TimeInterval = 0.3
                 UIView.transition(with: window, duration: duration, options: options, animations: {}, completion:
-                { completed in
+                                    { completed in
                     LoadingHUD.hide()
                     KeyChainController.shared.delete(Constants.ServiceString, account: "Token")
                 })

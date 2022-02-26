@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (5.5.0)
   - BetterSegmentedControl (2.0.1)
+  - Carte (2.2.1)
   - CryptoSwift (1.4.3)
   - FFPopup (1.1.5)
   - Gifu (3.3.1)
@@ -36,6 +37,7 @@ PODS:
 
 DEPENDENCIES:
   - BetterSegmentedControl
+  - Carte
   - CryptoSwift
   - FFPopup
   - Gifu
@@ -57,6 +59,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - BetterSegmentedControl
+    - Carte
     - CryptoSwift
     - FFPopup
     - Gifu
@@ -77,6 +80,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
   BetterSegmentedControl: 09607b27861d49cbce48b7673b74f9150a3d371a
+  Carte: 6bcff4eaa894ff5b979d646de833fec96e04a38c
   CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
   FFPopup: a208dcee8db3e54ec4a88fcd6481f6f5d85b7a83
   Gifu: 416d4e38c4c2fed012f019e0a1d3ffcb58e5b842
@@ -94,6 +98,6 @@ SPEC CHECKSUMS:
   Then: acfe0be7e98221c6204e12f8161459606d5d822d
   ZLPhotoBrowser: a7aa41a674e67a86c1728a3d9d73a471d5650a82
 
-PODFILE CHECKSUM: 9d9d1b3b790738207d5e5531246df6770d3036be
+PODFILE CHECKSUM: c14352c6457391976b3f2e5f82d192adf7c08e56
 
 COCOAPODS: 1.11.2

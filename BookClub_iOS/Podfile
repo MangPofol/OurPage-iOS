@@ -23,6 +23,7 @@ target 'BookClub_iOS' do
   pod 'SnapKit'
   pod 'Then'
   pod 'ZLPhotoBrowser'
+  pod 'Carte'
 
   target 'BookClub_iOSTests' do
     inherit! :search_paths
@@ -36,6 +37,9 @@ target 'BookClub_iOS' do
 end
 
 post_install do |installer|
+    pods_dir = File.dirname(installer.pods_project.path)
+    at_exit { `ruby #{pods_dir}/Carte/Sources/Carte/carte.rb configure` }
+
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
