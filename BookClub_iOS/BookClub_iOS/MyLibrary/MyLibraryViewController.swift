@@ -78,14 +78,19 @@ class MyLibraryViewController: UIViewController {
         
         // bind inputs {
         
-        self.navigationItem.leftBarButtonItem!
-            .rx.tap
+        self.navigationItem.leftBarButtonItem!.rx.tap
             .bind { [weak self] in
-                let menu = SideMenuNavigationController(rootViewController: SideMenuViewController())
-                menu.leftSide = true
-                menu.presentationStyle = .menuSlideIn
-                menu.menuWidth = Constants.screenSize.width * 0.85
-                self?.present(menu, animated: true, completion: nil)
+                let transition = CATransition()
+                transition.duration = 0.3
+                transition.type = CATransitionType.moveIn
+                transition.subtype = CATransitionSubtype.fromLeft
+                self?.view.window!.layer.add(transition, forKey: kCATransition)
+                
+                let vc = UINavigationController(rootViewController: SettingViewController())
+                vc.modalPresentationStyle = .fullScreen
+        
+                self?.present(vc, animated: false, completion: nil)
+                
             }
             .disposed(by: disposeBag)
         

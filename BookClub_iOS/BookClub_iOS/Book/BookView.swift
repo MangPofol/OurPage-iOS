@@ -104,6 +104,7 @@ final class BookView: UIScrollView {
             $0.font = .defaultFont(size: 18, boldLevel: .extraBold)
             $0.textColor = .mainColor
             $0.textAlignment = .center
+            $0.snp.contentHuggingVerticalPriority = .infinity
         }.snp.makeConstraints {
             $0.top.equalTo(bookImageView.snp.bottom).offset(19.adjustedHeight)
             $0.left.right.equalToSuperview().inset(49.adjustedHeight)
@@ -185,13 +186,17 @@ final class BookView: UIScrollView {
             $0.centerX.equalToSuperview()
         }
         
-        memoContainerView.snp.makeConstraints { [unowned self] in
+        memoContainerView.then {
+            $0.snp.contentHuggingVerticalPriority = 0.0
+        }.snp.makeConstraints { [unowned self] in
             $0.top.equalTo(actionButtonStackView.snp.bottom).offset(12.76.adjustedHeight)
             $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
         
-        memoTitleLabel.snp.makeConstraints {
+        memoTitleLabel.then {
+            $0.snp.contentHuggingVerticalPriority = .infinity
+        }.snp.makeConstraints {
             $0.left.equalToSuperview().inset(25.3.adjustedWidth)
             $0.top.equalToSuperview().inset(19.adjustedHeight)
         }
@@ -201,6 +206,9 @@ final class BookView: UIScrollView {
             $0.top.equalTo(memoTitleLabel.snp.bottom).offset(9.adjustedHeight)
             $0.bottom.equalToSuperview().inset(21.adjustedHeight)
         }
+        
+        dotLine1.snp.makeConstraints { $0.width.equalTo(0.5) }
+        dotLine2.snp.makeConstraints { $0.width.equalTo(0.5) }
     }
     
     required init?(coder: NSCoder) {
