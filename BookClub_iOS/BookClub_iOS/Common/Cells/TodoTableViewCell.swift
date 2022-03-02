@@ -42,7 +42,6 @@ class TodoTableViewCell: UITableViewCell {
             $0.backgroundColor = .white
             $0.setCornerRadius(radius: 12.adjustedHeight)
         }.snp.makeConstraints {
-            $0.height.equalTo(24.adjustedHeight)
             $0.left.right.equalToSuperview().inset(14.adjustedHeight)
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview().inset(10.adjustedHeight)
@@ -55,9 +54,8 @@ class TodoTableViewCell: UITableViewCell {
             $0.imageView?.tintColor = UIColor(hexString: "646A88")
         }.snp.makeConstraints {
             $0.width.equalTo(22.adjustedHeight)
-            $0.height.equalTo(20.adjustedHeight)
             $0.left.equalToSuperview().inset(6.adjustedHeight)
-            $0.centerY.equalToSuperview()
+            $0.top.bottom.equalToSuperview().inset(2.adjustedHeight)
         }
         
         self.contentLabel.then {
@@ -76,9 +74,8 @@ class TodoTableViewCell: UITableViewCell {
             $0.imageView?.tintColor = UIColor(hexString: "E5949D")
         }.snp.makeConstraints {
             $0.width.equalTo(22.adjustedHeight)
-            $0.height.equalTo(20.adjustedHeight)
             $0.right.equalToSuperview().inset(6.adjustedHeight)
-            $0.centerY.equalToSuperview()
+            $0.top.bottom.equalToSuperview().inset(2.adjustedHeight)
         }
         
         self.completeTodoAt = self.completeButton.rx.tap

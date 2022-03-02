@@ -28,7 +28,6 @@ class EmptyTodoTableViewCell: UITableViewCell {
             $0.backgroundColor = .white
             $0.setCornerRadius(radius: 12.adjustedHeight)
         }.snp.makeConstraints {
-            $0.height.equalTo(24.adjustedHeight)
             $0.left.right.equalToSuperview().inset(14.adjustedHeight)
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview().inset(10.adjustedHeight)
@@ -51,7 +50,7 @@ class EmptyTodoTableViewCell: UITableViewCell {
         }.snp.makeConstraints {
             $0.left.equalTo(createButton.snp.right).offset(14.52.adjustedHeight)
             $0.right.equalToSuperview()
-            $0.top.bottom.equalToSuperview()
+            $0.top.bottom.equalToSuperview().inset(2.adjustedHeight)
         }
     }
     
