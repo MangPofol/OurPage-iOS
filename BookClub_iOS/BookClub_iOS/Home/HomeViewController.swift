@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxGesture
+import FFPopup
 
 class HomeViewController: UIViewController {
 
@@ -17,8 +18,17 @@ class HomeViewController: UIViewController {
     
     var viewModel: HomeViewModel!
     var disposeBag = DisposeBag()
+    private var alertDisposeBag = DisposeBag()
     
     var checkListOpened = false
+    
+    private var popup: FFPopup!
+    
+    var todos: [Todo?] = [] {
+        didSet {
+            self.customView.toDoListTableView.reloadData()
+        }
+    }
     
     override func loadView() {
         self.view = customView
@@ -34,8 +44,11 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.customView.toDoListTableView.delegate = self
+        self.customView.toDoListTableView.dataSource = self
+        
         viewModel = HomeViewModel(
-            checkListButtonTapped: customView.checkListHeader.openButton.rx.tap,
+            checkListButtonTapped: customView.toDoListHeader.openButton.rx.tap,
             myProfileButtonTapped: customView.myProfileButton.rx.tap,
             goalButtonTapped: customView.goalButton.rx.tapGesture().when(.recognized),
             writeButtonTapped: customView.writeButton.rx.tapGesture().when(.recognized)
@@ -76,23 +89,23 @@ class HomeViewController: UIViewController {
             .do {(owner, _) in owner.checkListOpened.toggle()}
             .bind { (owner, _) in
                 if owner.checkListOpened {
-                    owner.customView.checkListHeader.topRoundCorner(radius: 8.adjustedHeight)
+                    owner.customView.toDoListHeader.topRoundCorner(radius: 8.adjustedHeight)
                 }
-                owner.customView.checkListTableView.snp.updateConstraints {
-                    $0.height.equalTo(owner.checkListOpened ? 188.adjustedHeight : 0)
+                owner.customView.toDoListTableView.snp.updateConstraints {
+                    $0.height.equalTo(owner.checkListOpened ? 178.adjustedHeight : 0)
                 }
 
                 UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
                     owner.view.layoutIfNeeded()
                     if owner.checkListOpened {
-                        owner.customView.checkListHeader.openButton.rotateWithoutAnimation(degree: Double.pi)
+                        owner.customView.toDoListHeader.openButton.rotateWithoutAnimation(degree: Double.pi)
                     } else {
-                        owner.customView.checkListHeader.openButton.transform = CGAffineTransform.identity
+                        owner.customView.toDoListHeader.openButton.transform = CGAffineTransform.identity
                     }
                     
                 }, completion: { _ in
                     if !owner.checkListOpened {
-                        owner.customView.checkListHeader.setCornerRadius(radius: 8.adjustedHeight)
+                        owner.customView.toDoListHeader.setCornerRadius(radius: 8.adjustedHeight)
                     }
                     UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
                         owner.view.layoutIfNeeded()
@@ -134,7 +147,115 @@ class HomeViewController: UIViewController {
                 }
             }
             .disposed(by: disposeBag)
+        
+        viewModel.todos
+            .do { _ in
+                LoadingHUD.hide()
+            }
+            .withUnretained(self)
+            .bind { (owner, todos) in
+                owner.todos = todos
+            }
+            .disposed(by: disposeBag)
     // }
     }
+    
+    private func showCreateTodoAlert() {
+        self.alertDisposeBag = DisposeBag()
+        let view = IntroduceUpdateAlertView(introduce: "").then {
+            $0.titleLabel.text = "CHECK LIST"
+            $0.subtitleLabel.text = "독서 체크리스트를 입력해주세요!"
+        }
+        let layout = FFPopupLayout(horizontal: .center, vertical: .aboveCenter)
+        
+        popup = FFPopup(contentView: view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        popup.show(layout: layout)
+        
+        view.cancelButton.rx.tap
+            .bind { [weak self] in
+                self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: alertDisposeBag)
+        
+        view.finishButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel.newTodoText.accept(view.introduceTextView.text)
+                self?.popup.dismiss(animated: false)
+                LoadingHUD.show()
+            }
+            .disposed(by: alertDisposeBag)
+        
+        view.introduceTextView.rx.text
+            .orEmpty
+            .bind {
+                view.finishButton.isEnabled = $0.count > 0
+            }
+            .disposed(by: alertDisposeBag)
+        
+        view.introduceTextView.rx.setDelegate(self).disposed(by: alertDisposeBag)
+    }
+}
 
+extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.todos.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if self.todos[indexPath.row] == nil {
+            return tableView.dequeueReusableCell(withIdentifier: EmptyTodoTableViewCell.identifier, for: indexPath)
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.identifier, for: indexPath) as! TodoTableViewCell
+            cell.todo = self.todos[indexPath.row]
+            cell.completeButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+            
+            cell.completeTodoAt
+                .map { [weak self] in
+                    guard let self = self else { return nil }
+                    return self.todos[$0]
+                }
+                .compactMap { $0 }
+                .bind(to: self.viewModel.completeTodo)
+                .disposed(by: disposeBag)
+            
+            cell.deleteTodoAt
+                .map { [weak self] in
+                    guard let self = self else { return nil }
+                    return self.todos[$0]
+                }
+                .compactMap { $0 }
+                .bind(to: self.viewModel.deleteTodo)
+                .disposed(by: disposeBag)
+            
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 34.adjustedHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if self.todos[indexPath.row] == nil {
+            self.showCreateTodoAlert()
+        } else {
+            
+        }
+    }
+}
+
+// 체크리스트 20자 제한
+extension HomeViewController: UITextViewDelegate {
+    private func textLimit(existingText: String?, newText: String, limit: Int) -> Bool {
+        let text = existingText ?? ""
+        let isAtLimit = text.count + newText.count <= limit
+        return isAtLimit
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return self.textLimit(existingText: textView.text,
+                              newText: text,
+                              limit: 20)
+    }
 }

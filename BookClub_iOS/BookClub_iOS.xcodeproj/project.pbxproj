@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		2A6F3E1727152F32BEE7121B /* Pods_BookClub_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5137BCE6A4A081A5C4ECC789 /* Pods_BookClub_iOS.framework */; };
+		AE1642AB27CDD0F700D6E1F4 /* TodoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AA27CDD0F700D6E1F4 /* TodoAPI.swift */; };
+		AE1642AD27CDD4A500D6E1F4 /* TodoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */; };
+		AE1642AF27CDD50C00D6E1F4 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AE27CDD50C00D6E1F4 /* Todo.swift */; };
 		AE29CB9427CA7E06003CD02E /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */; };
+		AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */; };
+		AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */; };
 		BD267D1A5E58BB7ADB2C35C7 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1899C4E982B99EAB3550D48 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework */; };
 		D3E66E1AD0BDA4162DBE121A /* Pods_BookClub_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC6B464F1A6BE619D6302C99 /* Pods_BookClub_iOSTests.framework */; };
 		EA0563FB26F844AD000E0D77 /* BookSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0563FA26F844AD000E0D77 /* BookSelectViewModel.swift */; };
@@ -186,7 +191,12 @@
 		7639B5AA2CAA4382FA7786AA /* Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-BookClub_iOS-BookClub_iOSUITests/Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9CF8BA5C96824FCA89BF8F27 /* Pods-BookClub_iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOSTests.debug.xcconfig"; path = "Target Support Files/Pods-BookClub_iOSTests/Pods-BookClub_iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AC6B464F1A6BE619D6302C99 /* Pods_BookClub_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BookClub_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE1642AA27CDD0F700D6E1F4 /* TodoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAPI.swift; sourceTree = "<group>"; };
+		AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoServices.swift; sourceTree = "<group>"; };
+		AE1642AE27CDD50C00D6E1F4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
+		AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
+		AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTodoTableViewCell.swift; sourceTree = "<group>"; };
 		C1899C4E982B99EAB3550D48 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BookClub_iOS_BookClub_iOSUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E044EE27198752D60EB4D98D /* Pods-BookClub_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOS.debug.xcconfig"; path = "Target Support Files/Pods-BookClub_iOS/Pods-BookClub_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		EA0563FA26F844AD000E0D77 /* BookSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSelectViewModel.swift; sourceTree = "<group>"; };
@@ -745,6 +755,7 @@
 				EAF7074326EBB89200B7B6D1 /* Post.swift */,
 				EA66D194272C3C0300557873 /* User.swift */,
 				EA8FA8F42777441A0078FE62 /* Club.swift */,
+				AE1642AE27CDD50C00D6E1F4 /* Todo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -758,6 +769,8 @@
 				EA3CCB7226D137E700ADBA94 /* BookclubSelectorCell.swift */,
 				EA32DAB826D69DF200D7A6C4 /* MemberProfileCollectionViewCell.swift */,
 				EA8FA90127782EFE0078FE62 /* CheckListTableViewCell.swift */,
+				AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */,
+				AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -803,6 +816,8 @@
 				EA66D192272C227600557873 /* UserServices.swift */,
 				EA8FA8F2277740790078FE62 /* ClubAPI.swift */,
 				EA8FA8F6277744960078FE62 /* ClubServices.swift */,
+				AE1642AA27CDD0F700D6E1F4 /* TodoAPI.swift */,
+				AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1099,6 +1114,7 @@
 				EA89350A26BB8CD300D0C18C /* CreateBookClubViewController.swift in Sources */,
 				EA3A029D277DE26F0055EB3A /* OriginalImagesView.swift in Sources */,
 				EA983F2026C241F90070604E /* AlertModel.swift in Sources */,
+				AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */,
 				EA27DB2F26F4634F00CBD45E /* BookSelectViewController.swift in Sources */,
 				EA71261627C1024D0010726A /* SettingView.swift in Sources */,
 				EA66D195272C3C0300557873 /* User.swift in Sources */,
@@ -1128,6 +1144,7 @@
 				EA1B38A027A93F2B004EBB16 /* EmailAuthViewController.swift in Sources */,
 				EA1B38A427A96497004EBB16 /* PaddingLabel.swift in Sources */,
 				EA66D19C272CEAD200557873 /* ProfileMakeView.swift in Sources */,
+				AE1642AB27CDD0F700D6E1F4 /* TodoAPI.swift in Sources */,
 				EA66D1A1272CF6AE00557873 /* ProfileMakeViewModel.swift in Sources */,
 				EA8FA90227782EFE0078FE62 /* CheckListTableViewCell.swift in Sources */,
 				EA89355726BBC9DC00D0C18C /* UnderBarButton.swift in Sources */,
@@ -1182,6 +1199,7 @@
 				EA66D1A3272D3F3000557873 /* GenderBirthView.swift in Sources */,
 				EA27DB3526F4D05800CBD45E /* WriteViewModel.swift in Sources */,
 				EA1C2A522779FAED009BFF32 /* BookViewModel.swift in Sources */,
+				AE1642AD27CDD4A500D6E1F4 /* TodoServices.swift in Sources */,
 				EA983F1626C16B770070604E /* SideMenuViewController.swift in Sources */,
 				EAF7074026EBB3BA00B7B6D1 /* PostServices.swift in Sources */,
 				EA45F7B427547712000A3FC5 /* HomeView.swift in Sources */,
@@ -1217,6 +1235,7 @@
 				EAA7ED1E276065AF000E0F06 /* MyTasteViewController.swift in Sources */,
 				EAF0406627C4C80000E3B60E /* AskViewController.swift in Sources */,
 				EA60219927326C6300092917 /* GenderBirthViewModel.swift in Sources */,
+				AE1642AF27CDD50C00D6E1F4 /* Todo.swift in Sources */,
 				EAF7073E26EB85AB00B7B6D1 /* BookAPI.swift in Sources */,
 				EA983F1C26C17E540070604E /* BookClubListTableViewCell.swift in Sources */,
 				EA45F7B627548776000A3FC5 /* HomeViewController.swift in Sources */,
@@ -1231,6 +1250,7 @@
 				EA6021A52734F89B00092917 /* ReadingStyleView.swift in Sources */,
 				EA71260D27BF4ECA0010726A /* SelfSizedTableView.swift in Sources */,
 				EAF0406227C485FD00E3B60E /* SignOutView.swift in Sources */,
+				AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,7 +1426,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.05;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "NamJunLee.BookClub-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1428,7 +1448,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.05;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "NamJunLee.BookClub-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

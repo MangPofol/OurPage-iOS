@@ -18,12 +18,76 @@ class HomeViewModel {
     var openModifyGoalView : Observable<Bool>
     var openWriteView: Observable<Bool>
     var totalCount: Observable<Int?>
+    var todos = PublishRelay<[Todo?]>()
     
-    init(checkListButtonTapped: ControlEvent<()>, myProfileButtonTapped: ControlEvent<()>, goalButtonTapped: Observable<UITapGestureRecognizer>, writeButtonTapped: Observable<UITapGestureRecognizer>) {
+    var createTodoButtonTapped = PublishRelay<()>()
+    var newTodoText = PublishRelay<String>()
+    var completeTodo = PublishRelay<Todo>()
+    var deleteTodo = PublishRelay<Todo>()
+    
+    private let disposeBag = DisposeBag()
+    
+    init(
+        checkListButtonTapped: ControlEvent<()>,
+        myProfileButtonTapped: ControlEvent<()>,
+        goalButtonTapped: Observable<UITapGestureRecognizer>,
+        writeButtonTapped: Observable<UITapGestureRecognizer>
+    ) {
         checkListToggle = checkListButtonTapped.map { true }
         openMyProfileView = myProfileButtonTapped.map { true }
         openModifyGoalView = goalButtonTapped.map { _ in true }
         openWriteView = writeButtonTapped.map { _ in true }
         totalCount = PostServices.getTotalCount()
+        
+        self.getTodos()
+            .bind(to: self.todos)
+            .disposed(by: disposeBag)
+        
+        newTodoText
+            .flatMap {
+                TodoServices.createTodo(content: $0)
+            }
+            .flatMap { [weak self] _ -> Observable<[Todo?]> in
+                guard let self = self else { return Observable.just([]) }
+                return self.getTodos()
+            }
+            .bind(to: self.todos)
+            .disposed(by: disposeBag)
+        
+        deleteTodo
+            .flatMap {
+                TodoServices.deleteTodo(ids: [$0.toDoId])
+            }
+            .flatMap { [weak self] _ -> Observable<[Todo?]> in
+                guard let self = self else { return Observable.just([]) }
+                return self.getTodos()
+            }
+            .bind(to: self.todos)
+            .disposed(by: disposeBag)
+        
+        completeTodo
+            .flatMap {
+                TodoServices.updateTodo(todo: $0)
+            }
+            .flatMap { [weak self] _ -> Observable<[Todo?]> in
+                guard let self = self else { return Observable.just([]) }
+                return self.getTodos()
+            }
+            .bind(to: self.todos)
+            .disposed(by: disposeBag)
+    }
+    
+    func getTodos() -> Observable<[Todo?]> {
+        TodoServices.getTodos()
+            .map {
+                var todos: [Todo?] = []
+                $0.forEach {
+                    if !$0.isComplete {
+                        todos.append($0)
+                    }
+                }
+                todos = todos + Array(repeating: nil, count: 5 - todos.count)
+                return todos
+            }
     }
 }

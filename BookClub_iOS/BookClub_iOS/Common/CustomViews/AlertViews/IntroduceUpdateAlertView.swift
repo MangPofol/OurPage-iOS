@@ -80,6 +80,8 @@ final class IntroduceUpdateAlertView: UIView {
             $0.text = introduce
             $0.textContainerInset = .zero
             $0.textContainer.lineFragmentPadding = 0
+            $0.autocorrectionType = .no
+            $0.autocapitalizationType = .none
         }.snp.makeConstraints {
             $0.top.equalTo(textContainer).inset(8.adjustedHeight)
             $0.left.equalTo(plusIconView.snp.right).offset(13.76.adjustedHeight)

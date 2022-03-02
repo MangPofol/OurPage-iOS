@@ -81,11 +81,14 @@ final class HomeView: UIView {
         }
     }
     
-    var checkListHeader = CheckListButton()
+    var toDoListHeader = CheckListButton()
     
-    var checkListTableView = UITableView().then {
+    var toDoListTableView = UITableView().then {
         $0.backgroundColor = UIColor(hexString: "EFF0F3")
         $0.bottomRoundCorner(radius: 8.adjustedHeight)
+        $0.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.identifier)
+        $0.register(EmptyTodoTableViewCell.self, forCellReuseIdentifier: EmptyTodoTableViewCell.identifier)
+        $0.separatorStyle = .none
     }
     
     var writeButton = WriteRecordButton()
@@ -101,8 +104,8 @@ final class HomeView: UIView {
         self.addSubview(recordForDateLabelContainer)
         self.addSubview(myProfileButton)
         self.addSubview(goalButton)
-        self.addSubview(checkListHeader)
-        self.addSubview(checkListTableView)
+        self.addSubview(toDoListHeader)
+        self.addSubview(toDoListTableView)
         self.addSubview(writeButton)
         
         makeView()
@@ -156,18 +159,18 @@ final class HomeView: UIView {
             $0.left.right.equalToSuperview().inset(20.adjustedWidth)
             $0.height.equalTo(35.adjustedHeight)
         }
-        checkListHeader.snp.makeConstraints {
+        toDoListHeader.snp.makeConstraints {
             $0.top.equalTo(goalButton.snp.bottom).offset(11.81.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.adjustedWidth)
             $0.height.equalTo(35.adjustedHeight)
         }
-        checkListTableView.snp.makeConstraints {
-            $0.top.equalTo(checkListHeader.snp.bottom)
-            $0.left.right.equalTo(checkListHeader)
+        toDoListTableView.snp.makeConstraints {
+            $0.top.equalTo(toDoListHeader.snp.bottom)
+            $0.left.right.equalTo(toDoListHeader)
             $0.height.equalTo(0)
         }
         writeButton.snp.makeConstraints {
-            $0.top.equalTo(checkListTableView.snp.bottom).offset(11.81.adjustedHeight)
+            $0.top.equalTo(toDoListTableView.snp.bottom).offset(11.81.adjustedHeight)
             $0.left.right.equalTo(goalButton)
             $0.height.equalTo(35.adjustedHeight)
         }
