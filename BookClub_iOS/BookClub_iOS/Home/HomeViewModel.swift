@@ -90,4 +90,10 @@ class HomeViewModel {
                 return todos
             }
     }
+    
+    func reloadTodos() {
+        self.getTodos()
+            .bind(to: self.todos)
+            .disposed(by: disposeBag)
+    }
 }

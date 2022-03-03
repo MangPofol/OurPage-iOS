@@ -14,6 +14,10 @@
 		AE29CB9427CA7E06003CD02E /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */; };
 		AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */; };
 		AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */; };
+		AEFD7F6A27CF641D006A872F /* CheckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFD7F6927CF641D006A872F /* CheckListView.swift */; };
+		AEFD7F6C27CF66B6006A872F /* MonthlyCheckListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFD7F6B27CF66B6006A872F /* MonthlyCheckListCell.swift */; };
+		AEFD7F6E27CF6CAC006A872F /* CheckListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFD7F6D27CF6CAC006A872F /* CheckListViewController.swift */; };
+		AEFD7F7027CF6D1F006A872F /* CheckListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFD7F6F27CF6D1F006A872F /* CheckListViewModel.swift */; };
 		BD267D1A5E58BB7ADB2C35C7 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1899C4E982B99EAB3550D48 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework */; };
 		D3E66E1AD0BDA4162DBE121A /* Pods_BookClub_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC6B464F1A6BE619D6302C99 /* Pods_BookClub_iOSTests.framework */; };
 		EA0563FB26F844AD000E0D77 /* BookSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0563FA26F844AD000E0D77 /* BookSelectViewModel.swift */; };
@@ -197,6 +201,10 @@
 		AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
 		AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 		AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTodoTableViewCell.swift; sourceTree = "<group>"; };
+		AEFD7F6927CF641D006A872F /* CheckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListView.swift; sourceTree = "<group>"; };
+		AEFD7F6B27CF66B6006A872F /* MonthlyCheckListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCheckListCell.swift; sourceTree = "<group>"; };
+		AEFD7F6D27CF6CAC006A872F /* CheckListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListViewController.swift; sourceTree = "<group>"; };
+		AEFD7F6F27CF6D1F006A872F /* CheckListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListViewModel.swift; sourceTree = "<group>"; };
 		C1899C4E982B99EAB3550D48 /* Pods_BookClub_iOS_BookClub_iOSUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BookClub_iOS_BookClub_iOSUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E044EE27198752D60EB4D98D /* Pods-BookClub_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOS.debug.xcconfig"; path = "Target Support Files/Pods-BookClub_iOS/Pods-BookClub_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		EA0563FA26F844AD000E0D77 /* BookSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSelectViewModel.swift; sourceTree = "<group>"; };
@@ -406,6 +414,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AEFD7F6827CF6402006A872F /* CheckList */ = {
+			isa = PBXGroup;
+			children = (
+				AEFD7F6927CF641D006A872F /* CheckListView.swift */,
+				AEFD7F6B27CF66B6006A872F /* MonthlyCheckListCell.swift */,
+				AEFD7F6D27CF6CAC006A872F /* CheckListViewController.swift */,
+				AEFD7F6F27CF6D1F006A872F /* CheckListViewModel.swift */,
+			);
+			path = CheckList;
+			sourceTree = "<group>";
+		};
 		EA55C8A126D7973000636FD6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -597,6 +616,7 @@
 		EA82162727BB6F820074152C /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				AEFD7F6827CF6402006A872F /* CheckList */,
 				EA82162B27BB70EC0074152C /* ModifyGoal */,
 				EA82162A27BB70CD0074152C /* MyTaste */,
 				EA1E6B0727585D2F0065A003 /* MyProfileViewController.swift */,
@@ -1136,6 +1156,7 @@
 				EA71261827C118C10010726A /* SettingViewController.swift in Sources */,
 				EA60219F2732D29F00092917 /* IntroduceViewModel.swift in Sources */,
 				EA983F1826C172250070604E /* SideMenuView.swift in Sources */,
+				AEFD7F7027CF6D1F006A872F /* CheckListViewModel.swift in Sources */,
 				EA3CCB7326D137E700ADBA94 /* BookclubSelectorCell.swift in Sources */,
 				EA82161B27B908960074152C /* MyProfileViewModel.swift in Sources */,
 				EA32DAB726D69CD000D7A6C4 /* BookclubViewController.swift in Sources */,
@@ -1163,6 +1184,7 @@
 				EA55B68626C64F3100C2545C /* Book.swift in Sources */,
 				EA8FA8FE27780C970078FE62 /* LoadingHUD.swift in Sources */,
 				EAD4B88A27B661F4006EABE8 /* IntroViewController.swift in Sources */,
+				AEFD7F6C27CF66B6006A872F /* MonthlyCheckListCell.swift in Sources */,
 				EA6021AD27355B7300092917 /* GoalViewController.swift in Sources */,
 				EA66D191272C206400557873 /* UserAPI.swift in Sources */,
 				EA1B38A227A95E77004EBB16 /* EmailAuthView.swift in Sources */,
@@ -1176,6 +1198,7 @@
 				EA89350826BB8CD300D0C18C /* SceneDelegate.swift in Sources */,
 				EA55B68026C6403100C2545C /* MyLibraryViewController.swift in Sources */,
 				EAA7ED2227608AD0000E0F06 /* ModifyGoalViewController.swift in Sources */,
+				AEFD7F6E27CF6CAC006A872F /* CheckListViewController.swift in Sources */,
 				EA983F1E26C185910070604E /* Extensions.swift in Sources */,
 				EA8FA8F7277744960078FE62 /* ClubServices.swift in Sources */,
 				EA0563FB26F844AD000E0D77 /* BookSelectViewModel.swift in Sources */,
@@ -1195,6 +1218,7 @@
 				EA7CD6C4276F2D5F00CD528A /* ModifyGoalViewModel.swift in Sources */,
 				EA983F2326C242370070604E /* AlertTableViewCell.swift in Sources */,
 				EAF7074226EBB3C000B7B6D1 /* PostAPI.swift in Sources */,
+				AEFD7F6A27CF641D006A872F /* CheckListView.swift in Sources */,
 				EA6021A32732E07600092917 /* GenreViewController.swift in Sources */,
 				EA66D1A3272D3F3000557873 /* GenderBirthView.swift in Sources */,
 				EA27DB3526F4D05800CBD45E /* WriteViewModel.swift in Sources */,

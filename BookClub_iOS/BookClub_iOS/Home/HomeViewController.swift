@@ -19,6 +19,7 @@ class HomeViewController: UIViewController {
     var viewModel: HomeViewModel!
     var disposeBag = DisposeBag()
     private var alertDisposeBag = DisposeBag()
+    private var cellDisposeBag = DisposeBag()
     
     var checkListOpened = false
     
@@ -26,6 +27,7 @@ class HomeViewController: UIViewController {
     
     var todos: [Todo?] = [] {
         didSet {
+            self.cellDisposeBag = DisposeBag()
             self.customView.toDoListTableView.reloadData()
         }
     }
@@ -39,6 +41,7 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.removeBarShadow()
+        self.viewModel.reloadTodos()
     }
     
     override func viewDidLoad() {
@@ -157,6 +160,14 @@ class HomeViewController: UIViewController {
                 owner.todos = todos
             }
             .disposed(by: disposeBag)
+        
+        self.customView.toDoListHeader.settingButton
+            .rx.tap
+            .bind { [weak self] in
+                guard let self = self else { return }
+                self.navigationController?.pushViewController(CheckListViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     // }
     }
     
@@ -217,7 +228,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
                 }
                 .compactMap { $0 }
                 .bind(to: self.viewModel.completeTodo)
-                .disposed(by: disposeBag)
+                .disposed(by: cellDisposeBag)
             
             cell.deleteTodoAt
                 .map { [weak self] in
@@ -226,7 +237,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
                 }
                 .compactMap { $0 }
                 .bind(to: self.viewModel.deleteTodo)
-                .disposed(by: disposeBag)
+                .disposed(by: cellDisposeBag)
             
             return cell
         }

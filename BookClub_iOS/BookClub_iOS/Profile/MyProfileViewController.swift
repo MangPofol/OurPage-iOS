@@ -141,6 +141,13 @@ class MyProfileViewController: UIViewController {
                 self?.navigationController?.pushViewController(ModifyGoalViewController(), animated: true)
             }
             .disposed(by: disposeBag)
+        
+        customView.checkListSettingButton
+            .rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(CheckListViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func showPhotoAlert() {

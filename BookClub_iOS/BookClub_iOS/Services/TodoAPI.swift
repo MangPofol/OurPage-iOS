@@ -62,7 +62,7 @@ extension TodoAPI: TargetType, AccessTokenAuthorizable {
         case .deleteTodos(let ids):
             return .requestJSONEncodable(DeletingTodoIds(toDoIds: ids))
         case .updateTodo(let todo):
-            return .requestJSONEncodable(UpdatingTodo(content: todo.content, isComplete: true))
+            return .requestJSONEncodable(UpdatingTodo(content: todo.content, isComplete: !todo.isComplete))
         }
     }
     

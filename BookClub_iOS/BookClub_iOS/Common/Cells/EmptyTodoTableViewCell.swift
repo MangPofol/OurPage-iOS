@@ -21,6 +21,8 @@ class EmptyTodoTableViewCell: UITableViewCell {
         self.containerView.addSubview(createButton)
         self.containerView.addSubview(contentLabel)
         
+        self.selectionStyle = .none
+        self.backgroundColor = UIColor(hexString: "EFF0F3")
         self.contentView.addSubview(containerView)
         self.contentView.backgroundColor = UIColor(hexString: "EFF0F3")
         

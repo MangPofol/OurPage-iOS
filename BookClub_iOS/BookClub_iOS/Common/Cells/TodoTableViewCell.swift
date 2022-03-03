@@ -24,6 +24,9 @@ class TodoTableViewCell: UITableViewCell {
             guard let todo = todo else {
                 return
             }
+            if todo.isComplete {
+                self.completeButton.setImage(UIImage(named: "CompletedButtonImage")?.resize(to: CGSize(width: 9.48, height: 9.48).resized(basedOn: .height)), for: .normal)
+            }
             self.contentLabel.text = todo.content
         }
     }
@@ -35,6 +38,8 @@ class TodoTableViewCell: UITableViewCell {
         self.containerView.addSubview(contentLabel)
         self.containerView.addSubview(deleteButton)
         
+        self.selectionStyle = .none
+        self.backgroundColor = UIColor(hexString: "EFF0F3")
         self.contentView.addSubview(containerView)
         self.contentView.backgroundColor = UIColor(hexString: "EFF0F3")
         
