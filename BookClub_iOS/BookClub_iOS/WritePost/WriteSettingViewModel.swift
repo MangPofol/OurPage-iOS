@@ -31,7 +31,8 @@ class WriteSettingViewModel {
             linkTitleText: Observable<String>,
             linkContentText: Observable<String>,
             postButtonTapped: ControlEvent<()>?,
-            postToCreate: PostToCreate
+            postToCreate: PostToCreate,
+            updatingPostId: Int?
         )
     ) {
         let myLibrary = Club(id: -1, name: "내 서재", colorSet: "", level: -1, presidentId: -1, description: "", createdDate: "", modifiedDate: "")
@@ -53,11 +54,14 @@ class WriteSettingViewModel {
             .flatMap { inputs -> Observable<PostModel?> in
                 post.location = inputs.place
                 post.readTime = inputs.time
-                post.hyperlinkTitle = inputs.linkTitle
-                post.hyperlink = inputs.linkContent
+                post.linkRequestDtos = [CreatingPostHyperlink(hyperlinkTitle: inputs.linkTitle, hyperlink: inputs.linkContent)]
                 post.clubIdListForScope = inputs.clubs.map { $0.id }
                 
                 post.scope = "PRIVATE"
+                
+                if let updatingPostId = input.updatingPostId {
+                    return PostServices.updatePost(post: PostToUpdate(scope: post.scope, isIncomplete: post.isIncomplete, location: post.location, readTime: post.readTime, title: post.title, content: post.content, postImgLocations: post.postImgLocations, linkRequestDtos: post.linkRequestDtos, clubIdListForScope: post.clubIdListForScope), postId: updatingPostId)
+                }
                 
                 return PostServices.createPost(post: post)
             }

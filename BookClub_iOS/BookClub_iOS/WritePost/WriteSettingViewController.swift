@@ -20,9 +20,16 @@ class WriteSettingViewController: UIViewController {
     var postToCreate: PostToCreate!
     var bookModel: BookModel!
     
-    convenience init(postToCreate: PostToCreate, bookModel: BookModel) {
+    var updatingPostId: Int? = nil
+    
+    convenience init(postToCreate: PostToCreate, bookModel: BookModel, updatingPostId: Int?) {
         self.init()
+        self.updatingPostId = updatingPostId
         self.postToCreate = postToCreate
+        self.customView.placeTextField.text = postToCreate.location
+        self.customView.timeTextField.text = postToCreate.readTime
+        self.customView.linkTitleTextField.text = postToCreate.linkRequestDtos.first?.hyperlinkTitle ?? ""
+        self.customView.linkContentTextField.text =  postToCreate.linkRequestDtos.first?.hyperlink ?? ""
         self.bookModel = bookModel
     }
     
@@ -49,7 +56,8 @@ class WriteSettingViewController: UIViewController {
                 linkTitleText: customView.linkTitleTextField.rx.text.orEmpty.asObservable(),
                 linkContentText: customView.linkContentTextField.rx.text.orEmpty.asObservable(),
                 postButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap,
-                postToCreate: postToCreate
+                postToCreate: postToCreate,
+                updatingPostId: self.updatingPostId
             )
         )
         
@@ -66,6 +74,7 @@ class WriteSettingViewController: UIViewController {
         
         viewModel.postSuccess
             .observe(on: MainScheduler.instance)
+            .debug("@@@")
             .bind { [weak self] post in
                 if post != nil {
                     let vc = PostViewController(post_: post, book_: self?.bookModel)
