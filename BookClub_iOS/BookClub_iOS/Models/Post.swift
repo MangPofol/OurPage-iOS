@@ -39,8 +39,7 @@ struct PostModel: Codable {
     var modifiedDate: Date
     var location: String
     var readTime: String
-    var hyperlinkTitle: String
-    var hyperlink: String
+    var linkResponseDtos: [PostHyperlink]
     var postImgLocations: [String]
     var clubIdListForScope: [Int]
     var likedList: [Liked]
@@ -58,13 +57,28 @@ struct PostModel: Codable {
         try container.encode(modifiedDate, forKey: .modifiedDate)
         try container.encode(location, forKey: .location)
         try container.encode(readTime, forKey: .readTime)
-        try container.encode(hyperlinkTitle, forKey: .hyperlinkTitle)
-        try container.encode(hyperlink, forKey: .hyperlink)
+        try container.encode(linkResponseDtos, forKey: .linkResponseDtos)
         try container.encode(postImgLocations, forKey: .postImgLocations)
         try container.encode(clubIdListForScope, forKey: .clubIdListForScope)
         try container.encode(likedList, forKey: .likedList)
         try container.encode(commentsDto, forKey: .commentsDto)
     }
+}
+
+struct PostHyperlink: Codable {
+    var linkId: Int
+    var hyperlinkTitle: String
+    var hyperLink: String
+    
+    func toCreatingPostHyperlink() -> CreatingPostHyperlink {
+        return CreatingPostHyperlink(hyperlinkTitle: self.hyperlinkTitle, hyperlink: self.hyperLink)
+    }
+}
+
+
+struct CreatingPostHyperlink: Codable {
+    var hyperlinkTitle: String
+    var hyperlink: String
 }
 
 struct PostToCreate: Codable {
@@ -73,11 +87,10 @@ struct PostToCreate: Codable {
     var isIncomplete: Bool
     var location: String
     var readTime: String
-    var hyperlinkTitle: String
-    var hyperlink: String
     var title: String
     var content: String
     var postImgLocations: [String]
+    var linkRequestDtos: [CreatingPostHyperlink]
     var clubIdListForScope: [Int]
     
     func encode(to encoder: Encoder) throws {
@@ -88,8 +101,7 @@ struct PostToCreate: Codable {
         try container.encode(isIncomplete, forKey: .isIncomplete)
         try container.encode(location, forKey: .location)
         try container.encode(readTime, forKey: .readTime)
-        try container.encode(hyperlinkTitle, forKey: .hyperlinkTitle)
-        try container.encode(hyperlink, forKey: .hyperlink)
+        try container.encode(linkRequestDtos, forKey: .linkRequestDtos)
         try container.encode(title, forKey: .title)
         try container.encode(content, forKey: .content)
         try container.encode(postImgLocations, forKey: .postImgLocations)
@@ -98,12 +110,29 @@ struct PostToCreate: Codable {
 }
 
 struct PostToUpdate: Codable {
-    var type: String
     var scope: String
     var isIncomplete: Bool
-    var imgLocation: String
+    var location: String
+    var readTime: String
     var title: String
     var content: String
+    var postImgLocations: [String]
+    var linkRequestDtos: [CreatingPostHyperlink]
+    var clubIdListForScope: [Int]
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(scope, forKey: .scope)
+        try container.encode(isIncomplete, forKey: .isIncomplete)
+        try container.encode(location, forKey: .location)
+        try container.encode(readTime, forKey: .readTime)
+        try container.encode(linkRequestDtos, forKey: .linkRequestDtos)
+        try container.encode(title, forKey: .title)
+        try container.encode(content, forKey: .content)
+        try container.encode(postImgLocations, forKey: .postImgLocations)
+        try container.encode(clubIdListForScope, forKey: .clubIdListForScope)
+    }
 }
 
 struct Comment: Codable {

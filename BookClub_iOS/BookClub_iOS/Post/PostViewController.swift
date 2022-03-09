@@ -37,7 +37,7 @@ class PostViewController: UIViewController {
         customView.snp.makeConstraints { $0.edges.equalToSuperview() }
         customView.makeView()
         self.navigationController?.navigationBar.removeBarShadow()
-        
+        self.removeBackButtonTitle()
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = .zero
         flowLayout.minimumInteritemSpacing = 0
@@ -56,6 +56,13 @@ class PostViewController: UIViewController {
             linkTapped: customView.linkView.rx.tapGesture().when(.recognized)
         )
         
+        customView.modifyButton.rx.tap
+            .bind { [weak self] in
+                guard let self = self else { return }
+                self.navigationController?.pushViewController(WriteViewController(post: self.post_!, selectedBook: self.book_!), animated: true)
+            }
+            .disposed(by: disposeBag)
+        
         customView.deleteButton.rx.tap
             .bind { [weak self] in
                 self?.showDeleteAlert()
@@ -72,7 +79,7 @@ class PostViewController: UIViewController {
                 owner.customView.placeView.label.text = post.location
                 owner.customView.timeView.label.text = post.readTime
                 let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue]
-                let underlineAttributedString = NSAttributedString(string: post.hyperlinkTitle, attributes: underlineAttribute)
+                let underlineAttributedString = NSAttributedString(string: post.linkResponseDtos.first?.hyperlinkTitle ?? "", attributes: underlineAttribute)
                 owner.customView.linkView.label.attributedText = underlineAttributedString
             }
             .disposed(by: disposeBag)

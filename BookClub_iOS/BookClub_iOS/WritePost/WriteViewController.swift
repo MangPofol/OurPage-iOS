@@ -18,11 +18,20 @@ class WriteViewController: UIViewController {
     let customView = WriteView()
     var viewModel: WriteViewModel!
     
+    var isUpdating: Bool = false
+    var updatingPost: PostModel?
     var selectedBook: BookModel?
     
     convenience init(selectedBook: BookModel) {
         self.init()
         self.selectedBook = selectedBook
+    }
+    
+    convenience init(post: PostModel, selectedBook: BookModel) {
+        self.init()
+        self.selectedBook = selectedBook
+        self.isUpdating = true
+        self.updatingPost = post
     }
     
     override func loadView() {
@@ -56,9 +65,16 @@ class WriteViewController: UIViewController {
                 imageUploadButtonTapped: customView.imageUploadButton.rx.tap.asSignal(),
                 nextButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asSignal(),
                 titleText: customView.titleTextField.rx.text.orEmpty.asObservable(),
-                contentText: customView.contentTextView.rx.text.orEmpty.asObservable()
+                contentText: customView.contentTextView.rx.text.orEmpty.asObservable(),
+                updatingPost: self.updatingPost
             )
         )
+        
+        if let updatingPost = updatingPost {
+            self.viewModel.uploadedImagesURLs.accept(updatingPost.postImgLocations)
+            self.customView.titleTextField.text = updatingPost.title
+            self.customView.contentTextView.text = updatingPost.content
+        }
         
 //        customView.uploadedImageCollection.rx.itemSelected
 //            .withUnretained(self)
@@ -88,7 +104,7 @@ class WriteViewController: UIViewController {
             .compactMap { $0 }
             .withUnretained(self)
             .bind { (owner, post) in
-                let vc = WriteSettingViewController(postToCreate: post, bookModel: owner.selectedBook!)
+                let vc = WriteSettingViewController(postToCreate: post, bookModel: owner.selectedBook!, updatingPostId: owner.updatingPost?.postId)
                 
                 owner.navigationController?.pushViewController(vc, animated: true)
             }

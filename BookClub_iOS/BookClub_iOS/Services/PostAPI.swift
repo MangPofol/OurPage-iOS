@@ -11,7 +11,7 @@ import Moya
 enum PostAPI {
     case getPostsByBookId(_ bookId: Int)
     case createPost(_ post: PostToCreate)
-    case updatePost(_ post: PostModel)
+    case updatePost(_ post: PostToUpdate, postId: Int)
     case deletePost(_ postId: Int)
     case doLikePost(_ bookId: Int)
     case undoLikePost(_ bookId: Int)
@@ -33,8 +33,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return ""
         case .createPost(_):
             return ""
-        case .updatePost(let post):
-            return "/\(post.postId)"
+        case .updatePost(_, let postId):
+            return "/\(postId)"
         case .deletePost(let postId):
             return "/\(postId)"
         case .doLikePost(let bookId):
@@ -52,8 +52,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return .get
         case .createPost(_):
             return .post
-        case .updatePost(_):
-            return .patch
+        case .updatePost(_, _):
+            return .put
         case .deletePost(_):
             return .delete
         case .doLikePost(_):
@@ -75,7 +75,7 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return .requestParameters(parameters: ["bookId": bookId], encoding: URLEncoding.default)
         case .createPost(let post):
             return .requestJSONEncodable(post)
-        case .updatePost(let post):
+        case .updatePost(let post, _):
             return .requestJSONEncodable(post)
         case .deletePost(_):
             return .requestPlain

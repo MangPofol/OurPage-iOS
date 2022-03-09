@@ -90,8 +90,29 @@ class PostServices: Networkable {
             }
     }
     
-    static func updatePost(post: PostModel) {
-        
+    static func updatePost(post: PostToUpdate, postId: Int) -> Observable<PostModel?> {
+        PostServices.provider
+            .rx.request(.updatePost(post, postId: postId))
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    do {
+                        let decoder = JSONDecoder()
+                        let formatter = DateFormatter().then {
+                            $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                        }
+                        decoder.dateDecodingStrategy = .formatted(formatter)
+                        let data = try decoder.decode(PostModel.self, from: $0.data)
+                        return data
+                    } catch {
+                        print(error)
+                        return nil
+                    }
+                } else {
+                    return nil
+                }
+            }
     }
     
     static func deletePost(postId: Int) -> Observable<Bool> {

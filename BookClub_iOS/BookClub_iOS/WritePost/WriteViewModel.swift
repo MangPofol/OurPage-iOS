@@ -32,7 +32,8 @@ class WriteViewModel {
             imageUploadButtonTapped: Signal<()>,
             nextButtonTapped: Signal<()>,
             titleText: Observable<String>,
-            contentText: Observable<String>
+            contentText: Observable<String>,
+            updatingPost: PostModel?
         )
     ) {
         
@@ -52,9 +53,14 @@ class WriteViewModel {
         openPostSetting = input.nextButtonTapped.asObservable().withLatestFrom(postSource)
             .map { source -> PostToCreate? in
                 if source.book != nil {
-                    let post = PostToCreate(bookId: source.book!.id, scope: "", isIncomplete: false, location: "", readTime: "", hyperlinkTitle: "", hyperlink: "", title: source.title, content: source.content, postImgLocations: source.images, clubIdListForScope: [])
-                    print(#fileID, #function, #line, post)
-                    return post
+                    var postToCreate: PostToCreate?
+                    if let post = input.updatingPost {
+                        postToCreate = PostToCreate(bookId: source.book!.id, scope: post.scope, isIncomplete: post.isIncomplete, location: post.location, readTime: post.readTime, title: source.title, content: source.content, postImgLocations: source.images, linkRequestDtos: post.linkResponseDtos.map { $0.toCreatingPostHyperlink() }, clubIdListForScope: post.clubIdListForScope)
+                    } else {
+                        postToCreate = PostToCreate(bookId: source.book!.id, scope: "", isIncomplete: false, location: "", readTime: "", title: source.title, content: source.content, postImgLocations: source.images, linkRequestDtos: [], clubIdListForScope: [])
+                    }
+                    
+                    return postToCreate
                 } else {
                     return nil
                 }

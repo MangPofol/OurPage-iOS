@@ -31,13 +31,14 @@ class PostViewModel {
         linkTapped
             .debug()
             .map { _ -> URL? in
-                if post.hyperlink == "" {
+                guard let link = post.linkResponseDtos.first else { return nil }
+                if link.hyperLink == "" {
                     return nil
                 }
-                if !post.hyperlink.hasPrefix("http") {
-                    return URL(string: "http://" + post.hyperlink)
+                if !link.hyperLink.hasPrefix("http") {
+                    return URL(string: "http://" + link.hyperLink)
                 }
-                return URL(string: post.hyperlink)
+                return URL(string: link.hyperLink)
             }
             .bind(to: self.urlToOpen)
             .disposed(by: disposeBag)
