@@ -26,6 +26,7 @@ final class AlertView: UIView {
         self.backgroundColor = .white
         self.setCornerRadius(radius: 10.adjustedHeight)
         
+        self.snp.contentCompressionResistanceHorizontalPriority = .infinity
         self.snp.makeConstraints {
             $0.width.equalTo(268.adjustedHeight)
         }
