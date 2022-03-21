@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import RxGesture
 import FFPopup
+import Toaster
 
 class HomeViewController: UIViewController {
 
@@ -166,6 +167,16 @@ class HomeViewController: UIViewController {
             .bind { [weak self] in
                 guard let self = self else { return }
                 self.navigationController?.pushViewController(CheckListViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+//        let toastText = AttributedString(
+        viewModel.todoCompleted
+            .bind {
+                
+                if $0 {
+                    Toast(text: "체크리스트를 완료했습니다.").show()
+                }
             }
             .disposed(by: disposeBag)
     // }

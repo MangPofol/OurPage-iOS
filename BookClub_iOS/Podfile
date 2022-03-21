@@ -24,7 +24,7 @@ target 'BookClub_iOS' do
   pod 'Then'
   pod 'ZLPhotoBrowser'
   pod 'Carte'
-
+  pod 'Toaster'
   target 'BookClub_iOSTests' do
     inherit! :search_paths
     # Pods for testing
