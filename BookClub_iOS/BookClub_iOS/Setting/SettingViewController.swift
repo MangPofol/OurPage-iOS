@@ -93,7 +93,51 @@ final class SettingViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        self.customView.noticeButton.rx.tapGesture().when(.recognized)
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                self.showEmptyAlert()
+            }
+            .disposed(by: disposeBag)
+        
+        //도움말
+        self.customView.helpButton.rx.tapGesture().when(.recognized)
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                self.showHelpAlert()
+            }
+            .disposed(by: disposeBag)
         // }
+    }
+    
+    private func showHelpAlert() {
+        let view = AlertView(title: "도움말", content: "도움말을 준비하고 있습니다.", action: "확인")
+        
+        let layout = FFPopupLayout(horizontal: .center, vertical: .center)
+        self.popup = FFPopup(contentView : view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        self.popup.show(layout: layout)
+        
+        view.actionButton.rx.tap
+            .bind {
+                [weak self] in
+                    self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func showEmptyAlert() {
+        let view = AlertView(title: "공지사항", content: "내용이 없습니다.", action: "확인")
+        
+        let layout = FFPopupLayout(horizontal: .center, vertical: .center)
+        self.popup = FFPopup(contentView : view, showType: .bounceIn, dismissType: .shrinkOut, maskType: .dimmed, dismissOnBackgroundTouch: true, dismissOnContentTouch: false)
+        self.popup.show(layout: layout)
+        
+        view.actionButton.rx.tap
+            .bind {
+                [weak self] in
+                    self?.popup.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func showLogoutAlert() {

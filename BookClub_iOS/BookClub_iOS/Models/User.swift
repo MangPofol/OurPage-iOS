@@ -28,8 +28,8 @@ struct CreatingUser: Codable {
     var email: String = ""
     var nickname: String? = nil
     var password: String = ""
-    var sex: String? = nil
-    var birthdate: String? = nil
+    var sex: String? = "MALE"
+    var birthdate: String? = "1996-07-01T11:11:11"
     var introduce: String? = nil
     var style: String? = nil
     var goal: String? = nil

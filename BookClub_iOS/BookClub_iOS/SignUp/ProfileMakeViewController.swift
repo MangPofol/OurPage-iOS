@@ -100,7 +100,7 @@ class ProfileMakeViewController: UIViewController {
         viewModel.nextConfirmed
             .bind { [weak self] in
                 if $0 {
-                    self?.navigationController?.pushViewController(GenderBirthViewController(), animated: true)
+                    self?.navigationController?.pushViewController(IntroduceViewController(), animated: true)
                 }
             }
             .disposed(by: disposeBag)

@@ -14,6 +14,11 @@ class BookCollectionViewController: UICollectionViewController {
     
     let disposeBag = DisposeBag()
     var viewModel: BookCollectionViewModel!
+    var emptyView = EmptyView().then {
+        $0.imageView.isHidden = true
+        $0.contentLabel.text = "등록된 책이 없습니다."
+        $0.isHidden = true
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -24,6 +29,10 @@ class BookCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.addSubview(emptyView)
+        emptyView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         self.collectionView.delegate = nil
         self.collectionView.dataSource = nil
         
@@ -38,6 +47,9 @@ class BookCollectionViewController: UICollectionViewController {
         // bind outputs
         viewModel!.books
             .observe(on: MainScheduler.instance)
+            .do { [weak self] in
+                self?.emptyView.isHidden = !$0.isEmpty
+            }
             .bind(to:
                     collectionView.rx
                     .items(cellIdentifier: BookCollectionViewCell.identifier, cellType: BookCollectionViewCell.self)) { (row, element, cell) in

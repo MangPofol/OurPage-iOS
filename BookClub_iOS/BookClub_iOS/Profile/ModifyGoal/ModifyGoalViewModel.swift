@@ -8,23 +8,17 @@
 import Foundation
 
 import RxSwift
+import RxRelay
 
 class ModifyGoalViewModel {
     var isModified = BehaviorSubject<Bool>(value: false)
     
-    var periodText = BehaviorSubject<String>(value: "1")
-    var unitText = BehaviorSubject<String>(value: "개월")
-    var booksText = BehaviorSubject<String>(value: "10")
+    var goalSentence = PublishRelay<String>()
     
     var disposeBag = DisposeBag()
     
-    init(nextButtonTapped: Observable<Void>) {
-        let goalSentence = Observable.combineLatest(periodText, unitText, booksText)
-            .map {
-                "\($0)\($1) 동안 \($2)권의 책을 기록하기"
-            }
-        
-        nextButtonTapped.withLatestFrom(goalSentence)
+    init() {
+        self.goalSentence
             .flatMap { val -> Observable<Bool> in
                 do {
                     if let currentUser = try? Constants.CurrentUser.value() {
