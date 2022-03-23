@@ -13,6 +13,8 @@
 		AE1642AF27CDD50C00D6E1F4 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AE27CDD50C00D6E1F4 /* Todo.swift */; };
 		AE29CB9427CA7E06003CD02E /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */; };
 		AEA5ABA627E379FA006841FA /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5ABA527E379FA006841FA /* EmptyView.swift */; };
+		AEC26CED27EB5C6100E9D3E2 /* BookclubHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */; };
+		AEC26CEF27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */; };
 		AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */; };
 		AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */; };
 		AEFD7F6A27CF641D006A872F /* CheckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFD7F6927CF641D006A872F /* CheckListView.swift */; };
@@ -201,6 +203,8 @@
 		AE1642AE27CDD50C00D6E1F4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
 		AEA5ABA527E379FA006841FA /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
+		AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeView.swift; sourceTree = "<group>"; };
+		AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeViewController.swift; sourceTree = "<group>"; };
 		AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 		AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTodoTableViewCell.swift; sourceTree = "<group>"; };
 		AEFD7F6927CF641D006A872F /* CheckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListView.swift; sourceTree = "<group>"; };
@@ -416,6 +420,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AEC26CEB27EB5C4900E9D3E2 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */,
+				AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		AEFD7F6827CF6402006A872F /* CheckList */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,6 +529,7 @@
 		EA82162027BB6DFB0074152C /* Bookclub */ = {
 			isa = PBXGroup;
 			children = (
+				AEC26CEB27EB5C4900E9D3E2 /* Home */,
 				EA82162D27BB754D0074152C /* Views */,
 				EA82162C27BB75450074152C /* ViewModels */,
 				EA55C8A126D7973000636FD6 /* ViewControllers */,
@@ -1182,9 +1196,11 @@
 				EAF7073C26EB4FD700B7B6D1 /* BookServices.swift in Sources */,
 				EA66D198272C518C00557873 /* ProfileInformationView.swift in Sources */,
 				EA55B68426C64ED300C2545C /* MyLibraryViewModel.swift in Sources */,
+				AEC26CED27EB5C6100E9D3E2 /* BookclubHomeView.swift in Sources */,
 				EAC816CA27042A8900757258 /* BookOptionSelectViewModel.swift in Sources */,
 				EAA7ED2027608A36000E0F06 /* ModifyGoalView.swift in Sources */,
 				EA55B68626C64F3100C2545C /* Book.swift in Sources */,
+				AEC26CEF27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift in Sources */,
 				EA8FA8FE27780C970078FE62 /* LoadingHUD.swift in Sources */,
 				EAD4B88A27B661F4006EABE8 /* IntroViewController.swift in Sources */,
 				AEFD7F6C27CF66B6006A872F /* MonthlyCheckListCell.swift in Sources */,
