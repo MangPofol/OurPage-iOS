@@ -68,10 +68,10 @@ struct PostModel: Codable {
 struct PostHyperlink: Codable {
     var linkId: Int
     var hyperlinkTitle: String
-    var hyperLink: String
+    var hyperlink: String
     
     func toCreatingPostHyperlink() -> CreatingPostHyperlink {
-        return CreatingPostHyperlink(hyperlinkTitle: self.hyperlinkTitle, hyperlink: self.hyperLink)
+        return CreatingPostHyperlink(hyperlinkTitle: self.hyperlinkTitle, hyperlink: self.hyperlink)
     }
 }
 

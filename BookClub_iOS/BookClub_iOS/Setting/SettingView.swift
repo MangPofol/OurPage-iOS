@@ -40,7 +40,7 @@ final class SettingView: UIView {
         self.addSubview(logoutButton)
         self.addSubview(signOutButton)
         
-        self.addSubview(helpButton)
+//        self.addSubview(helpButton)
         
         self.passwordChangeButton.snp.makeConstraints {
             $0.top.equalToSuperview().inset(12.adjustedHeight)
@@ -101,15 +101,15 @@ final class SettingView: UIView {
             $0.left.right.equalToSuperview().inset(20.adjustedHeight)
         }
         
-        self.helpButton.then {
-            $0.contentMode = .scaleAspectFit
-            $0.image = UIImage(named: "HelpImage")
-        }.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.width.equalTo(274.adjustedHeight)
-            $0.height.equalTo(46.33.adjustedHeight)
-            $0.bottom.equalToSuperview().inset(60.67.adjustedHeight)
-        }
+//        self.helpButton.then {
+//            $0.contentMode = .scaleAspectFit
+//            $0.image = UIImage(named: "HelpImage")
+//        }.snp.makeConstraints {
+//            $0.centerX.equalToSuperview()
+//            $0.width.equalTo(274.adjustedHeight)
+//            $0.height.equalTo(46.33.adjustedHeight)
+//            $0.bottom.equalToSuperview().inset(60.67.adjustedHeight)
+//        }
     }
     
     required init?(coder: NSCoder) {

@@ -9,6 +9,7 @@ import UIKit
 
 import RxSwift
 import RxCocoa
+import BetterSegmentedControl
 
 class ModifyGoalViewController: UIViewController {
 
@@ -30,8 +31,73 @@ class ModifyGoalViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.font: UIFont.defaultFont(size: 14, boldLevel: .bold)], for: .normal)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        Constants.CurrentUser
+            .compactMap { $0 }
+            .bind { [weak self] in
+                guard let self = self,
+                      let goal = $0.goal,
+                      !goal.isEmpty else { return }
+                
+                let strs = goal.components(separatedBy: " ")
+                
+                var period: [String] = []
+                var unit: [String] = []
+                
+                if let str = strs.first {
+                    str
+                        .map { String($0) }
+                        .forEach {
+                            if Int($0) != nil {
+                                period.append($0)
+                            } else {
+                                unit.append($0)
+                            }
+                        }
+                }
+                
+                let _period = Int(period.joined())!
+                print("@@@", _period)
+                self.customView.periodPickerView.selectRow(_period - 1, inComponent: 0, animated: false)
+                
+                var _unit = 0
+                switch unit.joined() {
+                case "년":
+                   _unit = 0
+                case "개월":
+                    _unit = 1
+                case "일":
+                    _unit = 2
+                default:
+                    break
+                }
+                
+                self.customView.unitPickerView.selectRow(_unit, inComponent: 0, animated: false)
+                
+                let str = strs[2]
+                var book: [String] = []
+                str
+                    .map { String($0) }
+                    .forEach {
+                        if Int($0) != nil {
+                            book.append($0)
+                        }
+                    }
+                
+                let _book = Int(book.joined())!
+                self.customView.booksPickerView.selectRow(_book - 1, inComponent: 0, animated: false)
+                
+                LoadingHUD.hide()
+            }
+            .disposed(by: disposeBag)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        LoadingHUD.show()
         
         self.customView.periodPickerView.rx.setDelegate(self).disposed(by: disposeBag)
         self.customView.periodPickerView.dataSource = self
@@ -43,25 +109,16 @@ class ModifyGoalViewController: UIViewController {
         self.customView.unitPickerView.selectRow(1, inComponent: 0, animated: false)
         self.customView.booksPickerView.selectRow(9, inComponent: 0, animated: false)
         
-        viewModel = ModifyGoalViewModel(nextButtonTapped: self.navigationItem.rightBarButtonItem!.rx.tap.asObservable())
+        viewModel = ModifyGoalViewModel()
         
-        // inputs
-        self.customView.periodPickerView.rx.itemSelected.asObservable()
-            .withUnretained(self)
-            .bind { (owner, val) in
-                owner.viewModel.periodText.onNext(owner.periods[val.row])
-            }.disposed(by: disposeBag)
-        self.customView.unitPickerView.rx.itemSelected.asObservable()
-            .withUnretained(self)
-            .bind { (owner, val) in
-                owner.viewModel.unitText.onNext(owner.units[val.row])
-            }.disposed(by: disposeBag)
-        self.customView.booksPickerView.rx.itemSelected.asObservable()
-            .withUnretained(self)
-            .bind { (owner, val) in
-                owner.viewModel.booksText.onNext(owner.booksGoals[val.row])
-            }.disposed(by: disposeBag)
-        
+        self.navigationItem.rightBarButtonItem!.rx.tap
+            .map { [weak self] in
+                guard let self = self else { return "" }
+                return "\(self.customView.periodPickerView.selectedRow(inComponent: 0) + 1)\(self.units[self.customView.unitPickerView.selectedRow(inComponent: 0)]) 동안 \(self.customView.booksPickerView.selectedRow(inComponent: 0) + 1)권의 책을 기록하기"
+            }
+            .bind(to: self.viewModel.goalSentence)
+            .disposed(by: disposeBag)
+            
         // outputs
         viewModel.isModified
             .observe(on: MainScheduler.instance)

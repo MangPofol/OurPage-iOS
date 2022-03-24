@@ -46,14 +46,14 @@ class MyLibraryView: UIView {
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
     }
     let sortingButton = ToggleButton(normalColor: .white, onColor: .mainColor).then {
         $0.setTitle("정렬", for: .normal)
         $0.titleLabel?.font = .defaultFont(size: .small)
         $0.setTitleColor(.black, for: .normal)
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedWidth(13.0)))
+        $0.makeBorder(color: UIColor.grayC3.cgColor, width: 1.0, cornerRadius: CGFloat(Constants.getAdjustedHeight(13.0)))
     }
     
     lazy var upperView = UIView().then {

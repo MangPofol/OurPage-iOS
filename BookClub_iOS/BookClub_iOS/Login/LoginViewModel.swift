@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class LoginViewModel {
-    var isLoginConfirmed: Observable<Bool>
+    var isLoginConfirmed: Observable<LoginResultType>
     
     init(idText: Observable<String>, passwordText: Observable<String>, loginButtonTapped: ControlEvent<()>) {
         let idAndPassword = Observable.combineLatest(idText, passwordText)
@@ -30,13 +30,23 @@ class LoginViewModel {
                 }
                 
             }
+            .delay(.milliseconds(1500), scheduler: MainScheduler.instance)
             .map {
-                if $0 == nil {
-                    return false
+                guard let user = $0 else { return .failed }
+                
+                if user.isDormant {
+                    return .deleted
                 } else {
                     Constants.CurrentUser.onNext($0)
-                    return true
+                    return .success
                 }
             }
     }
+}
+
+enum LoginResultType {
+    case success
+    case failed
+    case deleted
+    case error
 }

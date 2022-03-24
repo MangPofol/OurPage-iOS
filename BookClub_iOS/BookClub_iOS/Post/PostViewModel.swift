@@ -32,13 +32,13 @@ class PostViewModel {
             .debug()
             .map { _ -> URL? in
                 guard let link = post.linkResponseDtos.first else { return nil }
-                if link.hyperLink == "" {
+                if link.hyperlink == "" {
                     return nil
                 }
-                if !link.hyperLink.hasPrefix("http") {
-                    return URL(string: "http://" + link.hyperLink)
+                if !link.hyperlink.hasPrefix("http") {
+                    return URL(string: "http://" + link.hyperlink)
                 }
-                return URL(string: link.hyperLink)
+                return URL(string: link.hyperlink)
             }
             .bind(to: self.urlToOpen)
             .disposed(by: disposeBag)

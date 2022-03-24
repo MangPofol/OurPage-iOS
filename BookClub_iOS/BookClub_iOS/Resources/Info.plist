@@ -30,11 +30,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>카메라를 사용합니다.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>마이크를 사용합니다.</string>
+	<string>프로필 사진, 메모에 사진을 저장하기 위해 카메라를 사용합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>사진을 사용합니다.</string>
+	<string>프로필 사진, 메모에 사진을 저장하기 위해 갤러리를 사용합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Light.ttf</string>

@@ -23,6 +23,7 @@ class HomeViewModel {
     var createTodoButtonTapped = PublishRelay<()>()
     var newTodoText = PublishRelay<String>()
     var completeTodo = PublishRelay<Todo>()
+    var todoCompleted = PublishRelay<Bool>()
     var deleteTodo = PublishRelay<Todo>()
     
     private let disposeBag = DisposeBag()
@@ -71,6 +72,7 @@ class HomeViewModel {
             }
             .flatMap { [weak self] _ -> Observable<[Todo?]> in
                 guard let self = self else { return Observable.just([]) }
+                self.todoCompleted.accept(true)
                 return self.getTodos()
             }
             .bind(to: self.todos)

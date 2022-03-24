@@ -481,7 +481,11 @@ extension UINavigationBar {
         appearance.backgroundColor = .white
         appearance.titleTextAttributes = [.foregroundColor: UIColor.mainColor, .font: UIFont.defaultFont(size: 18, boldLevel: .extraBold)]
         appearance.shadowColor = nil
-        appearance.setBackIndicatorImage(.leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)).withInsets(UIEdgeInsets(top: 0, left: 20.adjustedHeight, bottom: 0, right: 0)), transitionMaskImage: .leftArrowImage.resize(to: CGSize(width: 6.34, height: 11).resized(basedOn: .height)).withInsets(UIEdgeInsets(top: 0, left: 20.adjustedHeight, bottom: 0, right: 0)))
+        
+        let backbuttonImage: UIImage = .leftArrowImage
+            .resize(to: CGSize(width: 6.34, height: 11))
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12.0, bottom: -8.0, right: 0))
+        appearance.setBackIndicatorImage(backbuttonImage, transitionMaskImage: backbuttonImage)
         
         self.isTranslucent = false
         self.tintColor = .mainColor
@@ -515,11 +519,7 @@ extension UIViewController {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21, height: 16.05).resized(basedOn: .height)), style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        // 백 버튼 텍스트 지우기
-        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        backBarButtonItem.tintColor = .mainColor
-        self.navigationItem.backBarButtonItem = backBarButtonItem
+        self.navigationController?.navigationBar.setDefault()
     }
     
     func removeBackButtonTitle() {
