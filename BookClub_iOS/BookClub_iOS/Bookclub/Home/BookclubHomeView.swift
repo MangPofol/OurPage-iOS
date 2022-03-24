@@ -120,20 +120,23 @@ final class BookclubHomeView: UIView {
         }
         
         self.lowView.addArrangedSubview(addBookclubButton)
-        self.addBookclubButton.then {
-            $0.titleLabel.text = "북클럽 추가"
-            $0.titleLabel.textColor = .mainColor
+        self.addBookclubButton.then { item in
+            item.titleLabel.text = "북클럽 추가"
             
-            $0.backgroundColor = .white
-            $0.setCornerRadius(radius: 10.0.adjustedHeight)
+            item.setCornerRadius(radius: 10.0.adjustedHeight)
             
-            $0.writeButton.image = UIImage(named: "RightArrow")?.withRenderingMode(.alwaysTemplate)
-            $0.writeButton.tintColor = .mainColor
+            item.writeButton.image = UIImage(named: "PlusIcon")?
+                .withRenderingMode(.alwaysTemplate)
             
-            $0.writeButton.snp.updateConstraints {
-                $0.right.equalToSuperview().inset(16.5.adjustedHeight)
-                $0.width.equalTo(5.48.adjustedHeight)
-                $0.height.equalTo(9.51.adjustedHeight)
+            item.writeButton.snp.remakeConstraints {
+                $0.centerY.equalToSuperview()
+                $0.width.height.equalTo(10.0.adjustedHeight)
+                $0.left.equalToSuperview().inset(14.0.adjustedHeight)
+            }
+            
+            item.titleLabel.snp.remakeConstraints {
+                $0.left.equalTo(item.writeButton.snp.right).offset(12.0.adjustedHeight)
+                $0.centerY.equalToSuperview()
             }
         }.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(20.adjustedHeight)

@@ -484,12 +484,9 @@ extension UINavigationBar {
         
         let backbuttonImage: UIImage = .leftArrowImage
             .resize(to: CGSize(width: 6.34, height: 11))
-                        .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12, bottom: -5, right: 0))
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12.0, bottom: -8.0, right: 0))
         appearance.setBackIndicatorImage(backbuttonImage, transitionMaskImage: backbuttonImage)
         
-        self.topItem?.backBarButtonItem = UIBarButtonItem(customView: UIView().then {
-            $0.backgroundColor = .red
-        })
         self.isTranslucent = false
         self.tintColor = .mainColor
         self.standardAppearance = appearance
