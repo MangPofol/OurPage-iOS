@@ -35,7 +35,6 @@ class HomeViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
-        self.navigationController?.navigationBar.setDefault()
         self.setDefaultConfiguration()
     }
     
