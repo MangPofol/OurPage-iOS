@@ -23,6 +23,8 @@ final class BookclubHomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // TODO: 북클럽 데이터 연결
+        
         // bind outputs {
         self.navigationItem.leftBarButtonItem!.rx.tap
             .bind { [weak self] in

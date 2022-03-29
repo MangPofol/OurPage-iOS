@@ -48,6 +48,10 @@ final class BookclubHomeView: UIView {
         self.stackView.setCustomSpacing(34.0, after: self.bookclubCollectionView)
         self.bookclubCollectionView.then {
             $0.backgroundColor = .red
+            $0.register(BookclubHomeCollectionViewCell.self, forCellWithReuseIdentifier: BookclubHomeCollectionViewCell.identifier)
+            _ = ($0.collectionViewLayout as! UICollectionViewFlowLayout).then {
+                $0.itemSize = CGSize(width: 220.0, height: 250.0).resized(basedOn: .height)
+            }
         }.snp.makeConstraints {
             $0.height.equalTo(250.adjustedHeight)
             $0.left.right.equalToSuperview()

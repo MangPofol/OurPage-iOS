@@ -198,6 +198,8 @@ class HomeViewController: UIViewController {
             }
             .disposed(by: alertDisposeBag)
         
+        view.finishButton.setTitleColor(.mainColor, for: .normal)
+        
         view.finishButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel.newTodoText.accept(view.introduceTextView.text)

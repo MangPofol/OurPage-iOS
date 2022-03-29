@@ -12,6 +12,10 @@
 		AE1642AD27CDD4A500D6E1F4 /* TodoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */; };
 		AE1642AF27CDD50C00D6E1F4 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AE27CDD50C00D6E1F4 /* Todo.swift */; };
 		AE29CB9427CA7E06003CD02E /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */; };
+		AE6E5FB127F1FA2600A1D8F1 /* BookclubHomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6E5FB027F1FA2600A1D8F1 /* BookclubHomeCollectionViewCell.swift */; };
+		AE80DF9527F34A3C0005D758 /* BookclubSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE80DF9427F34A3C0005D758 /* BookclubSettingView.swift */; };
+		AE80DF9727F34F610005D758 /* BookclubSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE80DF9627F34F610005D758 /* BookclubSettingTableViewCell.swift */; };
+		AE80DF9927F353AF0005D758 /* BookclubSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE80DF9827F353AF0005D758 /* BookclubSettingViewController.swift */; };
 		AEA5ABA627E379FA006841FA /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5ABA527E379FA006841FA /* EmptyView.swift */; };
 		AEC26CED27EB5C6100E9D3E2 /* BookclubHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */; };
 		AEC26CEF27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */; };
@@ -202,6 +206,10 @@
 		AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoServices.swift; sourceTree = "<group>"; };
 		AE1642AE27CDD50C00D6E1F4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		AE29CB9327CA7E06003CD02E /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
+		AE6E5FB027F1FA2600A1D8F1 /* BookclubHomeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeCollectionViewCell.swift; sourceTree = "<group>"; };
+		AE80DF9427F34A3C0005D758 /* BookclubSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubSettingView.swift; sourceTree = "<group>"; };
+		AE80DF9627F34F610005D758 /* BookclubSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubSettingTableViewCell.swift; sourceTree = "<group>"; };
+		AE80DF9827F353AF0005D758 /* BookclubSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubSettingViewController.swift; sourceTree = "<group>"; };
 		AEA5ABA527E379FA006841FA /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeView.swift; sourceTree = "<group>"; };
 		AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeViewController.swift; sourceTree = "<group>"; };
@@ -420,11 +428,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AE80DF9327F34A2E0005D758 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				AE80DF9427F34A3C0005D758 /* BookclubSettingView.swift */,
+				AE80DF9627F34F610005D758 /* BookclubSettingTableViewCell.swift */,
+				AE80DF9827F353AF0005D758 /* BookclubSettingViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
 		AEC26CEB27EB5C4900E9D3E2 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */,
 				AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */,
+				AE6E5FB027F1FA2600A1D8F1 /* BookclubHomeCollectionViewCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -529,6 +548,7 @@
 		EA82162027BB6DFB0074152C /* Bookclub */ = {
 			isa = PBXGroup;
 			children = (
+				AE80DF9327F34A2E0005D758 /* Setting */,
 				AEC26CEB27EB5C4900E9D3E2 /* Home */,
 				EA82162D27BB754D0074152C /* Views */,
 				EA82162C27BB75450074152C /* ViewModels */,
@@ -1168,11 +1188,13 @@
 				EAD5902726CC100A006176DB /* MyLibraryView.swift in Sources */,
 				EA32DAB926D69DF200D7A6C4 /* MemberProfileCollectionViewCell.swift in Sources */,
 				EA983F0726BFFE5B0070604E /* CreateBookClubViewModel.swift in Sources */,
+				AE80DF9927F353AF0005D758 /* BookclubSettingViewController.swift in Sources */,
 				EAD6FEDD2716FB5B00563005 /* FileAPI.swift in Sources */,
 				EAF0406027C3758600E3B60E /* PasswordChangeViewModel.swift in Sources */,
 				EA71261827C118C10010726A /* SettingViewController.swift in Sources */,
 				EA60219F2732D29F00092917 /* IntroduceViewModel.swift in Sources */,
 				EA983F1826C172250070604E /* SideMenuView.swift in Sources */,
+				AE80DF9727F34F610005D758 /* BookclubSettingTableViewCell.swift in Sources */,
 				AEFD7F7027CF6D1F006A872F /* CheckListViewModel.swift in Sources */,
 				EA3CCB7326D137E700ADBA94 /* BookclubSelectorCell.swift in Sources */,
 				EA82161B27B908960074152C /* MyProfileViewModel.swift in Sources */,
@@ -1248,6 +1270,7 @@
 				EA45F7B427547712000A3FC5 /* HomeView.swift in Sources */,
 				EA66D19E272CEDE800557873 /* ProfileMakeViewController.swift in Sources */,
 				EAF0405E27C3279600E3B60E /* PasswordChangeViewController.swift in Sources */,
+				AE6E5FB127F1FA2600A1D8F1 /* BookclubHomeCollectionViewCell.swift in Sources */,
 				EA27DB3326F472A500CBD45E /* ButtonWithImage.swift in Sources */,
 				EA1C2A58277A1BFE009BFF32 /* PostViewModel.swift in Sources */,
 				EA1B38AA27A96B67004EBB16 /* EmailAuthViewModel.swift in Sources */,
@@ -1271,6 +1294,7 @@
 				AEA5ABA627E379FA006841FA /* EmptyView.swift in Sources */,
 				EA1B05C726CD59B8002F6037 /* ToggleButton.swift in Sources */,
 				EA55C8A926D7DAA100636FD6 /* BookCollectionViewController.swift in Sources */,
+				AE80DF9527F34A3C0005D758 /* BookclubSettingView.swift in Sources */,
 				EA983F2526C24E360070604E /* SideMenuViewModel.swift in Sources */,
 				EAC24B532760548300BCA823 /* ButtonWithRightIcon.swift in Sources */,
 				EA983F2726C2B07D0070604E /* WriteViewController.swift in Sources */,
@@ -1470,7 +1494,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "NamJunLee.BookClub-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1492,7 +1516,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "NamJunLee.BookClub-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
