@@ -17,7 +17,7 @@ final class BookclubHomeView: UIView {
     let bookclubSettingLabel = UILabel()
     let bookclubSettingButton = WriteRecordButton()
     let bookclubHelpButton = WriteRecordButton()
-    let addBookclubButton = WriteRecordButton()
+    let createBookclubButton = WriteRecordButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -123,10 +123,10 @@ final class BookclubHomeView: UIView {
             $0.height.equalTo(40.0.adjustedHeight)
         }
         
-        self.lowView.addArrangedSubview(addBookclubButton)
-        self.addBookclubButton.then { item in
+        self.lowView.addArrangedSubview(createBookclubButton)
+        self.createBookclubButton.then { item in
             item.titleLabel.text = "북클럽 추가"
-            
+            item.titleLabel.font = .defaultFont(size: 14.0, boldLevel: .bold)
             item.setCornerRadius(radius: 10.0.adjustedHeight)
             
             item.writeButton.image = UIImage(named: "PlusIcon")?

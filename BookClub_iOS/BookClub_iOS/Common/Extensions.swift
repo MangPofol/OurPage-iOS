@@ -10,6 +10,7 @@ import UIKit.UITableView
 import BetterSegmentedControl
 import UIKit
 import CryptoKit
+import RxSwift
 
 extension UITableView {
     func removeExtraLine() {
@@ -516,7 +517,7 @@ extension UIViewController {
         // bar underline 삭제
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         nav.navigationBar.shadowImage = nil
-        
+        self.removeBackButtonTitle()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21, height: 16.05).resized(basedOn: .height)), style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationController?.navigationBar.setDefault()
@@ -541,6 +542,20 @@ extension UITextField {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: value, height: self.frame.height))
         self.leftView = paddingView
         self.leftViewMode = ViewMode.always
+    }
+    
+    func setMaxLength(maxLength: Int, disposeBag: DisposeBag) {
+        self.rx.text
+            .orEmpty
+            .map {
+                if $0.count > maxLength {
+                    return String($0.prefix(maxLength))
+                } else {
+                    return $0
+                }
+            }
+            .bind(to: self.rx.text)
+            .disposed(by: disposeBag)
     }
 }
 
