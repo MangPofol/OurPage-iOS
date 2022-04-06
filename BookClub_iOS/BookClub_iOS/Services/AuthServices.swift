@@ -18,7 +18,7 @@ class AuthServices: Networkable {
             .rx.request(.createUser(user))
             .asObservable()
             .map {
-                guard let result = try? JSONDecoder().decode(CreatingResult.self, from: $0.data) else {
+                guard let result = try? Constants.defaultDecoder.decode(CreatingResult.self, from: $0.data) else {
                     return false
                 }
                 SignUpViewModel.createdUserId = String(result.data.userId)
@@ -31,7 +31,7 @@ class AuthServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let token = try? JSONDecoder().decode(LoginResult.self, from: $0.data)
+                    let token = try? Constants.defaultDecoder.decode(LoginResult.self, from: $0.data)
                     if let token = token {
                         KeyChainController.shared.create(Constants.ServiceString, account: "Token", value: token.token)
                     }

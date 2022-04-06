@@ -22,7 +22,7 @@ class ClubServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let response = try? JSONDecoder().decode(GetClubResponse.self, from: $0.data)
+                    let response = try? Constants.defaultDecoder.decode(GetClubResponse.self, from: $0.data)
                     return response!.data
                 }
                 return []

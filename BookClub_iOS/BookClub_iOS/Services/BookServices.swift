@@ -26,7 +26,7 @@ class BookServices: Networkable {
             .map {
                 if $0.statusCode == 200 {
                     do {
-                        let data = try JSONDecoder().decode(BooksResponse.self, from: $0.data)
+                        let data = try Constants.defaultDecoder.decode(BooksResponse.self, from: $0.data)
                         return data.data
                     } catch {
                         return []
@@ -44,7 +44,7 @@ class BookServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 201 {
-                    let data = try JSONDecoder().decode(BookModel.self, from: $0.data)
+                    let data = try Constants.defaultDecoder.decode(BookModel.self, from: $0.data)
                     return data
                 } else {
                     return nil

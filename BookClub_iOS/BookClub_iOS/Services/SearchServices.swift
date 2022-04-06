@@ -24,8 +24,7 @@ class SearchServices {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-//                    print(try $0.mapJSON())
-                    let data = try JSONDecoder().decode(SearchedResult.self, from: $0.data)
+                    let data = try Constants.defaultDecoder.decode(SearchedResult.self, from: $0.data)
                     return data.documents
                 } else {
                     return []
@@ -41,7 +40,7 @@ class SearchServices {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let data = try JSONDecoder().decode(SearchedResult.self, from: $0.data)
+                    let data = try Constants.defaultDecoder.decode(SearchedResult.self, from: $0.data)
                     return data.documents.first?.thumbnail
                 } else {
                     print($0.description)
@@ -58,7 +57,7 @@ class SearchServices {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let data = try JSONDecoder().decode(SearchedResult.self, from: $0.data)
+                    let data = try Constants.defaultDecoder.decode(SearchedResult.self, from: $0.data)
                     
                     var books = [Book]()
                     for (index, value) in data.documents.enumerated() {

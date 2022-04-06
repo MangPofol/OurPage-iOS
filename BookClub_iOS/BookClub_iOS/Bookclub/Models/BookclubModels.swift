@@ -16,14 +16,6 @@ struct Bookclub: Codable {
     var description: String
     var createdDate: Date
     var modifiedDate: Date
-    //"id": 8,
-    //    "name": "새로운 클럽 이름",
-    //    "colorSet": "A",
-    //    "level": 1,
-    //    "presidentId": 1,
-    //    "description": "클럽 소개",
-    //    "createdDate": "2021-09-16T16:39:21.8062928",
-    //    "modifiedDate": "2021-09-16T16:39:21.8062928"
 }
 
 struct CreatingBookclub: Codable {

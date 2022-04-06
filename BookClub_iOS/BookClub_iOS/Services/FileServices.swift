@@ -36,7 +36,7 @@ class FileServices: Networkable {
             .map {
                 if $0.statusCode == 200 {
                     
-                    let urls = try JSONDecoder().decode([String].self, from: $0.data)
+                    let urls = try Constants.defaultDecoder.decode([String].self, from: $0.data)
                     return urls
                 }
                 return []

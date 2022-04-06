@@ -35,7 +35,7 @@ class UserServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let response = try? JSONDecoder().decode(CreatedResult.self, from: $0.data)
+                    let response = try? Constants.defaultDecoder.decode(CreatedResult.self, from: $0.data)
                     return response?.data
                 } else {
                     return nil

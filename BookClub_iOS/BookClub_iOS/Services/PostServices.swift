@@ -29,13 +29,7 @@ class PostServices: Networkable {
             .map {
                 if $0.statusCode == 200 {
                     do {
-                        let decoder = JSONDecoder()
-                        let dateFormat = DateFormatter().then {
-                            $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                            $0.calendar = Calendar(identifier: .iso8601)
-                            $0.locale = Locale(identifier: "ko_kr")
-                        }
-                        decoder.dateDecodingStrategy = .formatted(dateFormat)
+                        let decoder = Constants.defaultDecoder
                         let data = try decoder.decode(PostsResponse.self, from: $0.data)
                         return data.data
                     } catch {
@@ -60,8 +54,7 @@ class PostServices: Networkable {
             .map {
                 if $0.statusCode == 201 {
                     do {
-                        let decoder = JSONDecoder()
-                        decoder.dateDecodingStrategy = .formatted(.serverFormat)
+                        let decoder = Constants.defaultDecoder
                         let data = try decoder.decode(PostModel.self, from: $0.data)
                         return data
                     } catch {
@@ -83,7 +76,7 @@ class PostServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let data = try JSONDecoder().decode(TotalCountResponse.self, from: $0.data)
+                    let data = try Constants.defaultDecoder.decode(TotalCountResponse.self, from: $0.data)
                     return data.data
                 }
                 return nil
@@ -98,11 +91,7 @@ class PostServices: Networkable {
             .map {
                 if $0.statusCode == 200 {
                     do {
-                        let decoder = JSONDecoder()
-                        let formatter = DateFormatter().then {
-                            $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                        }
-                        decoder.dateDecodingStrategy = .formatted(formatter)
+                        let decoder = Constants.defaultDecoder
                         let data = try decoder.decode(PostModel.self, from: $0.data)
                         return data
                     } catch {
