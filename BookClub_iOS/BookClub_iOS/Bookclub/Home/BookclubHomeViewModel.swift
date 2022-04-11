@@ -18,6 +18,7 @@ class BookclubHomeViewModel: ViewModelType {
     struct Output {
         var openBookclubSetting: Driver<Bool>!
         var openAddBookclub: Driver<Bool>!
+        var bookclub: Driver<[Club?]>!
     }
     
     var input: Input?
@@ -35,5 +36,19 @@ class BookclubHomeViewModel: ViewModelType {
         
         self.output.openAddBookclub = input.createBookclubTapped
             .map { _ in true }.asDriver(onErrorJustReturn: false)
+        
+        self.output.bookclub = Constants.CurrentUser
+            .compactMap { $0 }
+            .flatMap {
+                BookclubServices.getClubsByUser(id: $0.userId)
+            }
+            .map {
+                if 3 - $0.count > 0 {
+                    return $0 + Array(repeating: nil, count: 3 - $0.count)
+                } else {
+                    return $0
+                }
+            }
+            .asDriver(onErrorJustReturn: [])
     }
 }

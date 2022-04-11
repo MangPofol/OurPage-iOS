@@ -35,6 +35,8 @@ class BookclubCreateView: UIView {
             $0.font = .defaultFont(size: 14.0, boldLevel: .medium)
             $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
             $0.addLeftPadding(value: 10.0.adjustedHeight)
+            $0.autocorrectionType = .no
+            $0.autocapitalizationType = .none
         }.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom).offset(10.5.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
@@ -58,6 +60,8 @@ class BookclubCreateView: UIView {
             $0.font = .defaultFont(size: 14.0, boldLevel: .medium)
             $0.setCornerRadius(radius: Constants.getAdjustedHeight(10.0))
             $0.addLeftPadding(value: 10.0.adjustedHeight)
+            $0.autocorrectionType = .no
+            $0.autocapitalizationType = .none
         }.snp.makeConstraints {
             $0.top.equalTo(introduceLabel.snp.bottom).offset(10.5.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)

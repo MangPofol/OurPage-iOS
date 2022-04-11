@@ -15,6 +15,12 @@ final class BookclubHomeViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private var viewModel: BookclubHomeViewModel!
     
+    var bookclubs: [Club?] = [] {
+        didSet {
+            self.customView.bookclubCollectionView.reloadData()
+        }
+    }
+    
     override func loadView() {
         self.view = customView
         self.navigationItem.title = "BOOK CLUB"
@@ -23,6 +29,9 @@ final class BookclubHomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.customView.bookclubCollectionView.delegate = self
+        self.customView.bookclubCollectionView.dataSource = self
         
         self.viewModel = BookclubHomeViewModel(
             input: BookclubHomeViewModel.Input(
@@ -50,6 +59,12 @@ final class BookclubHomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        self.viewModel.output.bookclub
+            .drive { [weak self] in
+                self?.bookclubs = $0
+            }
+            .disposed(by: disposeBag)
+        
         self.navigationItem.leftBarButtonItem!.rx.tap
             .bind { [weak self] in
                 let transition = CATransition()
@@ -73,5 +88,35 @@ final class BookclubHomeViewController: UIViewController {
         self.navigationController?.navigationBar.setBarShadow()
         self.setDefaultConfiguration()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .updownArrowImage, style: .plain, target: nil, action: nil)
+    }
+}
+
+extension BookclubHomeViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 1 {
+            return self.bookclubs.count
+        }
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard indexPath.section == 1 else { return UICollectionViewCell() }
+        
+        if self.bookclubs[indexPath.item] == nil {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookclubHomeEmptyCell.identifier, for: IndexPath(item: indexPath.item, section: 0)) as! BookclubHomeEmptyCell
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookclubHomeCollectionViewCell.identifier, for: IndexPath(item: indexPath.item, section: 0)) as! BookclubHomeCollectionViewCell
+            cell.bookclub = self.bookclubs[indexPath.item]
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 10.adjustedHeight, bottom: 0, right: 0)
     }
 }

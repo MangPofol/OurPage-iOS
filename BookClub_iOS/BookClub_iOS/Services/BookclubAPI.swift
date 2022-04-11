@@ -10,6 +10,8 @@ import Moya
 
 enum BookclubAPI {
     case createBookclub(creatingBookclub: CreatingBookclub)
+    case getClubsByUser(id: Int)
+    case getClubInfoByClub(id: Int)
 }
 
 extension BookclubAPI: TargetType, AccessTokenAuthorizable {
@@ -23,8 +25,10 @@ extension BookclubAPI: TargetType, AccessTokenAuthorizable {
     
     var path: String {
         switch self {
-        case .createBookclub(_):
+        case .createBookclub(_), .getClubsByUser(_):
             return "/clubs"
+        case .getClubInfoByClub(let id):
+            return "/clubs/\(id)"
         }
     }
     
@@ -32,6 +36,10 @@ extension BookclubAPI: TargetType, AccessTokenAuthorizable {
         switch self {
         case .createBookclub(_):
             return .post
+        case .getClubsByUser(_):
+            return .get
+        case .getClubInfoByClub(_):
+            return .get
         }
     }
     
@@ -39,6 +47,10 @@ extension BookclubAPI: TargetType, AccessTokenAuthorizable {
         switch self {
         case .createBookclub(let creatingBookclub):
             return .requestJSONEncodable(creatingBookclub)
+        case .getClubsByUser(let id):
+            return .requestParameters(parameters: ["userId": "\(id)"], encoding: URLEncoding.default)
+        case .getClubInfoByClub(_):
+            return .requestPlain
         }
     }
     

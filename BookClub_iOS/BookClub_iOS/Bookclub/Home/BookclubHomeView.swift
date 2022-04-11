@@ -11,10 +11,10 @@ final class BookclubHomeView: UIView {
     private let stackView = UIStackView()
     private let lowView = UIStackView()
     
-    let myBookclubLabel = UILabel()
+    let myBookclubLabel = PaddedLabel(padding: UIEdgeInsets(top: 0, left: 29.0.adjustedHeight, bottom: 0, right: -29.0.adjustedHeight))
     var bookclubCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    let bookclubSettingLabel = UILabel()
+    let bookclubSettingLabel = PaddedLabel(padding: UIEdgeInsets(top: 0, left: 10.0.adjustedHeight, bottom: 0, right: -10.0.adjustedHeight))
     let bookclubSettingButton = WriteRecordButton()
     let bookclubHelpButton = WriteRecordButton()
     let createBookclubButton = WriteRecordButton()
@@ -29,7 +29,8 @@ final class BookclubHomeView: UIView {
             $0.axis = .vertical
             $0.distribution = .fill
         }.snp.makeConstraints {
-            $0.edges.equalTo(safeAreaInsets)
+            $0.top.equalTo(safeAreaInsets).inset(35.0.adjustedHeight)
+            $0.bottom.left.right.equalTo(safeAreaInsets)
         }
         
         self.stackView.addArrangedSubview(myBookclubLabel)
@@ -39,34 +40,36 @@ final class BookclubHomeView: UIView {
             $0.textColor = .mainColor
             $0.text = "나의 북클럽"
         }.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(29.0.adjustedHeight)
-            $0.top.equalToSuperview().inset(35.0.adjustedHeight)
             $0.height.equalTo(24.0.adjustedHeight)
         }
         
         self.stackView.addArrangedSubview(bookclubCollectionView)
         self.stackView.setCustomSpacing(34.0, after: self.bookclubCollectionView)
         self.bookclubCollectionView.then {
-            $0.backgroundColor = .red
+            $0.backgroundColor = .white
             $0.register(BookclubHomeCollectionViewCell.self, forCellWithReuseIdentifier: BookclubHomeCollectionViewCell.identifier)
+            $0.register(BookclubHomeEmptyCell.self, forCellWithReuseIdentifier: BookclubHomeEmptyCell.identifier)
+            
             _ = ($0.collectionViewLayout as! UICollectionViewFlowLayout).then {
                 $0.itemSize = CGSize(width: 220.0, height: 250.0).resized(basedOn: .height)
+                $0.scrollDirection = .horizontal
+                $0.minimumInteritemSpacing = 12.0.adjustedHeight
             }
+            $0.showsHorizontalScrollIndicator = false
         }.snp.makeConstraints {
             $0.height.equalTo(250.adjustedHeight)
             $0.left.right.equalToSuperview()
         }
         
         self.stackView.addArrangedSubview(lowView)
-        self.lowView.then {
+        _ = self.lowView.then {
             $0.axis = .vertical
             $0.distribution = .fill
             $0.spacing = 10.0
             $0.backgroundColor = UIColor(hexString: "EFF0F3")
             $0.topRoundCorner(radius: 20.0.adjustedHeight)
-        }.snp.makeConstraints {
-            $0.height.equalTo(292.adjustedHeight)
-            $0.left.right.equalToSuperview()
+            $0.layoutMargins = UIEdgeInsets(top: 0, left: 20.adjustedHeight, bottom: 0, right: 20.adjustedHeight)
+            $0.isLayoutMarginsRelativeArrangement = true
         }
         
         self.lowView.addArrangedSubview(bookclubSettingLabel)
@@ -77,7 +80,6 @@ final class BookclubHomeView: UIView {
             $0.text = "북클럽 관리"
             $0.numberOfLines = 0
         }.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(30.0)
             $0.height.equalTo(66.0)
         }
         
@@ -98,7 +100,6 @@ final class BookclubHomeView: UIView {
                 $0.height.equalTo(9.51.adjustedHeight)
             }
         }.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20.adjustedHeight)
             $0.height.equalTo(40.0.adjustedHeight)
         }
         
@@ -119,7 +120,6 @@ final class BookclubHomeView: UIView {
                 $0.height.equalTo(9.51.adjustedHeight)
             }
         }.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20.adjustedHeight)
             $0.height.equalTo(40.0.adjustedHeight)
         }
         
@@ -143,7 +143,6 @@ final class BookclubHomeView: UIView {
                 $0.centerY.equalToSuperview()
             }
         }.snp.makeConstraints {
-            $0.left.right.equalToSuperview().inset(20.adjustedHeight)
             $0.height.equalTo(40.0.adjustedHeight)
         }
         

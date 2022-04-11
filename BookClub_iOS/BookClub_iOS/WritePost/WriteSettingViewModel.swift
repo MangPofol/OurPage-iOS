@@ -35,7 +35,7 @@ class WriteSettingViewModel {
             updatingPostId: Int?
         )
     ) {
-        let myLibrary = Club(id: -1, name: "내 서재", colorSet: "", level: -1, presidentId: -1, description: "", createdDate: "", modifiedDate: "")
+        let myLibrary = Club(id: -1, name: "내 서재", level: -1, presidentId: -1, description: "", createdDate: "", modifiedDate: "")
         clubs = ClubServices.getClubByUser()
             .map {
                 return [myLibrary] + $0

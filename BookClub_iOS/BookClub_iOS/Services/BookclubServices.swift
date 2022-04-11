@@ -38,4 +38,42 @@ final class BookclubServices: Networkable {
                 
             }
     }
+    
+    static func getClubsByUser(id: Int) -> Observable<[Club]> {
+        BookclubServices.provider
+            .rx.request(.getClubsByUser(id: id))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    do {
+                        let response = try Constants.defaultDecoder.decode(ClubListResponse.self, from: $0.data)
+                        return response.data
+                    } catch {
+                        print(error)
+                        return []
+                    }
+                }
+                
+                return []
+            }
+    }
+    
+    static func getClubInfoByClub(id: Int) -> Observable<BookclubInfo?> {
+        BookclubServices.provider
+            .rx.request(.getClubInfoByClub(id: id))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    do {
+                        let response = try Constants.defaultDecoder.decode(BookclubInfoResponse.self, from: $0.data)
+                        return response.data
+                    } catch {
+                        print(error)
+                        return nil
+                    }
+                }
+                
+                return nil
+            }
+    }
 }

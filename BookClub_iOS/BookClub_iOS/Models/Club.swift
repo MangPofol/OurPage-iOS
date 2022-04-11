@@ -10,12 +10,15 @@ import Foundation
 struct Club: Codable {
     var id: Int
     var name: String
-    var colorSet: String
     var level: Int
     var presidentId: Int
     var description: String
     var createdDate: String
     var modifiedDate: String
+}
+
+struct ClubListResponse: Codable {
+    var data: [Club]
 }
 
 

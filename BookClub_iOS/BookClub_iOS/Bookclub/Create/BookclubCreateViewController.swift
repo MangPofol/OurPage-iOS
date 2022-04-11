@@ -40,7 +40,14 @@ class BookclubCreateViewController: UIViewController {
         )
         
         // bind outputs {
+        self.navigationItem.rightBarButtonItem!.rx.tap
+            .bind {
+                LoadingHUD.show()
+            }
+            .disposed(by: disposeBag)
+        
         self.viewModel.output.bookclubCreated
+            .do { _ in LoadingHUD.hide() }
             .debug("북클럽 생성")
             .drive {
                 switch $0 {
