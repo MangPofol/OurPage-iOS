@@ -13,8 +13,13 @@ final class BookclubDetailView: UIView {
     var membersLabel = UILabel()
     var headerArrowImageView = UIImageView()
     var headerButton = UIButton()
-    
+    var levelLabel = UILabel()
+    var pagesLabel = UILabel()
+    private var levelBackgroundImageView = UIImageView()
     private var headerView = UIView()
+    
+    private var containerStackView = UIStackView()
+    var bookclubBooksView = BookclubBooksView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,6 +90,50 @@ final class BookclubDetailView: UIView {
             $0.left.top.equalTo(titleLabel)
             $0.bottom.equalTo(membersLabel)
             $0.right.equalTo(headerArrowImageView)
+        }
+        
+        self.headerView.addSubview(levelBackgroundImageView)
+        self.levelBackgroundImageView.then {
+            $0.image = UIImage(named: "BookclubDetailLevelBackground")
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.centerY.equalTo(membersLabel)
+            $0.left.equalTo(membersLabel.snp.right).offset(6.0.adjustedHeight)
+            $0.width.equalTo(123.adjustedHeight)
+            $0.height.equalTo(20.adjustedHeight)
+        }
+        
+        self.headerView.addSubview(levelLabel)
+        self.levelLabel.then {
+            $0.font = .defaultFont(size: 10.0, boldLevel: .bold)
+            $0.textColor = .mainColor
+        }.snp.makeConstraints {
+            $0.centerY.equalTo(levelBackgroundImageView)
+            $0.left.equalTo(levelBackgroundImageView).offset(13.0.adjustedHeight)
+        }
+        
+        self.headerView.addSubview(pagesLabel)
+        self.pagesLabel.then {
+            $0.font = .defaultFont(size: 10.0, boldLevel: .medium)
+            $0.textColor = .mainColor
+        }.snp.makeConstraints {
+            $0.centerY.equalTo(levelBackgroundImageView)
+            $0.right.equalTo(levelBackgroundImageView).offset(-16.0.adjustedHeight)
+        }
+        
+        self.addSubview(containerStackView)
+        self.containerStackView.then {
+            $0.axis = .vertical
+            $0.spacing = 19.0.adjustedHeight
+        }.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom).offset(20.0.adjustedHeight)
+            $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(30.0.adjustedHeight)
+        }
+        
+        self.containerStackView.addArrangedSubview(bookclubBooksView)
+        self.bookclubBooksView.snp.makeConstraints {
+            $0.height.equalTo(173.adjustedHeight)
         }
     }
     

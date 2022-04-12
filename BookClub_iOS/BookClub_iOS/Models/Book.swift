@@ -7,12 +7,22 @@
 
 import UIKit.UIImage
 
+struct BookclubBook: Codable {
+    var userId: Int
+    var userNickname: String
+    var bookId: Int
+    var bookName: String
+    var isbn: String
+    var category: String
+    var createdDate: Date
+    var modifiedDate: Date
+}
+
 struct BookModel: Codable {
     var category: String
     var createdDate: String
     var id: Int
     var isbn: String
-//    var likedList: [Liked]
     var modifiedDate: String
     var name: String
     
@@ -23,7 +33,6 @@ struct BookModel: Codable {
         try container.encode(createdDate, forKey: .createdDate)
         try container.encode(id, forKey: .id)
         try container.encode(isbn, forKey: .isbn)
-//        try container.encode(likedList, forKey: .likedList)
         try container.encode(modifiedDate, forKey: .modifiedDate)
         try container.encode(name, forKey: .name)
     }

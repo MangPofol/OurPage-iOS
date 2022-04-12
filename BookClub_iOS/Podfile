@@ -27,7 +27,25 @@ target 'BookClub_iOS' do
   pod 'Toaster'
   target 'BookClub_iOSTests' do
     inherit! :search_paths
-    # Pods for testing
+      pod 'BetterSegmentedControl'
+  pod 'CryptoSwift'
+  pod 'FFPopup'
+  pod 'Gifu'
+  pod 'Kingfisher'
+  pod 'Moya'
+  pod 'Moya/RxSwift'
+  pod 'Pageboy'
+  pod 'Tabman'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'RxGesture'
+  pod 'RxKeyboard'
+  pod 'SideMenu'
+  pod 'SnapKit'
+  pod 'Then'
+  pod 'ZLPhotoBrowser'
+  pod 'Carte'
+  pod 'Toaster'
   end
 
   target 'BookClub_iOSUITests' do

@@ -83,10 +83,20 @@ final class BookclubHomeViewController: UIViewController {
         // }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setBarWhite()
+        self.navigationController?.navigationBar.setBarShadow()
+    }
+    
     func setNavigationBar() {
-        self.navigationController?.navigationBar.setDefault()
         self.navigationController?.navigationBar.setBarShadow()
         self.setDefaultConfiguration()
+        let backBarButtonItem = UIBarButtonItem(title: "CLUB LIST", style: .plain, target: self, action: nil)
+        backBarButtonItem.tintColor = .white
+        backBarButtonItem.setTitleTextAttributes([.font: UIFont.defaultFont(size: 10.0, boldLevel: .bold)], for: .normal)
+        self.navigationItem.backBarButtonItem = backBarButtonItem
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .updownArrowImage, style: .plain, target: nil, action: nil)
     }
 }
@@ -118,5 +128,16 @@ extension BookclubHomeViewController: UICollectionViewDelegateFlowLayout, UIColl
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 10.adjustedHeight, bottom: 0, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? BookclubHomeCollectionViewCell {
+            LoadingHUD.show()
+            let vc = BookclubDetailViewController(bookclub: cell.bookclub!)
+            vc.modalPresentationStyle = .fullScreen
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        
     }
 }

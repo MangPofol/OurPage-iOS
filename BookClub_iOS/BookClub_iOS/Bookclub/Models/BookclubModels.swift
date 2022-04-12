@@ -75,7 +75,8 @@ struct BookclubInfo: Codable {
     var totalComments: Int
     var totalLikes: Int
     var userResponseDtos: [CreatedUser]
-    var trendingPosts: [Int]
+    var bookAndUserDtos: [BookclubBook]
+    var trendingPosts: [PostModel]
 }
 
 

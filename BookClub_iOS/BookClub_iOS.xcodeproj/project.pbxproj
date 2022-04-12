@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2A6F3E1727152F32BEE7121B /* Pods_BookClub_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5137BCE6A4A081A5C4ECC789 /* Pods_BookClub_iOS.framework */; };
+		AE07100D2805AA750050FDFF /* BookclubDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE07100C2805AA750050FDFF /* BookclubDetailViewModel.swift */; };
+		AE07100F2805CD2E0050FDFF /* BookclubBooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE07100E2805CD2E0050FDFF /* BookclubBooksView.swift */; };
 		AE1642AB27CDD0F700D6E1F4 /* TodoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AA27CDD0F700D6E1F4 /* TodoAPI.swift */; };
 		AE1642AD27CDD4A500D6E1F4 /* TodoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */; };
 		AE1642AF27CDD50C00D6E1F4 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1642AE27CDD50C00D6E1F4 /* Todo.swift */; };
@@ -205,6 +207,8 @@
 		7639B5AA2CAA4382FA7786AA /* Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-BookClub_iOS-BookClub_iOSUITests/Pods-BookClub_iOS-BookClub_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9CF8BA5C96824FCA89BF8F27 /* Pods-BookClub_iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookClub_iOSTests.debug.xcconfig"; path = "Target Support Files/Pods-BookClub_iOSTests/Pods-BookClub_iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AC6B464F1A6BE619D6302C99 /* Pods_BookClub_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BookClub_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE07100C2805AA750050FDFF /* BookclubDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubDetailViewModel.swift; sourceTree = "<group>"; };
+		AE07100E2805CD2E0050FDFF /* BookclubBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubBooksView.swift; sourceTree = "<group>"; };
 		AE1642AA27CDD0F700D6E1F4 /* TodoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAPI.swift; sourceTree = "<group>"; };
 		AE1642AC27CDD4A500D6E1F4 /* TodoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoServices.swift; sourceTree = "<group>"; };
 		AE1642AE27CDD50C00D6E1F4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
@@ -439,6 +443,8 @@
 			children = (
 				AE25550127FDDA1000940E67 /* BookclubDetailView.swift */,
 				AE25550327FDDC6700940E67 /* BookclubDetailViewController.swift */,
+				AE07100C2805AA750050FDFF /* BookclubDetailViewModel.swift */,
+				AE07100E2805CD2E0050FDFF /* BookclubBooksView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -920,6 +926,7 @@
 				EA89351426BB8CD400D0C18C /* Sources */,
 				EA89351526BB8CD400D0C18C /* Frameworks */,
 				EA89351626BB8CD400D0C18C /* Resources */,
+				14B89357E47B7275F7C6FBFA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1028,6 +1035,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		14B89357E47B7275F7C6FBFA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BookClub_iOSTests/Pods-BookClub_iOSTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BookClub_iOSTests/Pods-BookClub_iOSTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BookClub_iOSTests/Pods-BookClub_iOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		35FF8E51D03B6F8425026F02 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1255,6 +1279,7 @@
 				EA0563FB26F844AD000E0D77 /* BookSelectViewModel.swift in Sources */,
 				EA8FA8F52777441A0078FE62 /* Club.swift in Sources */,
 				AEF91DB727F491C1009B6AF1 /* BookclubHomeViewModel.swift in Sources */,
+				AE07100D2805AA750050FDFF /* BookclubDetailViewModel.swift in Sources */,
 				EA8FA8F927774F250078FE62 /* CollectionViewLeftAlignFlowLayout.swift in Sources */,
 				EA71261127BF94DE0010726A /* PhotoAlertView.swift in Sources */,
 				EA71260927BE3AF20010726A /* AlertView.swift in Sources */,
@@ -1328,6 +1353,7 @@
 				EAC816C82702EBAF00757258 /* BookOptionSelectViewController.swift in Sources */,
 				EA983F2926C2B0970070604E /* WriteView.swift in Sources */,
 				EA6021A52734F89B00092917 /* ReadingStyleView.swift in Sources */,
+				AE07100F2805CD2E0050FDFF /* BookclubBooksView.swift in Sources */,
 				EA71260D27BF4ECA0010726A /* SelfSizedTableView.swift in Sources */,
 				EAF0406227C485FD00E3B60E /* SignOutView.swift in Sources */,
 				AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */,

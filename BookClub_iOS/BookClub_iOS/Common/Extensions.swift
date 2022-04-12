@@ -487,6 +487,7 @@ extension UINavigationBar {
             .resize(to: CGSize(width: 6.34, height: 11))
             .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12.0, bottom: -8.0, right: 0))
         appearance.setBackIndicatorImage(backbuttonImage, transitionMaskImage: backbuttonImage)
+        appearance.backButtonAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -2.0)
         
         self.isTranslucent = false
         self.tintColor = .mainColor
@@ -507,6 +508,56 @@ extension UINavigationBar {
     func removeBarShadow() {
         self.removeShadow()
     }
+    
+    func setBackgroundColor(color: UIColor) {
+        self.compactAppearance?.backgroundColor = color
+        self.standardAppearance.backgroundColor = color
+        self.scrollEdgeAppearance?.backgroundColor = color
+        if #available(iOS 15.0, *) {
+            self.compactScrollEdgeAppearance?.backgroundColor = color
+        }
+    }
+    
+    func setBarMainColor() {
+        let appearance = self.standardAppearance
+        self.tintColor = .white
+        
+        let backbuttonImage: UIImage = .leftArrowImage
+            .resize(to: CGSize(width: 6.34, height: 11))
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12.0, bottom: -8.0, right: 0))
+            .withTintColor(.white, renderingMode: .alwaysOriginal)
+    
+        appearance.setBackIndicatorImage(backbuttonImage, transitionMaskImage: backbuttonImage)
+        appearance.backgroundColor = .mainColor
+        
+        self.compactAppearance = appearance
+        self.standardAppearance = appearance
+        self.scrollEdgeAppearance = appearance
+        if #available(iOS 15.0, *) {
+            self.compactScrollEdgeAppearance = appearance
+        }
+    }
+    
+    func setBarWhite() {
+        let appearance = self.standardAppearance
+        self.tintColor = .mainColor
+        
+        let backbuttonImage: UIImage = .leftArrowImage
+            .withRenderingMode(.alwaysTemplate)
+            .resize(to: CGSize(width: 6.34, height: 11))
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -12.0, bottom: -8.0, right: 0))
+            .withTintColor(.mainColor, renderingMode: .alwaysOriginal)
+        
+        appearance.setBackIndicatorImage(backbuttonImage, transitionMaskImage: backbuttonImage)
+        appearance.backgroundColor = .white
+        
+        self.compactAppearance = appearance
+        self.standardAppearance = appearance
+        self.scrollEdgeAppearance = appearance
+        if #available(iOS 15.0, *) {
+            self.compactScrollEdgeAppearance = appearance
+        }
+    }
 }
 
 extension UIViewController {
@@ -518,9 +569,19 @@ extension UIViewController {
         nav.navigationBar.setBackgroundImage(UIImage(), for: .default)
         nav.navigationBar.shadowImage = nil
         self.removeBackButtonTitle()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.resize(to: CGSize(width: 15.21, height: 16.05).resized(basedOn: .height)), style: .plain, target: nil, action: nil)
-        self.navigationItem.leftBarButtonItem?.tintColor = .black
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: .SidebarButtonImage.withRenderingMode(.alwaysTemplate).resize(to: CGSize(width: 15.21, height: 16.05).resized(basedOn: .height)), style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem?.tintColor = .mainColor
         self.navigationController?.navigationBar.setDefault()
+    }
+    
+    func setBarWhite() {
+        self.navigationController?.navigationBar.setBarWhite()
+        self.navigationItem.leftBarButtonItem?.tintColor = .mainColor
+    }
+    
+    func setBarMainColor() {
+        self.navigationController?.navigationBar.setBarMainColor()
+        self.navigationItem.leftBarButtonItem?.tintColor = .white
     }
     
     func removeBackButtonTitle() {
