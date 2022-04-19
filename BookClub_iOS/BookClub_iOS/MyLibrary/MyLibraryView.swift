@@ -24,7 +24,8 @@ class MyLibraryView: UIView {
                                         selectedTextColor: .white),
         options: [.cornerRadius(8.adjustedHeight),
                   .backgroundColor(UIColor(hexString: "EFF0F3")),
-                  .indicatorViewBackgroundColor(.mainColor)]
+                  .indicatorViewBackgroundColor(.mainColor),
+                  .indicatorViewInset(0.0)]
     )
     
     // 검색, 북클럽, 정렬 버튼

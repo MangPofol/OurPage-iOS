@@ -35,11 +35,12 @@ class UserServices: Networkable {
             .asObservable()
             .map {
                 if $0.statusCode == 200 {
-                    let response = try? Constants.defaultDecoder.decode(CreatedResult.self, from: $0.data)
-                    return response?.data
-                } else {
+                    if let response = try? Constants.defaultDecoder.decode(CreatedResult.self, from: $0.data) {
+                        return response.data
+                    }
                     return nil
                 }
+                return nil
             }
     }
     

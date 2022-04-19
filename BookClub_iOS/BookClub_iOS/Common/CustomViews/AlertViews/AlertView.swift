@@ -47,7 +47,7 @@ final class AlertView: UIView {
             $0.textAlignment = .center
             $0.text = content
         }.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).inset(2.adjustedHeight)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(3.adjustedHeight)
             $0.left.right.equalToSuperview()
             $0.bottom.equalTo(lineView.snp.top).offset(-15.adjustedHeight)
         }

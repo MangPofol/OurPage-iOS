@@ -23,7 +23,7 @@ final class BookclubHomeViewController: UIViewController {
     
     override func loadView() {
         self.view = customView
-        self.navigationItem.title = "BOOK CLUB"
+        self.navigationItem.title = "CLUB LIST"
         self.setNavigationBar()
     }
     
