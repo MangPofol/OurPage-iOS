@@ -23,6 +23,7 @@ class BookclubDetailViewModel: ViewModelType {
         var member: Driver<Int>!
         var totalPages: Driver<Int>!
         var level: Driver<Int>!
+        var isWelcomeViewHidden: Driver<Bool>!
     }
     
     var input: Input?
@@ -40,5 +41,10 @@ class BookclubDetailViewModel: ViewModelType {
         self.output.member = bookclubInfo.compactMap { $0?.totalUser }.asDriver(onErrorJustReturn: 0)
         self.output.totalPages = bookclubInfo.compactMap { $0?.totalPosts }.asDriver(onErrorJustReturn: 0)
         self.output.level = bookclubInfo.compactMap { $0?.level }.asDriver(onErrorJustReturn: 0)
+        self.output.isWelcomeViewHidden = bookclubInfo.compactMap { $0 }
+            .map {
+                return !(($0.totalUser == 1) && $0.createdDate.isInToday)
+            }
+            .asDriver(onErrorJustReturn: true)
     }
 }

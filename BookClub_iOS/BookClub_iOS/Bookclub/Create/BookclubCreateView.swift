@@ -10,9 +10,11 @@ import UIKit
 class BookclubCreateView: UIView {
     var nameLabel = UILabel()
     var nameTextField = UITextField()
+    var nameWarningLabel = UILabel()
     
     var introduceLabel = UILabel()
     var descriptionTextField = UITextField()
+    var descriptionWarningLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,6 +45,17 @@ class BookclubCreateView: UIView {
             $0.height.equalTo(40.0.adjustedHeight)
         }
         
+        self.addSubview(nameWarningLabel)
+        self.nameWarningLabel.then {
+            $0.font = .defaultFont(size: 10.0, boldLevel: .regular)
+            $0.textColor = .mainPink
+            $0.text = "최대 10글자 이내로 작성해주세요."
+            $0.isHidden = true
+        }.snp.makeConstraints {
+            $0.top.equalTo(nameTextField.snp.bottom).offset(4.0)
+            $0.left.equalToSuperview().inset(30.0.adjustedHeight)
+        }
+        
         self.addSubview(introduceLabel)
         self.introduceLabel.then {
             $0.font = .defaultFont(size: 16.0, boldLevel: .bold)
@@ -66,6 +79,17 @@ class BookclubCreateView: UIView {
             $0.top.equalTo(introduceLabel.snp.bottom).offset(10.5.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
             $0.height.equalTo(40.0.adjustedHeight)
+        }
+        
+        self.addSubview(descriptionWarningLabel)
+        self.descriptionWarningLabel.then {
+            $0.font = .defaultFont(size: 10.0, boldLevel: .regular)
+            $0.textColor = .mainPink
+            $0.text = "최대 20글자 이내로 작성해주세요."
+            $0.isHidden = true
+        }.snp.makeConstraints {
+            $0.top.equalTo(descriptionTextField.snp.bottom).offset(4.0)
+            $0.left.equalToSuperview().inset(30.0.adjustedHeight)
         }
     }
     

@@ -33,7 +33,6 @@ class BookclubCreateViewModel: ViewModelType {
         
         let nameAndIntroduce = Observable.combineLatest(input.nameText, input.descriptionText)
         
-        // TODO: 데이트 포맷이 달라서 디코딩이 제대로 안되는 문제
         self.output.bookclubCreated = input.finishButtonTapped.withLatestFrom(nameAndIntroduce)
             .flatMap { value -> Observable<BookclubCreatResultType> in
                 let creatingBookclub = CreatingBookclub(name: value.0, description: value.1)
@@ -48,6 +47,3 @@ enum BookclubCreatResultType {
     case failure
     case nameDuplicated
 }
-
-
-

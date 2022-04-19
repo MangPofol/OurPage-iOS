@@ -28,8 +28,33 @@ class BookclubCreateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.customView.nameTextField.setMaxLength(maxLength: 10, disposeBag: self.disposeBag)
-        self.customView.descriptionTextField.setMaxLength(maxLength: 20, disposeBag: self.disposeBag)
+        self.customView.nameTextField.rx.text
+            .orEmpty
+            .map { [weak self] in
+                if $0.count > 10 {
+                    self?.customView.nameWarningLabel.isHidden = false
+                    return String($0.prefix(10))
+                } else {
+                    self?.customView.nameWarningLabel.isHidden = true
+                    return $0
+                }
+            }
+            .bind(to: self.customView.nameTextField.rx.text)
+            .disposed(by: disposeBag)
+        
+        self.customView.descriptionTextField.rx.text
+            .orEmpty
+            .map { [weak self] in
+                if $0.count > 20 {
+                    self?.customView.descriptionWarningLabel.isHidden = false
+                    return String($0.prefix(20))
+                } else {
+                    self?.customView.descriptionWarningLabel.isHidden = true
+                    return $0
+                }
+            }
+            .bind(to: self.customView.descriptionTextField.rx.text)
+            .disposed(by: disposeBag)
         
         self.viewModel = BookclubCreateViewModel(
             input: BookclubCreateViewModel.Input(

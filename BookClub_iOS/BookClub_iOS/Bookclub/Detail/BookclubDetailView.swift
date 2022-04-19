@@ -17,9 +17,11 @@ final class BookclubDetailView: UIView {
     var pagesLabel = UILabel()
     private var levelBackgroundImageView = UIImageView()
     private var headerView = UIView()
+    var levelCharacterImageView = UIImageView()
     
     private var containerStackView = UIStackView()
     var bookclubBooksView = BookclubBooksView()
+    var bookclubWelcomeView = BookclubWelcomeView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -112,6 +114,15 @@ final class BookclubDetailView: UIView {
             $0.left.equalTo(levelBackgroundImageView).offset(13.0.adjustedHeight)
         }
         
+        self.headerView.addSubview(levelCharacterImageView)
+        self.levelCharacterImageView.then {
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.width.height.equalTo(24.adjustedHeight)
+            $0.left.equalTo(levelBackgroundImageView.snp.right).offset(4.0)
+            $0.bottom.equalTo(levelBackgroundImageView)
+        }
+        
         self.headerView.addSubview(pagesLabel)
         self.pagesLabel.then {
             $0.font = .defaultFont(size: 10.0, boldLevel: .medium)
@@ -131,9 +142,76 @@ final class BookclubDetailView: UIView {
             $0.bottom.equalToSuperview().inset(30.0.adjustedHeight)
         }
         
+        self.containerStackView.addArrangedSubview(bookclubWelcomeView)
+        self.bookclubWelcomeView.snp.makeConstraints {
+            $0.height.equalTo(173.adjustedHeight)
+        }
+        
         self.containerStackView.addArrangedSubview(bookclubBooksView)
         self.bookclubBooksView.snp.makeConstraints {
             $0.height.equalTo(173.adjustedHeight)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+final class BookclubWelcomeView: UIView {
+    private var titleLabel = UILabel()
+    private var imageView = UIImageView()
+    var inviteButton = CMButton()
+    private var descriptionLabel = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .mainColor
+        self.setCornerRadius(radius: 10.0.adjustedHeight)
+        
+        self.addSubview(imageView)
+        self.addSubview(titleLabel)
+        titleLabel.then {
+            $0.font = .defaultFont(size: 16.73, boldLevel: .semiBold)
+            $0.textColor = .white
+            $0.text = "CONGRATULATION"
+        }.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(16.5.adjustedHeight)
+        }
+        
+        imageView.then {
+            $0.contentMode = .scaleAspectFit
+            $0.image = UIImage(named: "BookclubWelcomeImage")
+        }.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.centerY)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(169.adjustedHeight)
+            $0.height.equalTo(82.adjustedHeight)
+        }
+        
+        self.addSubview(inviteButton)
+        inviteButton.then {
+            $0.defaultBackgroundColor = .mainPink
+            $0.setCornerRadius(radius: 8.adjustedHeight)
+            $0.setTitle("클럽원 초대하기", for: .normal)
+            $0.setTitleColor(.white, for: .normal)
+            $0.titleLabel?.font = .defaultFont(size: 12.0, boldLevel: .semiBold)
+        }.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(imageView.snp.bottom).offset(7.0.adjustedHeight)
+            $0.width.equalTo(181.adjustedHeight)
+            $0.height.equalTo(24.adjustedHeight)
+        }
+        
+        self.addSubview(descriptionLabel)
+        descriptionLabel.then {
+            $0.font = .defaultFont(size: 10.0, boldLevel: .regular)
+            $0.textColor = .white
+            $0.text = "새로운 클럽원을 지금 바로 초대해 보세요."
+        }.snp.makeConstraints {
+            $0.top.equalTo(inviteButton.snp.bottom).offset(3.0.adjustedHeight)
+            $0.centerX.equalToSuperview()
         }
     }
     

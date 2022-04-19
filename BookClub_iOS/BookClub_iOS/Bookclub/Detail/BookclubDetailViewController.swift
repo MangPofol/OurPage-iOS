@@ -62,9 +62,19 @@ class BookclubDetailViewController: UIViewController {
             .drive(self.customView.levelLabel.rx.text)
             .disposed(by: disposeBag)
         
+        self.viewModel.output.level
+            .drive { [weak self] in
+                self?.customView.levelCharacterImageView.image = UIImage(named: "BookclubLevel\($0)")
+            }
+            .disposed(by: disposeBag)
+        
         self.viewModel.output.totalPages
             .map { "\($0) pages" }
             .drive(self.customView.pagesLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        self.viewModel.output.isWelcomeViewHidden
+            .drive(self.customView.bookclubWelcomeView.rx.isHidden)
             .disposed(by: disposeBag)
     }
     

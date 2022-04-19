@@ -51,7 +51,7 @@ class BookclubHomeCollectionViewCell: UICollectionViewCell {
                         self?.bookclubMembers = []
                         return
                     }
-                    
+                    self.levelCharacterimageView.image = UIImage(named: "BookclubLevel\(club.level)")
                     self.pageLabel.text = "\(club.totalPosts)"
                     self.bookclubMembers = club.userResponseDtos
                 }
@@ -87,6 +87,7 @@ class BookclubHomeCollectionViewCell: UICollectionViewCell {
             $0.textColor = UIColor(hexString: "C3C5D1")
             $0.textAlignment = .left
             $0.font = .defaultFont(size: 12.0, boldLevel: .regular)
+            $0.numberOfLines = 2
         }.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(3.adjustedHeight)
             $0.left.right.equalTo(titleLabel)
@@ -150,6 +151,15 @@ class BookclubHomeCollectionViewCell: UICollectionViewCell {
         }.snp.makeConstraints {
             $0.right.equalTo(pageBackgroundImage).offset(-28.2.adjustedHeight)
             $0.top.bottom.left.equalTo(pageBackgroundImage)
+        }
+        
+        self.containerView.addSubview(levelCharacterimageView)
+        levelCharacterimageView.then {
+            $0.contentMode = .scaleAspectFit
+        }.snp.makeConstraints {
+            $0.left.equalTo(pageBackgroundImage.snp.right).offset(0.8)
+            $0.bottom.equalTo(pageBackgroundImage)
+            $0.width.height.equalTo(24.adjustedHeight)
         }
     }
     
