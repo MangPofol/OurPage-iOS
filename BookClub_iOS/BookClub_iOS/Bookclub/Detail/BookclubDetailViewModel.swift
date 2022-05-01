@@ -12,9 +12,10 @@ import RxCocoa
 
 class BookclubDetailViewModel: ViewModelType {
     var bookclub: Bookclub!
+    private var clubBooks: [BookclubBook] = []
     
     struct Input {
-        
+        var selectedBookIndex = PublishRelay<Int>()
     }
     
     struct Output {
@@ -25,9 +26,10 @@ class BookclubDetailViewModel: ViewModelType {
         var level: Driver<Int>!
         var isWelcomeViewHidden: Driver<Bool>!
         var clubBooks: Driver<[BookclubBook]>!
+        var openBookDetail: Driver<BookclubBook?>!
     }
     
-    var input: Input?
+    var input: Input? = Input()
     var output: Output = Output()
     
     private let disposeBag = DisposeBag()
@@ -47,6 +49,21 @@ class BookclubDetailViewModel: ViewModelType {
                 return !(($0.totalUser == 1) && $0.createdDate.isInToday)
             }
             .asDriver(onErrorJustReturn: true)
-        self.output.clubBooks = bookclubInfo.compactMap { $0?.bookAndUserDtos }.asDriver(onErrorJustReturn: [])
+        self.output.clubBooks = bookclubInfo
+            .compactMap { [weak self] in
+                let books = $0?.bookAndUserDtos
+                self?.clubBooks = books ?? []
+                
+                return books
+            }
+            .asDriver(onErrorJustReturn: [])
+        
+        self.output.openBookDetail = self.input?.selectedBookIndex
+            .compactMap { [weak self] in
+                guard let self = self else { return nil}
+                
+                return self.clubBooks[$0]
+            }
+            .asDriver(onErrorJustReturn: nil)
     }
 }

@@ -113,6 +113,30 @@ class PostServices: Networkable {
             }
     }
     
+    static func getPostsByBookIdAndClubId(bookId: Int, bookclubId: Int) -> Observable<[PostModel]> {
+        PostServices.provider
+            .rx.request(.getPostsByBookIdAndClubId(bookId: bookId, bookclubId: bookclubId))
+            .asObservable()
+            .map {
+                if $0.statusCode == 200 {
+                    do {
+                        let decoder = Constants.defaultDecoder
+                        let data = try decoder.decode(PostsResponse.self, from: $0.data)
+                        return data.data
+                    } catch {
+                        print(#fileID, #function, #line, error)
+                        return []
+                    }
+                    
+                    
+                } else {
+                    print("Failed with Status Code: \($0.statusCode)")
+                    return []
+                }
+            }
+            .catchAndReturn([])
+    }
+    
     static func doLikePost(bookId: Int) {
         
     }

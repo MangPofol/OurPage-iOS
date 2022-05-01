@@ -12,12 +12,14 @@ import RxCocoa
 
 class BookclubDetailViewController: UIViewController {
     private let customView = BookclubDetailView()
+    private var bookclubId: Int? = nil
     var viewModel: BookclubDetailViewModel!
     
     private let disposeBag = DisposeBag()
     
     convenience init(bookclub: Bookclub) {
         self.init()
+        self.bookclubId = bookclub.id
         self.viewModel = BookclubDetailViewModel(bookclub: bookclub)
     }
     
@@ -43,6 +45,10 @@ class BookclubDetailViewController: UIViewController {
         super.viewDidLoad()
         
         LoadingHUD.hide()
+        
+        self.customView.bookclubBooksView.bookCollectionView.rx.itemSelected.map { $0.row }
+            .bind(to: self.viewModel.input!.selectedBookIndex)
+            .disposed(by: disposeBag)
         
         self.viewModel.output.title
             .drive(self.customView.titleLabel.rx.text)
@@ -85,11 +91,20 @@ class BookclubDetailViewController: UIViewController {
                 cell.bookclubBook = element
             }
             .disposed(by: disposeBag)
+        
+        self.viewModel.output.openBookDetail
+            .compactMap { $0 }
+            .drive { [weak self] in
+                let vc = BookclubBookViewController(bookclubBook: $0, bookclubId: self?.bookclubId)
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     func setNavigationBar() {
         self.navigationController?.navigationBar.removeBarShadow()
         self.setBarMainColor()
+        self.removeBackButtonTitle()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: .updownArrowImage, style: .plain, target: nil, action: nil)
     }
 }

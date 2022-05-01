@@ -16,6 +16,7 @@ enum PostAPI {
     case doLikePost(_ bookId: Int)
     case undoLikePost(_ bookId: Int)
     case getTotalCount
+    case getPostsByBookIdAndClubId(bookId: Int, bookclubId: Int)
 }
 
 extension PostAPI: TargetType, AccessTokenAuthorizable {
@@ -43,6 +44,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return "/\(bookId)"
         case .getTotalCount:
             return "/total-count"
+        case .getPostsByBookIdAndClubId(_, _):
+            return ""
         }
     }
     
@@ -61,6 +64,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
         case .undoLikePost(_):
             return .post
         case .getTotalCount:
+            return .get
+        case .getPostsByBookIdAndClubId(_,_):
             return .get
         }
     }
@@ -85,6 +90,8 @@ extension PostAPI: TargetType, AccessTokenAuthorizable {
             return .requestPlain
         case .getTotalCount:
             return .requestPlain
+        case .getPostsByBookIdAndClubId(let bookId, let bookclubId):
+            return .requestParameters(parameters: ["bookId": bookId, "clubId": bookclubId], encoding: URLEncoding.default)
         }
     }
     
