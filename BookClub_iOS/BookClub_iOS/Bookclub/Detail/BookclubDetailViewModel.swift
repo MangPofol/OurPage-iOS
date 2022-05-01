@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class BookclubDetailViewModel: ViewModelType {
-    var bookclub: Club!
+    var bookclub: Bookclub!
     
     struct Input {
         
@@ -24,6 +24,7 @@ class BookclubDetailViewModel: ViewModelType {
         var totalPages: Driver<Int>!
         var level: Driver<Int>!
         var isWelcomeViewHidden: Driver<Bool>!
+        var clubBooks: Driver<[BookclubBook]>!
     }
     
     var input: Input?
@@ -31,7 +32,7 @@ class BookclubDetailViewModel: ViewModelType {
     
     private let disposeBag = DisposeBag()
     
-    init(bookclub: Club) {
+    init(bookclub: Bookclub) {
         self.bookclub = bookclub
         
         let bookclubInfo = BookclubServices.getClubInfoByClub(id: self.bookclub.id)
@@ -46,5 +47,6 @@ class BookclubDetailViewModel: ViewModelType {
                 return !(($0.totalUser == 1) && $0.createdDate.isInToday)
             }
             .asDriver(onErrorJustReturn: true)
+        self.output.clubBooks = bookclubInfo.compactMap { $0?.bookAndUserDtos }.asDriver(onErrorJustReturn: [])
     }
 }

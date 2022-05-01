@@ -15,7 +15,7 @@ final class BookclubHomeViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private var viewModel: BookclubHomeViewModel!
     
-    var bookclubs: [Club?] = [] {
+    var bookclubs: [Bookclub?] = [] {
         didSet {
             self.customView.bookclubCollectionView.reloadData()
         }

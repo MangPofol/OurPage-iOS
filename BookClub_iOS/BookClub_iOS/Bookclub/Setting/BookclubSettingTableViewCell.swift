@@ -16,6 +16,15 @@ class BookclubSettingTableViewCell: UITableViewCell {
     
     private var containerView = UIView()
     
+    var bookclub: Bookclub? {
+        didSet {
+            if let bookclub = bookclub {
+                self.titleLabel.text = bookclub.name
+                self.createdDateLabel.text = bookclub.createdDate.toString(with: "yyyy년 MM월 dd일 개설")
+            }
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

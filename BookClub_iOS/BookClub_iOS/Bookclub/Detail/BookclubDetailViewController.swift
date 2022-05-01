@@ -16,7 +16,7 @@ class BookclubDetailViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     
-    convenience init(bookclub: Club) {
+    convenience init(bookclub: Bookclub) {
         self.init()
         self.viewModel = BookclubDetailViewModel(bookclub: bookclub)
     }
@@ -75,6 +75,15 @@ class BookclubDetailViewController: UIViewController {
         
         self.viewModel.output.isWelcomeViewHidden
             .drive(self.customView.bookclubWelcomeView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        self.viewModel.output.clubBooks
+            .do { [weak self] in
+                self?.customView.bookclubBooksView.emptyLabel.isHidden = ($0.count != 0)
+            }
+            .drive(self.customView.bookclubBooksView.bookCollectionView.rx.items(cellIdentifier: BookclubBooksCell.identifier, cellType: BookclubBooksCell.self)) { (row, element, cell) in
+                cell.bookclubBook = element
+            }
             .disposed(by: disposeBag)
     }
     

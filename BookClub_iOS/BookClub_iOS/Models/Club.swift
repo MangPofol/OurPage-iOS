@@ -18,7 +18,7 @@ struct Club: Codable {
 }
 
 struct ClubListResponse: Codable {
-    var data: [Club]
+    var data: [Bookclub]
 }
 
 

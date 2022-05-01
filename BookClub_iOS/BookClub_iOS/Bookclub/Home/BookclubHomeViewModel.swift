@@ -18,7 +18,7 @@ class BookclubHomeViewModel: ViewModelType {
     struct Output {
         var openBookclubSetting: Driver<Bool>!
         var openAddBookclub: Driver<Bool>!
-        var bookclub: Driver<[Club?]>!
+        var bookclub: Driver<[Bookclub?]>!
     }
     
     var input: Input?

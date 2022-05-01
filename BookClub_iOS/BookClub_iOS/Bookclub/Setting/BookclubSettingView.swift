@@ -34,6 +34,7 @@ class BookclubSettingView: UIView {
             $0.separatorStyle = .none
             $0.backgroundColor = .white
             $0.register(BookclubSettingTableViewCell.self, forCellReuseIdentifier: BookclubSettingTableViewCell.identifier)
+            $0.rowHeight = 70.0.adjustedHeight
         }.snp.makeConstraints {
             $0.top.equalTo(createdBookclubLabel.snp.bottom).offset(14.0.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)
@@ -55,6 +56,7 @@ class BookclubSettingView: UIView {
             $0.separatorStyle = .none
             $0.backgroundColor = .white
             $0.register(BookclubSettingTableViewCell.self, forCellReuseIdentifier: BookclubSettingTableViewCell.identifier)
+            $0.rowHeight = 70.0.adjustedHeight
         }.snp.makeConstraints {
             $0.top.equalTo(joinedBookclubLabel.snp.bottom).offset(14.0.adjustedHeight)
             $0.left.right.equalToSuperview().inset(20.0.adjustedHeight)

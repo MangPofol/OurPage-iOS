@@ -39,7 +39,7 @@ final class BookclubServices: Networkable {
             }
     }
     
-    static func getClubsByUser(id: Int) -> Observable<[Club]> {
+    static func getClubsByUser(id: Int) -> Observable<[Bookclub]> {
         BookclubServices.provider
             .rx.request(.getClubsByUser(id: id))
             .asObservable()

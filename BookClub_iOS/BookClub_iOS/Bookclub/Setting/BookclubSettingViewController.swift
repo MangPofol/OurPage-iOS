@@ -7,8 +7,12 @@
 
 import UIKit
 
+import RxSwift
+
 class BookclubSettingViewController: UIViewController {
     private let customView = BookclubSettingView()
+    private var viewModel = BookclubSettingViewModel()
+    private let disposeBag = DisposeBag()
     
     override func loadView() {
         self.view = customView
@@ -18,6 +22,16 @@ class BookclubSettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // TODO: 북클럽 데이터 연결
+        self.viewModel.output.ownBookclub
+            .drive(self.customView.createdBookclubTableView.rx.items(cellIdentifier: BookclubSettingTableViewCell.identifier, cellType: BookclubSettingTableViewCell.self)) { (row, element, cell) in
+                cell.bookclub = element
+            }
+            .disposed(by: disposeBag)
+        
+        self.viewModel.output.joinedBookclub
+            .drive(self.customView.joinedBookclubTableView.rx.items(cellIdentifier: BookclubSettingTableViewCell.identifier, cellType: BookclubSettingTableViewCell.self)) { (row, element, cell) in
+                cell.bookclub = element
+            }
+            .disposed(by: disposeBag)
     }
 }

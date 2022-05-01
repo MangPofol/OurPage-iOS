@@ -33,7 +33,7 @@ class BookclubHomeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var bookclub: Club? {
+    var bookclub: Bookclub? {
         didSet {
             guard let bookclub = bookclub else {
                 self.bookclubMembers = []

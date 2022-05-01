@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 final class BookclubBooksView: UIView {
     var titleLabel = UILabel()
@@ -45,13 +46,13 @@ final class BookclubBooksView: UIView {
                 $0.itemSize = CGSize(width: 61.0, height: 119.0).resized(basedOn: .height)
                 $0.minimumInteritemSpacing = 14.0.adjustedHeight
                 $0.scrollDirection = .horizontal
+                $0.sectionInset = UIEdgeInsets(top: 0, left: 15.0.adjustedHeight, bottom: 0, right: 0)
             }
             $0.showsHorizontalScrollIndicator = false
             $0.register(BookclubBooksCell.self, forCellWithReuseIdentifier: BookclubBooksCell.identifier)
             $0.backgroundColor = UIColor(hexString: "EFF0F3")
         }.snp.makeConstraints {
-            $0.left.equalToSuperview().inset(6.0.adjustedHeight)
-            $0.right.equalToSuperview()
+            $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview().inset(10.0.adjustedHeight)
             $0.height.equalTo(120.adjustedHeight)
         }
@@ -75,10 +76,21 @@ final class BookclubBooksView: UIView {
 final class BookclubBooksCell: UICollectionViewCell {
     static let identifier = "BookclubBooksCell"
     
-    // TODO: 북클럽 책 셀 구현 / BookclubBook 모델을 받아서 각 셀에서 검색 날려서 썸네일 이미지 가져오기
     var thumbnailImageView = UIImageView()
     var bookTitleLabel = UILabel()
     var ownerLabel = UILabel()
+    
+    var disposeBag = DisposeBag()
+    
+    var bookclubBook: BookclubBook? {
+        didSet {
+            if let bookclubBook = self.bookclubBook {
+                self.bookTitleLabel.text = bookclubBook.bookName
+                self.ownerLabel.text = bookclubBook.userNickname
+                self.getThumbnailImage(isbn: bookclubBook.isbn)
+            }
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -86,6 +98,7 @@ final class BookclubBooksCell: UICollectionViewCell {
         self.contentView.addSubview(thumbnailImageView)
         thumbnailImageView.then {
             $0.contentMode = .scaleAspectFit
+            $0.setCornerRadius(radius: 9.36.adjustedHeight)
         }.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
@@ -106,10 +119,28 @@ final class BookclubBooksCell: UICollectionViewCell {
         ownerLabel.then {
             $0.font = .defaultFont(size: 8.0, boldLevel: .regular)
             $0.textColor = .mainColor.withAlphaComponent(0.5)
+            $0.textAlignment = .center
         }.snp.makeConstraints {
             $0.left.right.equalToSuperview()
             $0.top.equalTo(bookTitleLabel.snp.bottom).offset(1.0)
         }
+    }
+    
+    func getThumbnailImage(isbn: String) {
+        if let isbn = isbn.components(separatedBy: " ").first {
+            SearchServices.getThumbnailBy(isbn: isbn)
+                .observe(on: MainScheduler.instance)
+                .compactMap { $0 }
+                .bind { [weak self] in
+                    self?.thumbnailImageView.kf.setImage(with: URL(string: $0), placeholder: UIImage(named: "DefaultBookImage"))
+                }
+                .disposed(by: disposeBag)
+        }
+    }
+    
+    override func prepareForReuse() {
+        self.disposeBag = DisposeBag()
+        self.thumbnailImageView.image = UIImage(named: "DefaultBookImage")
     }
     
     required init?(coder: NSCoder) {
