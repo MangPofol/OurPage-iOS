@@ -22,6 +22,7 @@ final class BookclubDetailView: UIView {
     private var containerStackView = UIStackView()
     var bookclubBooksView = BookclubBooksView()
     var bookclubWelcomeView = BookclubWelcomeView()
+    var bookclubTrendingMemoView = BookclubTrendingMemoView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -150,6 +151,11 @@ final class BookclubDetailView: UIView {
         self.containerStackView.addArrangedSubview(bookclubBooksView)
         self.bookclubBooksView.snp.makeConstraints {
             $0.height.equalTo(173.adjustedHeight)
+        }
+        
+        self.containerStackView.addArrangedSubview(bookclubTrendingMemoView)
+        self.bookclubTrendingMemoView.snp.makeConstraints {
+            $0.height.equalTo(316.adjustedHeight)
         }
     }
     

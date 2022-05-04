@@ -99,6 +99,15 @@ class BookclubDetailViewController: UIViewController {
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
+        
+        self.viewModel.output.trendingMemos
+            .do { [weak self] in
+                self?.customView.bookclubTrendingMemoView.emptyLabel.isHidden = ($0.count != 0)
+            }
+            .drive(self.customView.bookclubTrendingMemoView.trendingMemoCollectionView.rx.items(cellIdentifier: BookclubTrendingMemoCell.identifier, cellType: BookclubTrendingMemoCell.self)) { (row, element, cell) in
+                cell.post = element
+            }
+            .disposed(by: disposeBag)
     }
     
     func setNavigationBar() {

@@ -27,6 +27,7 @@ class BookclubDetailViewModel: ViewModelType {
         var isWelcomeViewHidden: Driver<Bool>!
         var clubBooks: Driver<[BookclubBook]>!
         var openBookDetail: Driver<BookclubBook?>!
+        var trendingMemos: Driver<[PostModel]>!
     }
     
     var input: Input? = Input()
@@ -65,5 +66,7 @@ class BookclubDetailViewModel: ViewModelType {
                 return self.clubBooks[$0]
             }
             .asDriver(onErrorJustReturn: nil)
+        
+        self.output.trendingMemos = bookclubInfo.compactMap { $0?.trendingPosts }.asDriver(onErrorJustReturn: [])
     }
 }
