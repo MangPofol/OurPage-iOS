@@ -245,7 +245,7 @@ extension UIView {
 extension UIColor {
     static let backgroundGray = UIColor(named: "BackgroundGray")!
     static let mainColor = UIColor(named: "MainColor")!
-    static let mainPink =  UIColor(hexString: "E5949D")
+    static let mainPink =  UIColor(hexString: "FF909D")
     static let gray1 = UIColor(named: "Gray1")!
 //    static let black = UIColor(named: "Black")!
     static let grayC3 = UIColor(named: "GrayC3")!
@@ -255,7 +255,6 @@ extension UIColor {
     static let grayD1 = UIColor(named: "GrayD1")!
     static let grayE3 = UIColor(named: "GrayE3")!
     static let lightMainColor = UIColor(named: "LightMainColor")!
-    static let pink_E5949D = UIColor(named: "Pink_E5949D")!
     static let textFieldBackgroundGray = UIColor(hexString: "EFF0F3")
     
     // Hex to color

@@ -26,13 +26,13 @@ class WriteView: UIView {
     
     var imageUploadButton = UIButton().then {
         $0.backgroundColor = .white
-        $0.makeBorder(color: UIColor.pink_E5949D.cgColor, width: 1.5, cornerRadius: CGFloat(Constants.getAdjustedHeight(8.0)))
+        $0.makeBorder(color: UIColor.mainPink.cgColor, width: 1.5, cornerRadius: CGFloat(Constants.getAdjustedHeight(8.0)))
         $0.setTitle("0/4", for: .normal)
-        $0.setTitleColor(.pink_E5949D, for: .normal)
+        $0.setTitleColor(.mainPink, for: .normal)
         $0.setTitleColor(.white, for: .selected)
         $0.titleLabel?.font = .defaultFont(size: .small, bold: false)
         $0.setImage(.cameraIcon.resize(to: CGSize(width: 17.17, height: 15.29).resized(basedOn: .height)), for: .normal)
-        $0.imageView?.tintColor = .pink_E5949D
+        $0.imageView?.tintColor = .mainPink
         $0.alignTextBelow(spacing: 0.0)
     }
     
