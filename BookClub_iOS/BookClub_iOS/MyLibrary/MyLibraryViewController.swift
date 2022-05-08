@@ -184,8 +184,17 @@ class MyLibraryViewController: UIViewController {
                 }
             }).disposed(by: disposeBag)
         
+        // cell을 모두 configure 한 후 autolayout 세팅
+        customView.makeView()
+        
         // 뷰 모델로 부터 소속된 북클럽을 받아와서 북클럽 필터에 표시
         viewModel!.bookclubs
+            .do { [weak self] clubs in
+                guard let self = self else { return }
+                self.customView.bookclubSelector.snp.updateConstraints {
+                    $0.width.equalTo((84.adjustedHeight + 8.0) * Double(clubs.count))
+                }
+            }
             .bind(to: customView.bookclubSelector
                     .rx
                     .items(cellIdentifier: BookclubSelectorCell.identifier, cellType: BookclubSelectorCell.self)) { (row, element, cell) in
@@ -194,9 +203,6 @@ class MyLibraryViewController: UIViewController {
                 cell.contentView.setCornerRadius(radius: CGFloat(Constants.getAdjustedWidth(3.0)))
             }
                     .disposed(by: disposeBag)
-        
-        // cell을 모두 configure 한 후 autolayout 세팅
-        customView.makeView()
         
         // }
         

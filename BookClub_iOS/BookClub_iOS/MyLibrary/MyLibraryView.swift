@@ -11,7 +11,11 @@ import BetterSegmentedControl
 class MyLibraryView: UIView {
 
     // CollectionView layouts
-    let bookclubSelectorLayout = UICollectionViewFlowLayout()
+    let bookclubSelectorLayout = UICollectionViewFlowLayout().then {
+        $0.minimumInteritemSpacing = 8.0
+        $0.scrollDirection = .horizontal
+        $0.itemSize = CGSize(width: 84.adjustedHeight, height: 19.adjustedHeight)
+    }
     let collectionViewLayout = UICollectionViewFlowLayout()
     
     // custom segment control
@@ -207,8 +211,9 @@ class MyLibraryView: UIView {
         bookclubSelector.snp.makeConstraints {
             $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
             $0.left.equalTo(typeControl)
-            $0.right.equalTo(typeControl)
+//            $0.right.equalTo(typeControl)
             $0.height.equalTo(19.adjustedHeight)
+            $0.width.equalTo(0)
         }
         sortButtonStack.snp.makeConstraints {
             $0.top.equalTo(upperView.snp.bottom).offset(20.adjustedHeight)
