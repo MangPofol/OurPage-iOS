@@ -38,7 +38,7 @@ class BookclubDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
+        self.setBarMainColor()
     }
     
     override func viewDidLoad() {
@@ -108,6 +108,16 @@ class BookclubDetailViewController: UIViewController {
                 cell.post = element
             }
             .disposed(by: disposeBag)
+        
+        // CollectionView 선택
+        self.customView.bookclubTrendingMemoView.trendingMemoCollectionView.rx.modelSelected(PostModel.self)
+            .bind { [weak self] in
+                let vc = BookclubPostViewController()
+                vc.post = $0
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
     }
     
     func setNavigationBar() {

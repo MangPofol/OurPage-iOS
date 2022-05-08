@@ -87,7 +87,7 @@ final class PostView: UIView {
         $0.isUserInteractionEnabled = true
     }
     
-    private var contentsView = UIScrollView()
+    var contentsView = UIScrollView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

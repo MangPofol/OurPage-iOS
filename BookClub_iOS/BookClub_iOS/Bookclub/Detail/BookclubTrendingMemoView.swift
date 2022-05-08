@@ -125,7 +125,7 @@ final class BookclubTrendingMemoCell: UICollectionViewCell {
         self.contentLabel.then {
             $0.font = .defaultFont(size: 10.0, boldLevel: .light)
             $0.textColor = UIColor(hexString: "646A88")
-            $0.text = "..."
+            $0.text = "한지가 왜 영주랑 사이가 소원해졌을까? 아아 마도 ..."
         }.snp.makeConstraints {
             $0.left.right.equalTo(self.titleLabel)
 //            $0.top.equalTo(self.titleLabel.snp.bottom).offset(5.0.adjustedHeight)

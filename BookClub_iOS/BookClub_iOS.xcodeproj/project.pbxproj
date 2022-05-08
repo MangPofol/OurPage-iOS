@@ -27,8 +27,12 @@
 		AEA5ABA627E379FA006841FA /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5ABA527E379FA006841FA /* EmptyView.swift */; };
 		AEAE6D5828158BEE00E26EAD /* BookclubSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE6D5728158BEE00E26EAD /* BookclubSettingViewModel.swift */; };
 		AEB8244F2822C1FA00E30D57 /* BookclubTrendingMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB8244E2822C1FA00E30D57 /* BookclubTrendingMemoView.swift */; };
+		AEB824522823636F00E30D57 /* BookclubPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB824512823636F00E30D57 /* BookclubPostView.swift */; };
+		AEB824542823676100E30D57 /* BookclubPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB824532823676100E30D57 /* BookclubPostViewController.swift */; };
 		AEC26CED27EB5C6100E9D3E2 /* BookclubHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */; };
 		AEC26CEF27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */; };
+		AEC8B6722827B81F00D5D1F0 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC8B6712827B81F00D5D1F0 /* CommentCell.swift */; };
+		AEC8B6742827E52900D5D1F0 /* BookclubPostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC8B6732827E52900D5D1F0 /* BookclubPostHeaderView.swift */; };
 		AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */; };
 		AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */; };
 		AEF91DB727F491C1009B6AF1 /* BookclubHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF91DB627F491C1009B6AF1 /* BookclubHomeViewModel.swift */; };
@@ -230,8 +234,12 @@
 		AEA5ABA527E379FA006841FA /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		AEAE6D5728158BEE00E26EAD /* BookclubSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubSettingViewModel.swift; sourceTree = "<group>"; };
 		AEB8244E2822C1FA00E30D57 /* BookclubTrendingMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubTrendingMemoView.swift; sourceTree = "<group>"; };
+		AEB824512823636F00E30D57 /* BookclubPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubPostView.swift; sourceTree = "<group>"; };
+		AEB824532823676100E30D57 /* BookclubPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubPostViewController.swift; sourceTree = "<group>"; };
 		AEC26CEC27EB5C6100E9D3E2 /* BookclubHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeView.swift; sourceTree = "<group>"; };
 		AEC26CEE27EB5FCE00E9D3E2 /* BookclubHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeViewController.swift; sourceTree = "<group>"; };
+		AEC8B6712827B81F00D5D1F0 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		AEC8B6732827E52900D5D1F0 /* BookclubPostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubPostHeaderView.swift; sourceTree = "<group>"; };
 		AECC523C27CDEDCE0058FA3D /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 		AECC523E27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTodoTableViewCell.swift; sourceTree = "<group>"; };
 		AEF91DB627F491C1009B6AF1 /* BookclubHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookclubHomeViewModel.swift; sourceTree = "<group>"; };
@@ -478,6 +486,17 @@
 			path = Setting;
 			sourceTree = "<group>";
 		};
+		AEB824502823635B00E30D57 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				AEB824512823636F00E30D57 /* BookclubPostView.swift */,
+				AEB824532823676100E30D57 /* BookclubPostViewController.swift */,
+				AEC8B6712827B81F00D5D1F0 /* CommentCell.swift */,
+				AEC8B6732827E52900D5D1F0 /* BookclubPostHeaderView.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
 		AEC26CEB27EB5C4900E9D3E2 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -599,6 +618,7 @@
 		EA82162027BB6DFB0074152C /* Bookclub */ = {
 			isa = PBXGroup;
 			children = (
+				AEB824502823635B00E30D57 /* Post */,
 				AE49AACC281EC8360096E483 /* Book */,
 				AE25550027FDD9FF00940E67 /* Detail */,
 				AEF91DC127F4A693009B6AF1 /* Models */,
@@ -1219,12 +1239,14 @@
 			files = (
 				AE29CB9427CA7E06003CD02E /* LicenseViewController.swift in Sources */,
 				EA8C886F27BDED6D005395E1 /* DeleteAlertView.swift in Sources */,
+				AEC8B6742827E52900D5D1F0 /* BookclubPostHeaderView.swift in Sources */,
 				EA6021A72734FF8100092917 /* ReadingStyleViewController.swift in Sources */,
 				EA3A029D277DE26F0055EB3A /* OriginalImagesView.swift in Sources */,
 				EA983F2026C241F90070604E /* AlertModel.swift in Sources */,
 				AECC523D27CDEDCE0058FA3D /* TodoTableViewCell.swift in Sources */,
 				EA27DB2F26F4634F00CBD45E /* BookSelectViewController.swift in Sources */,
 				AEF91DC027F4A52D009B6AF1 /* BookclubCreateViewModel.swift in Sources */,
+				AEB824522823636F00E30D57 /* BookclubPostView.swift in Sources */,
 				EA71261627C1024D0010726A /* SettingView.swift in Sources */,
 				EA66D195272C3C0300557873 /* User.swift in Sources */,
 				EAE6F89D26C93DEB00925178 /* MainTabBarController.swift in Sources */,
@@ -1270,6 +1292,7 @@
 				EA6021A927351FA200092917 /* ReadingStyleViewModel.swift in Sources */,
 				EA1E6B0827585D2F0065A003 /* MyProfileViewController.swift in Sources */,
 				EAF7073C26EB4FD700B7B6D1 /* BookServices.swift in Sources */,
+				AEB824542823676100E30D57 /* BookclubPostViewController.swift in Sources */,
 				EA66D198272C518C00557873 /* ProfileInformationView.swift in Sources */,
 				AEF91DC327F4A69C009B6AF1 /* BookclubModels.swift in Sources */,
 				EA55B68426C64ED300C2545C /* MyLibraryViewModel.swift in Sources */,
@@ -1378,6 +1401,7 @@
 				AE49AAD0281EC8DF0096E483 /* BookclubBookViewModel.swift in Sources */,
 				AE07100F2805CD2E0050FDFF /* BookclubBooksView.swift in Sources */,
 				EA71260D27BF4ECA0010726A /* SelfSizedTableView.swift in Sources */,
+				AEC8B6722827B81F00D5D1F0 /* CommentCell.swift in Sources */,
 				EAF0406227C485FD00E3B60E /* SignOutView.swift in Sources */,
 				AEB8244F2822C1FA00E30D57 /* BookclubTrendingMemoView.swift in Sources */,
 				AECC523F27CDF5AE0058FA3D /* EmptyTodoTableViewCell.swift in Sources */,
