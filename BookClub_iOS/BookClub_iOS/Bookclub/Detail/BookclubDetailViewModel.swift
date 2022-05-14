@@ -27,7 +27,7 @@ class BookclubDetailViewModel: ViewModelType {
         var isWelcomeViewHidden: Driver<Bool>!
         var clubBooks: Driver<[BookclubBook]>!
         var openBookDetail: Driver<BookclubBook?>!
-        var trendingMemos: Driver<[PostModel]>!
+        var trendingMemos: Driver<[ClubPost]>!
     }
     
     var input: Input? = Input()
@@ -40,19 +40,19 @@ class BookclubDetailViewModel: ViewModelType {
         
         let bookclubInfo = BookclubServices.getClubInfoByClub(id: self.bookclub.id)
         
-        self.output.title = bookclubInfo.compactMap { $0?.name }.asDriver(onErrorJustReturn: "")
-        self.output.description = bookclubInfo.compactMap { $0?.description }.asDriver(onErrorJustReturn: "")
+        self.output.title = bookclubInfo.compactMap { $0?.clubMetadata.name }.asDriver(onErrorJustReturn: "")
+        self.output.description = bookclubInfo.compactMap { $0?.clubMetadata.description }.asDriver(onErrorJustReturn: "")
         self.output.member = bookclubInfo.compactMap { $0?.totalUser }.asDriver(onErrorJustReturn: 0)
         self.output.totalPages = bookclubInfo.compactMap { $0?.totalPosts }.asDriver(onErrorJustReturn: 0)
-        self.output.level = bookclubInfo.compactMap { $0?.level }.asDriver(onErrorJustReturn: 0)
+        self.output.level = bookclubInfo.compactMap { $0?.clubMetadata.level }.asDriver(onErrorJustReturn: 0)
         self.output.isWelcomeViewHidden = bookclubInfo.compactMap { $0 }
             .map {
-                return !(($0.totalUser == 1) && $0.createdDate.isInToday)
+                return !(($0.totalUser == 1) && $0.clubMetadata.createdDate.isInToday)
             }
             .asDriver(onErrorJustReturn: true)
         self.output.clubBooks = bookclubInfo
             .compactMap { [weak self] in
-                let books = $0?.bookAndUserDtos
+                let books = $0?.bookclubBook
                 self?.clubBooks = books ?? []
                 
                 return books

@@ -65,6 +65,30 @@ struct PostModel: Codable {
     }
 }
 
+struct ClubPost: Codable {
+    var nickname: String
+    var profileImgLocation: String
+    var bookName: String
+    var post: PostModel
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(nickname, forKey: .nickname)
+        try container.encode(profileImgLocation, forKey: .profileImgLocation)
+        try container.encode(bookName, forKey: .bookName)
+        try container.encode(post, forKey: .post)
+       
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case nickname
+        case profileImgLocation
+        case bookName
+        case post = "postResponseDto"
+    }
+}
+
 struct PostHyperlink: Codable {
     var linkId: Int
     var hyperlinkTitle: String

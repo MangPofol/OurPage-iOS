@@ -234,7 +234,7 @@ final class WriteSettingItemView: UIView {
         self.addSubview(iconView)
         
         iconView.snp.makeConstraints {
-            $0.width.height.equalTo(13.adjustedHeight)
+//            $0.width.height.equalTo(13.adjustedHeight)
             $0.top.bottom.equalToSuperview()
             $0.right.equalToSuperview()
         }

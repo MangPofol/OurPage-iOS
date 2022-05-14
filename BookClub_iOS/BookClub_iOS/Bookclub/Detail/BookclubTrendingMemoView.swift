@@ -74,15 +74,16 @@ final class BookclubTrendingMemoCell: UICollectionViewCell {
     var commentImageView = UIImageView()
     var commentLabel = UILabel()
     
-    var post: PostModel? {
+    var clubPost: ClubPost? {
         didSet {
-            guard let post = post else { return }
-            
-            self.titleLabel.text = post.title
-            self.commentLabel.text = post.content
-            self.bookLabel.text = "쇼코의 미소 (최은영)"
-            self.likeLabel.text = "\(post.likedList.count)"
-            self.commentLabel.text = "\(post.commentsDto.count)"
+            guard let clubPost = clubPost else { return }
+            self.profileImageView.kf.setImage(with: URL(string: clubPost.profileImgLocation))
+            self.nicknameLabel.text = clubPost.nickname
+            self.titleLabel.text = clubPost.post.title
+            self.commentLabel.text = clubPost.post.content
+            self.bookLabel.text = clubPost.bookName
+            self.likeLabel.text = "\(clubPost.post.likedList.count)"
+            self.commentLabel.text = "\(clubPost.post.commentsDto.count)"
         }
     }
     

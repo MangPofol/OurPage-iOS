@@ -51,9 +51,9 @@ class BookclubHomeCollectionViewCell: UICollectionViewCell {
                         self?.bookclubMembers = []
                         return
                     }
-                    self.levelCharacterimageView.image = UIImage(named: "BookclubLevel\(club.level)")
+                    self.levelCharacterimageView.image = UIImage(named: "BookclubLevel\(club.clubMetadata.level)")
                     self.pageLabel.text = "\(club.totalPosts)"
-                    self.bookclubMembers = club.userResponseDtos
+                    self.bookclubMembers = club.users
                 }
                 .disposed(by: disposeBag)
         }

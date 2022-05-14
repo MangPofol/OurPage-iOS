@@ -105,15 +105,15 @@ class BookclubDetailViewController: UIViewController {
                 self?.customView.bookclubTrendingMemoView.emptyLabel.isHidden = ($0.count != 0)
             }
             .drive(self.customView.bookclubTrendingMemoView.trendingMemoCollectionView.rx.items(cellIdentifier: BookclubTrendingMemoCell.identifier, cellType: BookclubTrendingMemoCell.self)) { (row, element, cell) in
-                cell.post = element
+                cell.clubPost = element
             }
             .disposed(by: disposeBag)
         
         // CollectionView 선택
-        self.customView.bookclubTrendingMemoView.trendingMemoCollectionView.rx.modelSelected(PostModel.self)
+        self.customView.bookclubTrendingMemoView.trendingMemoCollectionView.rx.modelSelected(ClubPost.self)
             .bind { [weak self] in
                 let vc = BookclubPostViewController()
-                vc.post = $0
+                vc.clubPost = $0
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
