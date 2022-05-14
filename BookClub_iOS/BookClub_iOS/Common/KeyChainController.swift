@@ -63,6 +63,14 @@ class KeyChainController {
         assert(status == noErr, "failed to delete the value, status code = \(status)")
     }
     
+    func delete() {
+        let secItemClasses = [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
+        for itemClass in secItemClasses {
+            let spec: NSDictionary = [kSecClass: itemClass]
+            SecItemDelete(spec)
+        }
+    }
+    
     func getAuthorizationHeader(service: String, account: String) -> [String: String]? {
         if let accessToken = self.read(service, account: account) {
             return ["Authorization" : "Bearer \(accessToken)"]
