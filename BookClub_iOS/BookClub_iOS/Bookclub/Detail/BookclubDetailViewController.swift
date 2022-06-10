@@ -38,6 +38,7 @@ class BookclubDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.navigationController?.navigationBar.removeBarShadow()
         self.setBarMainColor()
     }
     
@@ -118,6 +119,11 @@ class BookclubDetailViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        self.customView.headerButton.rx.tap            
+            .bind { [weak self] in
+                self?.navigationController?.pushViewController(BookclubInfoViewController(bookclubId: self?.bookclubId), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     func setNavigationBar() {
